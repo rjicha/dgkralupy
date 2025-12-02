@@ -103,7 +103,7 @@ dgkralupy/
 
 ### Staging Environment
 
-- **URL**: https://dgkralupy.rjicha.online
+- **URL**: https://rjicha.github.io/dgkralupy/
 - **Deployment**: Automatic on push to `main` branch
 - **Purpose**: Testing and stakeholder review
 

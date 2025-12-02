@@ -46,7 +46,8 @@ jobs:
 
       - name: Update site URL for production
         run: |
-          sed -i "s|https://dgkralupy.rjicha.online|https://dgkralupy.cz|g" astro.config.mjs
+          sed -i "s|site: 'https://rjicha.github.io'|site: 'https://dgkralupy.cz'|g" astro.config.mjs
+          sed -i "s|base: '/dgkralupy'|base: '/'|g" astro.config.mjs
 
       - name: Build with Astro
         run: npm run build

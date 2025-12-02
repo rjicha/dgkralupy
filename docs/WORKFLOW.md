@@ -260,7 +260,7 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 
 **Deployment Checklist:**
 
-- [ ] Deployed to staging (dgkralupy.rjicha.online)
+- [ ] Deployed to staging (https://rjicha.github.io/dgkralupy/)
 - [ ] Verified on staging environment
 - [ ] Stakeholder reviewed on staging
 - [ ] Approved for production
@@ -337,7 +337,7 @@ Tasks move through these states:
 5. **Design Review** - UX Designer reviewing
 6. **Acceptance Testing** - Stakeholder testing
 7. **Ready for Staging** - Approved, ready to deploy to staging
-8. **On Staging** - Deployed to dgkralupy.rjicha.online
+8. **On Staging** - Deployed to https://rjicha.github.io/dgkralupy/
 9. **Ready for Production** - Approved on staging
 10. **In Production** - Deployed to dgkralupy.cz
 11. **Complete** - Done and verified
