@@ -1,0 +1,49 @@
+---
+import { quickLinks } from '../data/mockData';
+
+// Map color strings to Tailwind classes
+const colorMap: Record<string, string> = {
+  'primary': 'bg-primary hover:bg-primary/90',
+  'secondary': 'bg-secondary hover:bg-secondary/90',
+  'accent-green': 'bg-accent-green hover:bg-accent-green/90',
+  'accent-coral': 'bg-accent-coral hover:bg-accent-coral/90',
+  'accent-rose': 'bg-accent-rose hover:bg-accent-rose/90',
+};
+---
+
+<div class="bg-bg-content border border-border-light p-6">
+  <h2 class="text-xl font-heading font-thin uppercase mb-4 text-text-primary">Rychlé odkazy</h2>
+
+  <div class="space-y-3">
+    {quickLinks.map((link) => (
+      <a
+        href={link.url}
+        class={`block w-full px-4 py-3 text-white text-center text-sm font-normal uppercase transition-colors ${colorMap[link.color]}`}
+      >
+        {link.title}
+      </a>
+    ))}
+  </div>
+
+  <!-- Additional useful links -->
+  <div class="mt-6 pt-6 border-t border-border-light space-y-2">
+    <a
+      href="/studium/jidelna"
+      class="block text-sm text-accent-rose hover:underline"
+    >
+      → Jídelna
+    </a>
+    <a
+      href="/kontakty/ucitele"
+      class="block text-sm text-accent-rose hover:underline"
+    >
+      → Kontakty na učitele
+    </a>
+    <a
+      href="/o-skole/zakladni-dokumenty"
+      class="block text-sm text-accent-rose hover:underline"
+    >
+      → Základní dokumenty
+    </a>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
@@ -23,24 +25,18 @@ const { title, description = 'Gymnázium Kralupy' } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="bg-bg-page font-sans text-sm">
-    <header class="bg-primary-dark text-white py-4">
-      <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-heading font-thin uppercase">Gymnázium Kralupy</h1>
-        <nav class="mt-2">
-          <a href="/" class="text-white hover:underline mr-4">Domů</a>
-          <!-- Navigation will be expanded once we have the structure from Phase 0 -->
-        </nav>
+    <header class="bg-primary-dark text-white">
+      <div class="container mx-auto px-4 py-4">
+        <h1 class="text-2xl font-heading font-thin uppercase">Dvořákovo gymnázium</h1>
+        <p class="text-xs text-text-muted mt-1">Kralupy nad Vltavou</p>
       </div>
+      <Navigation />
     </header>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="min-h-screen">
       <slot />
     </main>
 
-    <footer class="bg-bg-content border-t border-border py-6 mt-12">
-      <div class="container mx-auto px-4 text-center text-text-muted text-xs">
-        <p>&copy; {new Date().getFullYear()} Gymnázium Kralupy. Všechna práva vyhrazena.</p>
-      </div>
-    </footer>
+    <Footer />
   </body>
 </html>

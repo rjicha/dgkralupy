@@ -1,28 +1,112 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import QuickLinks from '../components/QuickLinks.astro';
+import { articles } from '../data/mockData';
+
+// Get featured articles and regular articles
+const featuredArticles = articles.filter(article => article.featured);
+const regularArticles = articles.filter(article => !article.featured);
+const heroArticle = featuredArticles.find(article => article.important) || featuredArticles[0];
 ---
 
-<BaseLayout title="Gymnázium Kralupy - Domovská stránka">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-4xl font-bold text-gray-900 mb-6">Vítejte na stránkách Gymnázia Kralupy</h1>
+<BaseLayout
+  title="Dvořákovo gymnázium Kralupy nad Vltavou"
+  description="Oficiální webové stránky Dvořákova gymnázia v Kralupech nad Vltavou. Aktuální informace o škole, studiu, aktivitách a akcích."
+>
+  <!-- Hero Section -->
+  {heroArticle && <Hero article={heroArticle} />}
 
-    <div class="prose lg:prose-lg">
-      <p class="text-lg text-gray-700 mb-4">Toto je vývojová verze nového webu školy.</p>
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Column -->
+      <div class="lg:col-span-2">
+        <!-- Important News Section -->
+        {featuredArticles.length > 0 && (
+          <section class="mb-8">
+            <h2 class="text-3xl font-heading font-thin uppercase mb-6 text-text-primary border-b-2 border-accent-coral pb-2">
+              Důležité zprávy
+            </h2>
+            <div class="grid grid-cols-1 gap-6">
+              {featuredArticles.filter(article => article !== heroArticle).map((article) => (
+                <ArticleCard article={article} featured={true} />
+              ))}
+            </div>
+          </section>
+        )}
 
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 my-8">
-        <h2 class="text-2xl font-semibold text-blue-900 mb-2">Stav projektu</h2>
-        <ul class="list-disc list-inside text-blue-800">
-          <li>✅ Projekt inicializován</li>
-          <li>✅ Astro nakonfigurováno</li>
-          <li>✅ TailwindCSS připraveno</li>
-          <li>⏳ Čeká na analýzu aktuálního webu (Phase 0)</li>
-          <li>⏳ Design system bude implementován</li>
-        </ul>
+        <!-- Recent News Section -->
+        <section>
+          <h2 class="text-3xl font-heading font-thin uppercase mb-6 text-text-primary border-b-2 border-secondary pb-2">
+            Aktuálně
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {regularArticles.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+
+          <!-- View All Link -->
+          <div class="mt-8 text-center">
+            <a
+              href="/aktualne"
+              class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-6 py-3 text-base font-normal uppercase transition-colors"
+            >
+              Zobrazit všechny aktuality
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </section>
       </div>
 
-      <p class="text-gray-600 italic">
-        Design a barvy budou aktualizovány po analýze aktuálního webu dgkralupy.cz.
-      </p>
+      <!-- Sidebar -->
+      <aside class="space-y-6">
+        <!-- Quick Links -->
+        <QuickLinks />
+
+        <!-- Upcoming Events Widget -->
+        <div class="bg-bg-content border border-border-light p-6">
+          <h2 class="text-xl font-heading font-thin uppercase mb-4 text-text-primary">Nadcházející akce</h2>
+          <div class="space-y-4">
+            <div class="border-l-4 border-accent-coral pl-3">
+              <p class="text-sm font-normal text-text-primary">Den otevřených dveří</p>
+              <p class="text-xs text-text-muted">3. prosince 2025, 14:30-17:00</p>
+            </div>
+            <div class="border-l-4 border-accent-green pl-3">
+              <p class="text-sm font-normal text-text-primary">Vánoční koncert</p>
+              <p class="text-xs text-text-muted">18. prosince 2025</p>
+            </div>
+            <div class="border-l-4 border-secondary pl-3">
+              <p class="text-sm font-normal text-text-primary">Pololetní prázdniny</p>
+              <p class="text-xs text-text-muted">31. ledna 2026</p>
+            </div>
+          </div>
+          <a
+            href="/kalendar"
+            class="block mt-4 text-sm text-accent-rose hover:underline"
+          >
+            → Zobrazit celý kalendář
+          </a>
+        </div>
+
+        <!-- Info Box -->
+        <div class="bg-accent-green/10 border border-accent-green/30 p-6">
+          <h3 class="text-lg font-heading font-thin uppercase mb-3 text-text-primary">Pro uchazeče</h3>
+          <p class="text-sm text-text-secondary mb-4">
+            Zvažujete studium na našem gymnáziu? Navštivte naši sekci pro uchazeče!
+          </p>
+          <a
+            href="/studium/prijimaci-rizeni"
+            class="inline-block bg-accent-rose hover:bg-accent-rose/90 text-white px-4 py-2 text-sm uppercase transition-colors"
+          >
+            Přijímací řízení
+          </a>
+        </div>
+      </aside>
     </div>
   </div>
 </BaseLayout>
