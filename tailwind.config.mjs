@@ -4,38 +4,56 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Placeholder colors - will be replaced with actual school brand colors from Phase 0
+        // Brand colors extracted from www.dgkralupy.cz
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+          DEFAULT: '#3b5f78', // Blue-gray - main brand color
+          dark: '#273946',    // Dark blue-gray - navbar background
         },
-        secondary: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-          950: '#4a044e',
+        secondary: '#44c2c4', // Cyan/turquoise
+        accent: {
+          green: '#bfcc34',   // Lime green
+          coral: '#ff6b6b',   // Coral/red
+          rose: '#c44d58',    // Rose/pink - links and highlights
+        },
+        // Text colors
+        text: {
+          primary: '#000000',   // Black
+          secondary: '#3b3b3b', // Dark gray
+          muted: '#a09f9f',     // Gray for metadata
+        },
+        // Background colors
+        bg: {
+          page: '#f0f0f0',    // Light gray page background
+          content: '#ffffff', // White content boxes
+        },
+        // Border colors
+        border: {
+          light: '#efefef',   // Very light gray
+          DEFAULT: '#cccccc', // Medium gray
+          dark: '#999999',    // Darker gray
         },
       },
       fontFamily: {
-        // Placeholder fonts - will be replaced with actual school fonts from Phase 0
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Georgia', 'serif'],
+        // Actual fonts from www.dgkralupy.cz (Google Fonts with latin-ext for Czech)
+        sans: ['"Open Sans"', 'Arial', 'sans-serif'],
+        heading: ['"Roboto"', 'sans-serif'],
+      },
+      fontSize: {
+        // Typography scale matching current site
+        'xs': '0.7rem',    // 11.2px - metadata, footer
+        'sm': '0.8rem',    // 12.8px - body, breadcrumb
+        'base': '0.9rem',  // 14.4px - dropdown
+        'lg': '1.05rem',   // 16.8px - navbar
+        'xl': '1.3rem',    // 20.8px - h4
+        '2xl': '1.5rem',   // 24px - h3
+        '3xl': '1.7rem',   // 27.2px - h2
+        '4xl': '2rem',     // 32px - h1
+      },
+      fontWeight: {
+        thin: '100',
+        light: '300',
+        normal: '400',
+        bold: '700',
       },
     },
   },

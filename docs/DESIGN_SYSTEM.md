@@ -8,36 +8,74 @@
 
 ## Colors
 
-### Status: ⚠️ Partial - Requires Browser Inspection
+### Status: ✅ Extracted from site.min.css
 
-The current website does not expose explicit color values in the markup. The following colors need to be extracted using browser developer tools:
+Complete color palette extracted from the current website CSS.
 
-#### To Extract:
-- [ ] Primary brand color
-- [ ] Secondary brand color
-- [ ] Accent color(s)
-- [ ] Text colors (primary, secondary, muted)
-- [ ] Background colors
-- [ ] Link colors (default, hover, visited)
-- [ ] Border colors
-- [ ] Success/warning/error colors (if present)
+#### Brand Colors
 
-#### Provisional Color Palette (Update after extraction):
+**Primary Colors:**
 ```css
-/* Update these values after browser inspection */
---color-primary: #PLACEHOLDER;
---color-secondary: #PLACEHOLDER;
---color-accent: #PLACEHOLDER;
---color-text-primary: #000000; /* likely black/dark gray */
---color-text-secondary: #666666; /* likely gray */
---color-background: #FFFFFF; /* white */
---color-link: #0066CC; /* likely standard blue */
---color-link-hover: #004499; /* darker blue */
+--color-primary-dark: #273946;    /* Dark blue-gray - navbar background, primary dark */
+--color-primary: #3b5f78;         /* Blue-gray - navigation section 1, carousel dots */
+--color-secondary: #44c2c4;       /* Cyan/turquoise - navigation section 2 */
+--color-accent-green: #bfcc34;    /* Lime green - navigation section 3 */
+--color-accent-coral: #ff6b6b;    /* Coral/red - navigation section 4, important badge */
+--color-accent-rose: #c44d58;     /* Rose/pink - links, highlights, quick links */
 ```
 
-### TailwindCSS Configuration Template
+**Text Colors:**
+```css
+--color-text-primary: #000000;    /* Black - primary text */
+--color-text-secondary: #3b3b3b;  /* Dark gray - secondary text */
+--color-text-muted: #a09f9f;      /* Gray - metadata, dates, author info */
+--color-text-white: #ffffff;      /* White - navbar text, buttons */
+```
 
-Once colors are extracted, update `tailwind.config.mjs`:
+**Background Colors:**
+```css
+--color-bg-page: #f0f0f0;         /* Light gray - page background */
+--color-bg-content: #ffffff;      /* White - content boxes, cards */
+--color-bg-navbar: #273946;       /* Dark blue-gray - navbar */
+```
+
+**Border Colors:**
+```css
+--color-border-light: #efefef;    /* Very light gray - subtle borders */
+--color-border-medium: #eee;      /* Light gray - borders */
+--color-border-default: #ccc;     /* Medium gray - standard borders */
+--color-border-dark: #999;        /* Darker gray - table borders */
+--color-border-darker: #444;      /* Dark - table headers */
+```
+
+**Shadow Colors:**
+```css
+--shadow-dropdown: rgba(200, 200, 200, 0.75);  /* Dropdown menu shadow */
+--overlay-carousel: rgba(59, 95, 120, 0.7);    /* Carousel text overlay */
+--overlay-hover: rgba(255, 255, 255, 0.3);     /* Navigation hover border */
+```
+
+#### Navigation Section Colors
+
+The navigation uses distinct colors for each section:
+1. **O škole** (About): `#3b5f78` (blue-gray)
+2. **Studium** (Studies): `#44c2c4` (cyan)
+3. **Aktivity** (Activities): `#bfcc34` (lime green)
+4. **Aktuálně** (News): `#ff6b6b` (coral)
+5. **Pomoc jiným** (Help Others): `#273946` (dark blue-gray)
+
+#### Quick Links Colors
+
+Used for sidebar quick link buttons (c0-c4):
+- **c0**: `#ff6b6b` (coral)
+- **c1**: `#44c2c4` (cyan)
+- **c2**: `#c44d58` (rose)
+- **c3**: `#bfcc34` (lime green)
+- **c4**: `#3b5f78` (blue-gray)
+
+### TailwindCSS Configuration
+
+Update `tailwind.config.mjs` with these colors:
 
 ```javascript
 export default {
@@ -45,14 +83,28 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#PLACEHOLDER',
-          // Add shades if needed: 50, 100, ..., 900
+          DEFAULT: '#3b5f78',
+          dark: '#273946',
         },
-        secondary: {
-          DEFAULT: '#PLACEHOLDER',
-        },
+        secondary: '#44c2c4',
         accent: {
-          DEFAULT: '#PLACEHOLDER',
+          green: '#bfcc34',
+          coral: '#ff6b6b',
+          rose: '#c44d58',
+        },
+        text: {
+          primary: '#000000',
+          secondary: '#3b3b3b',
+          muted: '#a09f9f',
+        },
+        bg: {
+          page: '#f0f0f0',
+          content: '#ffffff',
+        },
+        border: {
+          light: '#efefef',
+          DEFAULT: '#ccc',
+          dark: '#999',
         },
       },
     },
@@ -64,49 +116,134 @@ export default {
 
 ## Typography
 
-### Status: ⚠️ Requires Browser Inspection
+### Status: ✅ Extracted from site.min.css and Google Fonts
 
-#### To Extract:
-- [ ] Primary font family
-- [ ] Secondary font family (if any)
-- [ ] Font sizes for headings (h1-h6)
-- [ ] Font sizes for body text
-- [ ] Font weights used
-- [ ] Line heights
-- [ ] Letter spacing (if any)
+Complete typography information extracted from the current website.
 
-#### Provisional Typography Scale (Update after extraction):
+#### Font Families
 
-```css
-/* Headings */
---font-h1: PLACEHOLDER; /* size, weight, line-height */
---font-h2: PLACEHOLDER;
---font-h3: PLACEHOLDER;
---font-h4: PLACEHOLDER;
---font-h5: PLACEHOLDER;
---font-h6: PLACEHOLDER;
-
-/* Body */
---font-body: PLACEHOLDER;
---font-body-small: PLACEHOLDER;
---font-body-large: PLACEHOLDER;
+**Google Fonts Import:**
+```html
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Roboto:300,400,700&subset=latin-ext" rel="stylesheet">
 ```
 
-### TailwindCSS Configuration Template
+**Primary Font (Body Text):**
+- **Font Family**: "Open Sans", Arial, sans-serif
+- **Weights Available**: 300 (Light), 400 (Regular), 700 (Bold)
+- **Charset**: Latin Extended (includes Czech characters: ě, š, č, ř, ž, ý, á, í, é, ú, ů, ň, ť, ď)
+
+**Secondary Font (Headings):**
+- **Font Family**: "Roboto", sans-serif
+- **Weights Available**: 300 (Light), 400 (Regular), 700 (Bold)
+- **Usage**: All headings (h1-h6)
+- **Style**: Uppercase text-transform, font-weight: 100 (thin rendering)
+
+#### Font Sizes
+
+**Base Size:**
+```css
+body {
+  font-size: 0.8rem;  /* Approximately 12.8px if root is 16px */
+}
+```
+
+**Headings:**
+```css
+h1 { font-size: 2rem; }     /* ~32px */
+h2 { font-size: 1.7rem; }   /* ~27.2px */
+h3 { font-size: 1.5rem; }   /* ~24px */
+h4 { font-size: 1.3rem; }   /* ~20.8px */
+h5, h6 { /* Not explicitly defined, inherit base */ }
+```
+
+**Component-Specific Sizes:**
+```css
+--navbar-link-desktop: 1.05rem;   /* ~16.8px */
+--navbar-link-mobile: 0.81rem;    /* ~13px */
+--navbar-brand: 1rem;             /* ~16px */
+--article-info: 0.7rem;           /* ~11.2px - metadata */
+--breadcrumb: 0.8rem;             /* ~12.8px */
+--quick-link: 0.8rem;             /* ~12.8px */
+--dropdown-menu: 0.9rem;          /* ~14.4px */
+```
+
+#### Typography Characteristics
+
+**Headings:**
+- Font-family: Roboto, sans-serif
+- Font-weight: 100 (thin)
+- Text-transform: uppercase
+- Text-align: left
+
+**Body Text:**
+- Font-family: Open Sans, Arial, sans-serif
+- Font-size: 0.8rem
+- Text-align: justify (on page content)
+
+**Special Text Styles:**
+- Article metadata: 0.7rem, uppercase, color: #a09f9f
+- Page footer: 0.7rem, color: #a09f9f
+- Attachments: 1rem
+
+### TailwindCSS Configuration
+
+Update `tailwind.config.mjs` with these typography settings:
 
 ```javascript
 export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['PLACEHOLDER', 'system-ui', 'sans-serif'],
-        // Add other font families if needed
+        sans: ['"Open Sans"', 'Arial', 'sans-serif'],
+        heading: ['"Roboto"', 'sans-serif'],
       },
       fontSize: {
-        // Update these after extraction
+        // Base sizes matching current site
+        'xs': '0.7rem',      // 11.2px - metadata, footer
+        'sm': '0.8rem',      // 12.8px - body, breadcrumb
+        'base': '0.9rem',    // 14.4px - dropdown
+        'lg': '1.05rem',     // 16.8px - navbar
+        'xl': '1.3rem',      // 20.8px - h4
+        '2xl': '1.5rem',     // 24px - h3
+        '3xl': '1.7rem',     // 27.2px - h2
+        '4xl': '2rem',       // 32px - h1
+      },
+      fontWeight: {
+        thin: '100',
+        light: '300',
+        normal: '400',
+        bold: '700',
       },
     },
   },
+}
+```
+
+#### Typography Usage Guide
+
+**When to use each font:**
+- **Open Sans**: All body text, navigation links, buttons, metadata
+- **Roboto**: All headings (h1-h6), preferably with uppercase transformation
+
+**Recommended pairings:**
+```css
+.heading {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  text-transform: uppercase;
+}
+
+.body-text {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.metadata {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #a09f9f;
 }
 ```
 
@@ -356,28 +493,24 @@ export default {
 ## Browser Inspection TODO
 
 ### Color Extraction Steps:
-1. Open www.dgkralupy.cz in Chrome/Firefox
-2. Open Developer Tools (F12)
-3. Inspect elements to find computed styles
-4. Document:
-   - Header background color
-   - Primary text color
-   - Link colors
-   - Button colors
-   - Accent colors
-   - Border colors
+✅ **Completed** - Extracted from site.min.css:
+- ✅ Header background color: #273946
+- ✅ Primary text color: #000000
+- ✅ Link colors: #c44d58
+- ✅ Button colors: Multiple (#3b5f78, #44c2c4, #bfcc34, #ff6b6b)
+- ✅ Accent colors: #c44d58, #ff6b6b, #bfcc34
+- ✅ Border colors: #ccc, #999, #eee, #efefef
 
 ### Typography Extraction Steps:
-1. Inspect heading elements (h1-h6)
-2. Inspect body text
-3. Document:
-   - Font family
-   - Font size
-   - Font weight
-   - Line height
-   - Letter spacing (if any)
+✅ **Completed** - Extracted from site.min.css and Google Fonts:
+- ✅ Font family: "Open Sans" (body), "Roboto" (headings)
+- ✅ Font size: 0.8rem (body), 2rem-1.3rem (headings)
+- ✅ Font weight: 100, 300, 400, 700
+- ✅ Line height: (inherited from base)
+- ✅ Letter spacing: (not explicitly defined)
 
 ### Screenshot Requirements:
+⚠️ **Manual Task** - Screenshots should be taken for visual reference:
 - [ ] Homepage (full page)
 - [ ] Article detail page
 - [ ] News listing page
