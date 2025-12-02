@@ -4,6 +4,27 @@
 
 This document outlines the phased implementation plan for the dgkralupy.cz website - a git-based CMS solution for Gymnázium Kralupy.
 
+## Current Progress Summary (Updated: 2025-12-02)
+
+**Phase 0**: Current Website Analysis - ⏳ **0% Complete** (Blocked - awaiting website access)
+**Phase 1**: Project Setup & Foundation - ✅ **~85% Complete**
+**Phase 2**: Frontend Development - ⏳ **~10% Complete** (Basic structure only)
+**Phase 3-8**: Not Started - ⏳ **0% Complete**
+
+**Overall Project Progress: ~8-10%**
+
+### Recently Completed
+- ✅ Full project foundation with Astro, TypeScript, TailwindCSS
+- ✅ GitHub Actions CI/CD pipelines for staging and production
+- ✅ Basic layout components and homepage
+- ✅ Docker configuration for local testing (bonus feature)
+
+### Next Steps
+1. Verify GitHub Pages deployment is working
+2. Configure DNS for staging domain (dgkralupy.rjicha.online)
+3. Begin Phase 0 analysis of current website once accessible
+4. Extract design system and implement actual colors/fonts
+
 ## Phase 0: Current Website Analysis
 
 ### 0.1 Website Structure Analysis
@@ -46,40 +67,48 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 
 ### 1.1 Repository & Build Configuration
 
-- [ ] Initialize Node.js project with TypeScript
-- [ ] Select and configure static site generator (Astro recommended for performance)
-- [ ] Set up TailwindCSS for styling
-- [ ] Configure build scripts and development environment
-- [ ] Set up ESLint and Prettier for code quality
-- [ ] Create initial project structure (folders: src/, content/, public/, etc.)
+- [x] Initialize Node.js project with TypeScript
+- [x] Select and configure static site generator (Astro 4.x)
+- [x] Set up TailwindCSS for styling
+- [x] Configure build scripts and development environment
+- [x] Set up ESLint and Prettier for code quality
+- [x] Create initial project structure (folders: src/, content/, public/, etc.)
 
 ### 1.2 GitHub Actions CI/CD
 
-- [ ] Create GitHub Actions workflow for automated builds
-- [ ] Configure deployment to GitHub Pages
-- [ ] Set up branch protection rules
-- [ ] Configure build triggers (on push to main)
-- [ ] Add build status badges to README
+- [x] Create GitHub Actions workflow for automated builds
+- [x] Configure deployment to GitHub Pages
+- [ ] Set up branch protection rules (needs verification)
+- [x] Configure build triggers (on push to main)
+- [x] Add build status badges to README
 
 ### 1.3 Domain & Hosting
 
 #### Staging Environment
 
-- [ ] Configure GitHub Pages for staging domain (dgkralupy.rjicha.online)
-- [ ] Set up DNS records for staging domain
-- [ ] Enable HTTPS for staging
-- [ ] Test staging deployment pipeline
-- [ ] Configure separate branch or repository for staging
-- [ ] Set up staging-specific environment variables
+- [x] Configure GitHub Pages for staging domain (dgkralupy.rjicha.online)
+- [ ] Set up DNS records for staging domain (needs verification)
+- [ ] Enable HTTPS for staging (auto-enabled via GitHub Pages once DNS configured)
+- [ ] Test staging deployment pipeline (needs verification)
+- [x] Configure separate branch or repository for staging (using main branch with staging workflow)
+- [x] Set up staging-specific environment variables (site URL in astro.config.mjs)
 
 #### Production Environment (Post-Staging Approval)
 
-- [ ] Configure GitHub Pages for production domain (dgkralupy.cz)
-- [ ] Set up DNS records for production
-- [ ] Enable HTTPS for production
-- [ ] Configure production deployment workflow
-- [ ] Set up promotion process from staging to production
-- [ ] Test full deployment pipeline end-to-end
+- [x] Configure GitHub Pages for production domain (dgkralupy.cz)
+- [ ] Set up DNS records for production (not done yet - awaiting domain access)
+- [ ] Enable HTTPS for production (auto-enabled via GitHub Pages once DNS configured)
+- [x] Configure production deployment workflow (manual trigger with confirmation)
+- [x] Set up promotion process from staging to production (manual workflow dispatch)
+- [ ] Test full deployment pipeline end-to-end (pending DNS configuration)
+
+### 1.4 Docker Setup (Bonus - Not in Original Plan)
+
+- [x] Create production Dockerfile with nginx
+- [x] Create development Dockerfile with hot reload
+- [x] Configure docker-compose for local testing
+- [x] Add npm scripts for Docker operations
+- [x] Document Docker usage in README
 
 ## Phase 2: Frontend Development (Public Website)
 
@@ -87,9 +116,9 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 
 ### 2.1 Core Layout & Navigation
 
-- [ ] Implement color scheme from current website using TailwindCSS
-- [ ] Set up typography matching current website fonts
-- [ ] Create base layout component with header/footer
+- [ ] Implement color scheme from current website using TailwindCSS (placeholder colors in place)
+- [ ] Set up typography matching current website fonts (placeholder fonts in place)
+- [x] Create base layout component with header/footer (basic implementation at src/layouts/BaseLayout.astro)
 - [ ] Implement responsive navigation menu matching current design
 - [ ] Build hierarchical page tree navigation
 - [ ] Add breadcrumb navigation
@@ -98,15 +127,15 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ### 2.2 Page Templates
 
 - [ ] Create standard page template
-- [ ] Build homepage template with featured content
+- [x] Build homepage template with featured content (basic placeholder at src/pages/index.astro)
 - [ ] Create blog landing page template
 - [ ] Build individual article page template
-- [ ] Add SEO meta tags to all templates
+- [x] Add SEO meta tags to all templates (basic implementation in BaseLayout)
 
 ### 2.3 Content Rendering
 
-- [ ] Set up Markdown processing pipeline
-- [ ] Configure syntax highlighting for code blocks
+- [x] Set up Markdown processing pipeline (Astro built-in)
+- [x] Configure syntax highlighting for code blocks (configured in astro.config.mjs)
 - [ ] Implement image optimization
 - [ ] Add support for embedded media (videos, iframes)
 - [ ] Create reusable content components (callouts, tables, etc.)
