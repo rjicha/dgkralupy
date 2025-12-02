@@ -1,0 +1,21 @@
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+
+  /* Placeholder styles - will be updated with actual school brand styles from Phase 0 */
+}
+
+@layer components {
+  /* Custom component styles will be added here */
+}

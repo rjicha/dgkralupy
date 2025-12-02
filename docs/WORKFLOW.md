@@ -7,7 +7,9 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ## Personas
 
 ### 1. Developer
+
 **Responsibilities:**
+
 - Implement features and bug fixes
 - Write clean, maintainable code
 - Follow design specifications and requirements
@@ -16,12 +18,15 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Create pull requests for review
 
 **Workflow Phases:**
+
 - Implementation
 - Unit testing
 - Self-review before submitting
 
 ### 2. Staff Engineer (Code Reviewer)
+
 **Responsibilities:**
+
 - Review code quality and architecture
 - Ensure best practices and coding standards
 - Check for security vulnerabilities
@@ -31,6 +36,7 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Mentor on technical decisions
 
 **Review Checklist:**
+
 - Code follows project conventions
 - No security vulnerabilities
 - Proper error handling
@@ -39,7 +45,9 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Documentation is clear
 
 ### 3. UX Designer
+
 **Responsibilities:**
+
 - Ensure design consistency
 - Validate visual implementation matches design system
 - Check accessibility compliance
@@ -49,6 +57,7 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Approve visual implementation
 
 **Review Checklist:**
+
 - Matches design system (colors, typography, spacing)
 - Visual consistency with existing pages
 - Accessibility standards met (WCAG 2.1 AA)
@@ -57,7 +66,9 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Interactive elements have proper states (hover, focus, active)
 
 ### 4. Teacher/Stakeholder
+
 **Responsibilities:**
+
 - Validate feature meets requirements
 - Test from end-user perspective
 - Verify content management workflow
@@ -66,6 +77,7 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 - Final approval before deployment
 
 **Acceptance Checklist:**
+
 - Feature works as requested
 - Content is editable through CMS
 - Workflow is intuitive for content editors
@@ -76,9 +88,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ## Development Workflow
 
 ### Phase 1: Feature Request / Task Definition
+
 **Actor:** Teacher/Stakeholder (or Developer for technical tasks)
 
 **Actions:**
+
 1. Define the feature or bug fix needed
 2. Provide context and requirements
 3. Specify acceptance criteria
@@ -89,9 +103,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 2: Design (if needed)
+
 **Actor:** UX Designer
 
 **Actions:**
+
 1. Review task requirements
 2. Design UI/UX if new components are needed
 3. Ensure consistency with design system
@@ -103,9 +119,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 3: Implementation
+
 **Actor:** Developer
 
 **Actions:**
+
 1. Review task definition and design specs
 2. Plan implementation approach
 3. Implement feature following best practices
@@ -116,12 +134,14 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 8. Submit for code review
 
 **Deliverables:**
+
 - Working implementation
 - Tests (if applicable)
 - Documentation updates
 - Self-review completed
 
 **Developer Checklist:**
+
 - [ ] Feature implemented according to specifications
 - [ ] Code follows project conventions
 - [ ] Tests written and passing
@@ -134,9 +154,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 4: Code Review
+
 **Actor:** Staff Engineer
 
 **Actions:**
+
 1. Review code quality and architecture
 2. Check for security issues
 3. Validate best practices
@@ -145,11 +167,13 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 6. Provide feedback or approval
 
 **Review Outcomes:**
+
 - **Approved:** Proceed to design review
 - **Changes Requested:** Developer addresses feedback, returns to Phase 3
 - **Rejected:** Return to planning with new approach
 
 **Code Review Checklist:**
+
 - [ ] Code is readable and maintainable
 - [ ] Follows project architecture patterns
 - [ ] No security vulnerabilities
@@ -162,9 +186,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 5: Design Review
+
 **Actor:** UX Designer
 
 **Actions:**
+
 1. Review visual implementation
 2. Check design system compliance
 3. Verify accessibility
@@ -173,11 +199,13 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 6. Provide feedback or approval
 
 **Review Outcomes:**
+
 - **Approved:** Proceed to acceptance testing
 - **Changes Requested:** Developer addresses feedback, returns to Phase 3
 - **Rejected:** Return to design phase with new specifications
 
 **Design Review Checklist:**
+
 - [ ] Matches design system (colors, typography, spacing)
 - [ ] Visual consistency maintained
 - [ ] Accessibility requirements met (ARIA labels, contrast, keyboard nav)
@@ -189,9 +217,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 6: Acceptance Testing
+
 **Actor:** Teacher/Stakeholder
 
 **Actions:**
+
 1. Test feature from end-user perspective
 2. Verify against acceptance criteria
 3. Test content management workflow
@@ -199,11 +229,13 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 5. Provide final approval or feedback
 
 **Review Outcomes:**
+
 - **Accepted:** Feature ready for deployment
 - **Issues Found:** Developer addresses issues, returns to Phase 3
 - **Rejected:** Return to requirements definition
 
 **Acceptance Checklist:**
+
 - [ ] Feature works as requested
 - [ ] Meets all acceptance criteria
 - [ ] Content management works intuitively
@@ -214,9 +246,11 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 ---
 
 ### Phase 7: Deployment
+
 **Actor:** Developer (with Staff Engineer oversight)
 
 **Actions:**
+
 1. Deploy to staging environment
 2. Verify on staging
 3. Monitor for issues
@@ -225,6 +259,7 @@ This document defines the workflow and personas for developing the dgkralupy.cz 
 6. Document deployment
 
 **Deployment Checklist:**
+
 - [ ] Deployed to staging (dgkralupy.rjicha.online)
 - [ ] Verified on staging environment
 - [ ] Stakeholder reviewed on staging
@@ -310,6 +345,7 @@ Tasks move through these states:
 ## Quick Start Examples
 
 ### Example 1: Simple Feature
+
 ```
 User: As Teacher/Stakeholder: We need to add a "Back to Top" button on long pages.
 
@@ -335,6 +371,7 @@ Claude (as Developer): [deploys to production]
 ```
 
 ### Example 2: Complex Feature with Iterations
+
 ```
 User: As Teacher/Stakeholder: We need a calendar view for school events.
 

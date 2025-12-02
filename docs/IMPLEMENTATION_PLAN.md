@@ -7,6 +7,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 0: Current Website Analysis
 
 ### 0.1 Website Structure Analysis
+
 - [ ] Analyze current website at https://www.dgkralupy.cz
 - [ ] Document page hierarchy and navigation structure
 - [ ] List all main sections and subsections
@@ -15,6 +16,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document current URL structure for redirect planning
 
 ### 0.2 Visual Design Analysis
+
 - [ ] Extract and document color scheme (primary, secondary, accent colors)
 - [ ] Document typography (fonts, sizes, weights)
 - [ ] Capture layout patterns and grid system
@@ -24,6 +26,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Note accessibility features already present
 
 ### 0.3 Content Audit
+
 - [ ] Inventory all existing content
 - [ ] Identify content owners/authors
 - [ ] Assess content quality and relevance
@@ -32,6 +35,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Note any dynamic functionality to replicate
 
 ### 0.4 Design System Documentation
+
 - [ ] Create color palette reference document
 - [ ] Document component library from current site
 - [ ] Create style guide based on current design
@@ -41,6 +45,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 1: Project Setup & Foundation
 
 ### 1.1 Repository & Build Configuration
+
 - [ ] Initialize Node.js project with TypeScript
 - [ ] Select and configure static site generator (Astro recommended for performance)
 - [ ] Set up TailwindCSS for styling
@@ -49,6 +54,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Create initial project structure (folders: src/, content/, public/, etc.)
 
 ### 1.2 GitHub Actions CI/CD
+
 - [ ] Create GitHub Actions workflow for automated builds
 - [ ] Configure deployment to GitHub Pages
 - [ ] Set up branch protection rules
@@ -58,6 +64,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ### 1.3 Domain & Hosting
 
 #### Staging Environment
+
 - [ ] Configure GitHub Pages for staging domain (dgkralupy.rjicha.online)
 - [ ] Set up DNS records for staging domain
 - [ ] Enable HTTPS for staging
@@ -66,6 +73,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Set up staging-specific environment variables
 
 #### Production Environment (Post-Staging Approval)
+
 - [ ] Configure GitHub Pages for production domain (dgkralupy.cz)
 - [ ] Set up DNS records for production
 - [ ] Enable HTTPS for production
@@ -78,6 +86,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 **Note**: All frontend development should follow the design system and color scheme documented in Phase 0, maintaining visual consistency with the current website.
 
 ### 2.1 Core Layout & Navigation
+
 - [ ] Implement color scheme from current website using TailwindCSS
 - [ ] Set up typography matching current website fonts
 - [ ] Create base layout component with header/footer
@@ -87,6 +96,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Implement mobile menu with hamburger icon
 
 ### 2.2 Page Templates
+
 - [ ] Create standard page template
 - [ ] Build homepage template with featured content
 - [ ] Create blog landing page template
@@ -94,6 +104,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Add SEO meta tags to all templates
 
 ### 2.3 Content Rendering
+
 - [ ] Set up Markdown processing pipeline
 - [ ] Configure syntax highlighting for code blocks
 - [ ] Implement image optimization
@@ -101,6 +112,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Create reusable content components (callouts, tables, etc.)
 
 ### 2.4 Blog Functionality
+
 - [ ] Build article list view with pagination
 - [ ] Implement article sorting (by date, featured status)
 - [ ] Create featured articles showcase (top N articles)
@@ -108,6 +120,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Implement article filtering/search (optional)
 
 ### 2.5 Accessibility Compliance
+
 - [ ] Conduct accessibility audit (WCAG 2.1 AA standard)
 - [ ] Ensure Czech Republic public institution compliance
 - [ ] Add ARIA labels where needed
@@ -117,6 +130,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Test with screen readers
 
 ### 2.6 Performance Optimization
+
 - [ ] Configure image lazy loading
 - [ ] Implement code splitting
 - [ ] Optimize bundle size
@@ -125,6 +139,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Run Lighthouse audits and address issues
 
 ### 2.7 SEO Optimization
+
 - [ ] Generate sitemap.xml
 - [ ] Create robots.txt
 - [ ] Implement Open Graph meta tags
@@ -135,6 +150,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 3: Content Management System (Decap CMS)
 
 ### 3.1 Decap CMS Setup
+
 - [ ] Install and configure Decap CMS
 - [ ] Create admin interface at `/admin`
 - [ ] Configure backend (GitHub integration)
@@ -142,6 +158,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Test CMS access and functionality
 
 ### 3.2 Content Collections Configuration
+
 - [ ] Define "Pages" collection schema
   - Title, slug, content, parent page, order
   - Draft/published status
@@ -157,6 +174,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
   - General site settings
 
 ### 3.3 Editorial Workflow
+
 - [ ] Configure Decap CMS editorial workflow
 - [ ] Set up draft/review/published states
 - [ ] Test content creation workflow
@@ -164,9 +182,10 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document content editing procedures
 
 ### 3.4 Content Model & File Structure
+
 - [ ] Design content file organization in Git
-  - /content/pages/*.md
-  - /content/articles/*.md
+  - /content/pages/\*.md
+  - /content/articles/\*.md
   - /content/settings/general.json
 - [ ] Create initial seed content (sample pages/articles)
 - [ ] Document content structure for editors
@@ -174,6 +193,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 4: Authentication & Authorization
 
 ### 4.1 Authentication Provider Setup
+
 - [ ] Choose authentication provider (Netlify Identity vs GitHub OAuth)
 - [ ] Configure authentication in Decap CMS
 - [ ] Set up OAuth application (if using GitHub)
@@ -181,6 +201,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document login procedures
 
 ### 4.2 Role-Based Access Control
+
 - [ ] Define roles in Decap CMS config (School Management, Teachers)
 - [ ] Configure section-level permissions
 - [ ] Map users to roles
@@ -188,6 +209,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document role management procedures
 
 ### 4.3 User Management Interface
+
 - [ ] Create user onboarding documentation
 - [ ] Set up process for School Management to invite teachers
 - [ ] Test user invitation and registration flow
@@ -196,6 +218,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 5: Testing & Quality Assurance
 
 ### 5.1 Functional Testing
+
 - [ ] Test all page templates render correctly
 - [ ] Verify page tree navigation works properly
 - [ ] Test article listing and featured articles
@@ -204,12 +227,14 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Verify general settings updates propagate
 
 ### 5.2 Cross-Browser Testing
+
 - [ ] Test on Chrome, Firefox, Safari, Edge
 - [ ] Test on mobile browsers (iOS Safari, Chrome Mobile)
 - [ ] Verify responsive design breakpoints
 - [ ] Test print stylesheets
 
 ### 5.3 Performance Testing
+
 - [ ] Run Lighthouse performance audits
 - [ ] Test page load times
 - [ ] Verify build times are acceptable
@@ -217,6 +242,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Simulate traffic spikes
 
 ### 5.4 Security Testing
+
 - [ ] Verify authentication security
 - [ ] Test authorization boundaries
 - [ ] Check for XSS vulnerabilities in content rendering
@@ -224,6 +250,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Test GitHub Actions secrets management
 
 ### 5.5 Accessibility Testing
+
 - [ ] Test with screen readers (NVDA, JAWS, VoiceOver)
 - [ ] Verify keyboard navigation
 - [ ] Test color contrast ratios
@@ -233,6 +260,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 6: Documentation & Training
 
 ### 6.1 Technical Documentation
+
 - [ ] Document architecture and tech stack choices
 - [ ] Create developer setup guide
 - [ ] Document build and deployment process
@@ -240,6 +268,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document content structure and conventions
 
 ### 6.2 User Documentation
+
 - [ ] Create content editor guide
 - [ ] Document page creation workflow
 - [ ] Document article publishing workflow
@@ -247,6 +276,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Document general settings management
 
 ### 6.3 Administrator Documentation
+
 - [ ] Create user management guide
 - [ ] Document permission configuration
 - [ ] Create maintenance procedures guide
@@ -255,6 +285,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 7: Launch Preparation
 
 ### 7.1 Content Migration
+
 - [ ] Audit existing school website content from www.dgkralupy.cz
 - [ ] Plan content migration strategy
 - [ ] Migrate priority content to staging environment
@@ -262,6 +293,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Set up URL redirects mapping from old to new structure
 
 ### 7.2 Staging Environment Testing
+
 - [ ] Deploy to staging (dgkralupy.rjicha.online)
 - [ ] Verify all features are working on staging
 - [ ] Complete accessibility audit on staging
@@ -271,6 +303,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Share staging link with stakeholders for review
 
 ### 7.3 Stakeholder Review & Feedback
+
 - [ ] Present staging site to school management
 - [ ] Train content editors on staging environment
 - [ ] Gather feedback from key stakeholders
@@ -279,6 +312,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Get formal approval to proceed to production
 
 ### 7.4 Production Setup
+
 - [ ] Set up analytics (Google Analytics, etc.)
 - [ ] Configure error monitoring for production
 - [ ] Finalize production DNS configuration
@@ -287,6 +321,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Prepare rollback plan in case of issues
 
 ### 7.5 Production Deployment
+
 - [ ] Promote approved staging build to production (dgkralupy.cz)
 - [ ] Verify production deployment successful
 - [ ] Test critical functionality on production
@@ -294,6 +329,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Keep staging environment active for future testing
 
 ### 7.6 Post-Launch Monitoring
+
 - [ ] Monitor traffic and performance for first 48 hours
 - [ ] Address any immediate issues
 - [ ] Provide user support to content editors
@@ -303,6 +339,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Phase 8: Post-Launch & Maintenance
 
 ### 8.1 Monitoring & Optimization
+
 - [ ] Set up uptime monitoring
 - [ ] Monitor build success rates
 - [ ] Review analytics data
@@ -310,6 +347,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - [ ] Identify optimization opportunities
 
 ### 8.2 Ongoing Maintenance
+
 - [ ] Document maintenance schedule
 - [ ] Plan for dependency updates
 - [ ] Create backup procedures
@@ -319,6 +357,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 ## Implementation Notes
 
 ### Staging to Production Workflow
+
 - **Staging Domain**: dgkralupy.rjicha.online (for testing and stakeholder review)
 - **Production Domain**: dgkralupy.cz (final public site)
 - **Workflow**:
@@ -333,12 +372,14 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
   - Parallel environments for A/B testing if needed
 
 ### Technology Decisions Pending
+
 - **Static Site Generator**: Astro (recommended), Next.js, or Gatsby
   - Astro: Best performance, modern DX, great for content sites
   - Next.js: More flexible, larger ecosystem, familiar to many devs
   - Gatsby: Mature ecosystem, good plugin system
 
 ### Success Metrics
+
 - Page load time < 2 seconds
 - Lighthouse performance score > 90
 - Accessibility score: 100
@@ -347,6 +388,7 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - Zero monthly hosting costs
 
 ### Risk Mitigation
+
 - **Build time increases**: Implement incremental builds if needed
 - **Content editor learning curve**: Provide comprehensive training and documentation
 - **GitHub rate limits**: Monitor API usage, consider GitHub Apps if needed

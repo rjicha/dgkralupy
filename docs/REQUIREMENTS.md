@@ -3,11 +3,13 @@
 ## Functional Requirements
 
 ### User Management
+
 - Simple role-based access control (RBAC)
 - School management can create user accounts for teachers
 - School management can grant edit permissions to specific sections of the website
 
 ### Multi-level Content Management
+
 - **Page Tree Structure**: Teachers can define and manage hierarchical page organization
 - **Page Operations**: Add, edit, and delete pages
 - **Publishing Workflow**:
@@ -20,6 +22,7 @@
   - Other general details
 
 ### Blog Section
+
 - Article creation and management
 - Article list view with landing page
 - **Featured Articles**: Highlight top N (1-3) articles with special formatting on the landing page
@@ -40,12 +43,14 @@
 ### Roles
 
 **School Management**
+
 - Create and manage teacher user accounts
 - Grant/revoke edit permissions to specific website sections
 - Edit general site information (address, contact details, etc.)
 - Full content management access
 
 **Teachers**
+
 - Create and manage page tree structure
 - Add, edit, and delete pages (within granted permissions)
 - Create and publish articles
@@ -53,5 +58,6 @@
 - Create and edit drafts
 
 **Public Visitors** (no authentication required)
+
 - View published content
 - Access public pages and articles

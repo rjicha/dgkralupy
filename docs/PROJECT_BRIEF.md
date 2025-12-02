@@ -7,6 +7,7 @@ CMS-like website for a local high school (Gymnázium Kralupy) in Czech Republic.
 ## Target Audience
 
 **Visitors:**
+
 - Students
 - Parents
 - Applicants
@@ -14,6 +15,7 @@ CMS-like website for a local high school (Gymnázium Kralupy) in Czech Republic.
 - General public
 
 **Key Stakeholders (Content Managers):**
+
 - Teachers
 - School management
 - Office staff

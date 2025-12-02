@@ -1,0 +1,42 @@
+services:
+  # Production-like environment for testing
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    container_name: dgkralupy-web
+    ports:
+      - '8080:80'
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost/']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Development environment with hot reload
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+      target: development
+    container_name: dgkralupy-dev
+    ports:
+      - '4321:4321'
+    volumes:
+      - ..:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev -- --host 0.0.0.0
+    restart: unless-stopped
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: dgkralupy-network
