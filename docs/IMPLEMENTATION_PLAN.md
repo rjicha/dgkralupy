@@ -8,15 +8,14 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 
 **Phase 0**: Current Website Analysis - ✅ **~95% Complete** (Only optional screenshots remaining)
 **Phase 1**: Project Setup & Foundation - ✅ **~85% Complete**
-**Phase 2**: Frontend Development - ⏳ **~15% Complete** (Basic structure + design tokens configured)
+**Phase 2**: Frontend Development - ⏳ **~30% Complete** (Core pages + article system implemented)
 **Phase 3-8**: Not Started - ⏳ **0% Complete**
 
-**Overall Project Progress: ~15-18%**
+**Overall Project Progress: ~20-25%**
 
-### Recently Completed
+### Recently Completed (2025-12-02)
 - ✅ Full project foundation with Astro, TypeScript, TailwindCSS
 - ✅ GitHub Actions CI/CD pipelines for staging and production
-- ✅ Basic layout components and homepage
 - ✅ Docker configuration for local testing (bonus feature)
 - ✅ Phase 0 website structure analysis (6 main sections, 35+ subsections documented)
 - ✅ Phase 0 content audit (identified content types, components, media assets)
@@ -25,12 +24,21 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 - ✅ Phase 0.2: Typography extracted and documented (Open Sans + Roboto fonts)
 - ✅ TailwindCSS configuration updated with actual design tokens
 - ✅ Google Fonts integration added to BaseLayout
+- ✅ Homepage with featured articles, quick links, and upcoming events widget
+- ✅ News listing page (/aktualne) with sorting, tags, pagination structure
+- ✅ Article detail pages (/aktualne/[slug]) with full content and related articles
+- ✅ Article card and hero components implemented
+- ✅ Real images fetched from original dgkralupy.cz website (6 article images)
+- ✅ Mock data structure with 6 sample articles, navigation, and site settings
+- ✅ Breadcrumb navigation on article pages
+- ✅ Social sharing functionality (Facebook, copy link)
 
 ### Next Steps
-1. Continue Phase 2 frontend development with documented design system
-2. Implement responsive navigation menu matching current design
-3. Build hierarchical page tree navigation
-4. Create reusable components (article cards, hero banner, etc.)
+1. Implement complete responsive navigation menu with all sections and subsections
+2. Build hierarchical page tree navigation with dropdowns
+3. Create additional page templates (About, Studies, Activities, Contacts)
+4. Implement search functionality
+5. Add image optimization for performance
 
 ## Phase 0: Current Website Analysis
 
@@ -123,37 +131,45 @@ This document outlines the phased implementation plan for the dgkralupy.cz websi
 
 ### 2.1 Core Layout & Navigation
 
-- [ ] Implement color scheme from current website using TailwindCSS (placeholder colors in place)
-- [ ] Set up typography matching current website fonts (placeholder fonts in place)
-- [x] Create base layout component with header/footer (basic implementation at src/layouts/BaseLayout.astro)
-- [ ] Implement responsive navigation menu matching current design
-- [ ] Build hierarchical page tree navigation
-- [ ] Add breadcrumb navigation
+- [x] Implement color scheme from current website using TailwindCSS - **✅ Completed**
+- [x] Set up typography matching current website fonts - **✅ Completed**
+- [x] Create base layout component with header/footer (src/layouts/BaseLayout.astro) - **✅ Completed**
+- [x] Create navigation component (src/components/Navigation.astro) - **✅ Completed**
+- [x] Create footer component (src/components/Footer.astro) - **✅ Completed**
+- [x] Add breadcrumb navigation (implemented on article pages) - **✅ Completed**
+- [ ] Implement full responsive navigation menu with all sections (in progress)
+- [ ] Build hierarchical page tree navigation with dropdowns
 - [ ] Implement mobile menu with hamburger icon
 
 ### 2.2 Page Templates
 
-- [ ] Create standard page template
-- [x] Build homepage template with featured content (basic placeholder at src/pages/index.astro)
-- [ ] Create blog landing page template
-- [ ] Build individual article page template
-- [x] Add SEO meta tags to all templates (basic implementation in BaseLayout)
+- [ ] Create standard page template (for static pages like About, Contacts)
+- [x] Build homepage template with featured content (src/pages/index.astro) - **✅ Completed**
+- [x] Create blog landing page template (src/pages/aktualne/index.astro) - **✅ Completed**
+- [x] Build individual article page template (src/pages/aktualne/[slug].astro) - **✅ Completed**
+- [x] Add SEO meta tags to all templates (implemented in BaseLayout) - **✅ Completed**
 
 ### 2.3 Content Rendering
 
-- [x] Set up Markdown processing pipeline (Astro built-in)
-- [x] Configure syntax highlighting for code blocks (configured in astro.config.mjs)
-- [ ] Implement image optimization
+- [x] Set up Markdown processing pipeline (Astro built-in) - **✅ Completed**
+- [x] Configure syntax highlighting for code blocks (configured in astro.config.mjs) - **✅ Completed**
+- [x] Add real images from original website (6 article images downloaded) - **✅ Completed**
+- [x] Create reusable article card component (src/components/ArticleCard.astro) - **✅ Completed**
+- [x] Create hero banner component (src/components/Hero.astro) - **✅ Completed**
+- [x] Create quick links component (src/components/QuickLinks.astro) - **✅ Completed**
+- [ ] Implement image optimization (lazy loading, responsive images)
 - [ ] Add support for embedded media (videos, iframes)
-- [ ] Create reusable content components (callouts, tables, etc.)
+- [ ] Create additional reusable content components (callouts, tables, etc.)
 
 ### 2.4 Blog Functionality
 
-- [ ] Build article list view with pagination
-- [ ] Implement article sorting (by date, featured status)
-- [ ] Create featured articles showcase (top N articles)
-- [ ] Add article metadata display (date, author, tags)
-- [ ] Implement article filtering/search (optional)
+- [x] Build article list view with pagination structure (src/pages/aktualne/index.astro) - **✅ Completed**
+- [x] Implement article sorting (by date) - **✅ Completed**
+- [x] Create featured articles showcase on homepage - **✅ Completed**
+- [x] Add article metadata display (date, author, tags) - **✅ Completed**
+- [x] Implement article tags with links - **✅ Completed**
+- [x] Add related articles section based on shared tags - **✅ Completed**
+- [ ] Implement full article filtering/search functionality (pending)
 
 ### 2.5 Accessibility Compliance
 

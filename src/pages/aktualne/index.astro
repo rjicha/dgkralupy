@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { articles } from '../../data/mockData';
+
+// Sort articles by date (newest first)
+const sortedArticles = [...articles].sort((a, b) => {
+  const dateA = new Date(a.publishedAt.split('.').reverse().join('-'));
+  const dateB = new Date(b.publishedAt.split('.').reverse().join('-'));
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Pagination setup (optional for future)
+const articlesPerPage = 12;
+const totalPages = Math.ceil(sortedArticles.length / articlesPerPage);
+const currentPage = 1;
+const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
+---
+
+<BaseLayout
+  title="Aktuality | Dvořákovo gymnázium Kralupy nad Vltavou"
+  description="Všechny aktuality a oznámení Dvořákova gymnázia v Kralupech nad Vltavou."
+>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="mb-6 text-sm">
+      <ol class="flex items-center gap-2 text-text-muted">
+        <li><a href="/" class="hover:text-accent-rose transition-colors">Domů</a></li>
+        <li>/</li>
+        <li class="text-text-primary">Aktuality</li>
+      </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-heading font-thin uppercase text-text-primary border-b-2 border-accent-coral pb-4 mb-4">
+        Aktuality
+      </h1>
+      <p class="text-text-secondary">
+        Nejnovější zprávy a oznámení z naší školy. Sledujte zde aktuální dění, připravované akce a důležité informace.
+      </p>
+    </header>
+
+    <!-- Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      {paginatedArticles.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+
+    <!-- Pagination (placeholder for future implementation) -->
+    {totalPages > 1 && (
+      <nav class="flex justify-center items-center gap-2 mt-12" aria-label="Stránkování">
+        <button
+          disabled={currentPage === 1}
+          class="px-4 py-2 border border-border-light bg-bg-content text-text-muted disabled:opacity-50 disabled:cursor-not-allowed hover:bg-bg-page transition-colors"
+        >
+          ← Předchozí
+        </button>
+
+        <div class="flex gap-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <a
+              href={page === 1 ? '/aktualne' : `/aktualne/page/${page}`}
+              class={`px-4 py-2 border transition-colors ${
+                page === currentPage
+                  ? 'bg-accent-rose text-white border-accent-rose'
+                  : 'border-border-light bg-bg-content text-text-primary hover:bg-bg-page'
+              }`}
+            >
+              {page}
+            </a>
+          ))}
+        </div>
+
+        <button
+          disabled={currentPage === totalPages}
+          class="px-4 py-2 border border-border-light bg-bg-content text-text-muted disabled:opacity-50 disabled:cursor-not-allowed hover:bg-bg-page transition-colors"
+        >
+          Další →
+        </button>
+      </nav>
+    )}
+
+    <!-- Archive & Tags Section (placeholder) -->
+    <aside class="mt-12 p-6 bg-bg-content border border-border-light">
+      <h2 class="text-xl font-heading font-thin uppercase mb-4 text-text-primary">
+        Procházet
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Tags Cloud -->
+        <div>
+          <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Podle kategorií</h3>
+          <div class="flex flex-wrap gap-2">
+            {Array.from(new Set(articles.flatMap(a => a.tags))).map((tag) => (
+              <a
+                href={`/hledej/?tag=${encodeURIComponent(tag)}`}
+                class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Archive Links -->
+        <div>
+          <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Archiv</h3>
+          <ul class="space-y-2 text-sm">
+            <li>
+              <a href="/aktualne/archiv/2025" class="text-text-secondary hover:text-accent-rose transition-colors">
+                → 2025
+              </a>
+            </li>
+            <li>
+              <a href="/aktualne/archiv/2024" class="text-text-secondary hover:text-accent-rose transition-colors">
+                → 2024
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>

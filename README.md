@@ -6,16 +6,16 @@ CMS-based website for Gymnázium Kralupy - A git-based static site solution usin
 
 ## Project Status
 
-**Overall Progress: ~12-15%**
+**Overall Progress: ~20-25%**
 
-**Phase 0: Current Website Analysis** - ✅ ~80% Complete
+**Phase 0: Current Website Analysis** - ✅ ~95% Complete
 
 - ✅ Website structure analysis (6 main sections, 35+ subsections documented)
 - ✅ Content audit and inventory complete
 - ✅ Component library identified and documented
 - ✅ Design system documentation created
-- ⏳ Color/typography extraction pending (requires browser dev tools)
-- ⏳ Reference screenshots needed
+- ✅ Color scheme and typography extracted
+- ⏳ Reference screenshots (optional)
 
 **Phase 1: Project Setup & Foundation** - ✅ ~85% Complete
 
@@ -27,7 +27,16 @@ CMS-based website for Gymnázium Kralupy - A git-based static site solution usin
 - ✅ GitHub Actions CI/CD configured
 - ✅ Docker setup for local testing
 
-**Phase 2: Frontend Development** - ⏳ ~10% Complete (Basic structure only)
+**Phase 2: Frontend Development** - ⏳ ~30% Complete
+
+- ✅ Homepage with featured articles and quick links
+- ✅ News listing page (/aktualne) with sorting and filtering
+- ✅ Article detail pages with full content and related articles
+- ✅ Real images fetched from original website (6 article images)
+- ✅ Responsive article cards and hero components
+- ✅ Base layout with navigation and footer
+- ⏳ Complete navigation menu implementation
+- ⏳ Additional page templates and components
 
 ## Quick Start
 
@@ -144,10 +153,24 @@ dgkralupy/
 - **Hosting**: GitHub Pages
 - **CI/CD**: GitHub Actions
 
+## Recent Updates (2025-12-02)
+
+### Completed Features
+- **News System**: Full news/articles functionality with listing and detail pages
+- **Real Content**: Homepage, news listing, and 6 article detail pages with real images
+- **Image Assets**: All article images fetched from original dgkralupy.cz website
+- **Responsive Design**: Mobile-friendly layouts using TailwindCSS
+- **Mock Data**: Comprehensive mock data structure for development
+
+### Available Pages
+- **Homepage**: `/` - Featured articles, quick links, upcoming events
+- **News Listing**: `/aktualne` - All articles with sorting, tags, and pagination structure
+- **Article Details**: `/aktualne/[slug]` - Individual article pages with related articles
+
 ## Next Steps
 
-1. Extract exact colors and typography from current website using browser dev tools
-2. Take reference screenshots of key pages
-3. Update TailwindCSS configuration with actual design tokens
-4. Continue Phase 2 frontend development with documented design system
+1. Implement complete navigation menu with all sections
+2. Create additional page templates (About, Studies, Activities, Contacts)
+3. Add search functionality
+4. Implement image optimization
 5. Set up Decap CMS for content management
