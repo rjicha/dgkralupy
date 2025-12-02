@@ -1,0 +1,1 @@
+# dgkralupy.cz AI petproject
