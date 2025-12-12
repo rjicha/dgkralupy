@@ -1,8 +1,8 @@
 # dgkralupy.cz
 
-[![Deploy to Staging](https://github.com/rjicha/dgkralupy/actions/workflows/deploy-staging.yml/badge.svg)](https://github.com/rjicha/dgkralupy/actions/workflows/deploy-staging.yml)
+[![Deploy to GitHub Pages](https://github.com/rjicha/dgkralupy/actions/workflows/deploy.yml/badge.svg)](https://github.com/rjicha/dgkralupy/actions/workflows/deploy.yml)
 
-CMS-based website for Gymnázium Kralupy - A git-based static site solution using Astro, Decap CMS, and GitHub Pages.
+Modern static website for Gymnázium Kralupy built with Astro and deployed to GitHub Pages.
 
 ## Project Status
 
@@ -122,17 +122,25 @@ dgkralupy/
 
 ## Deployment
 
-### Staging Environment
+The site is automatically deployed to GitHub Pages on every push to the `main` branch.
 
 - **URL**: https://rjicha.github.io/dgkralupy/
-- **Deployment**: Automatic on push to `main` branch
-- **Purpose**: Testing and stakeholder review
+- **Deployment**: Automatic via GitHub Actions
+- **Workflow**: `.github/workflows/deploy.yml`
 
-### Production Environment
+### Content Management
 
-- **URL**: https://dgkralupy.cz
-- **Deployment**: Manual workflow dispatch (requires confirmation)
-- **Purpose**: Live public website
+Content is managed by editing Markdown files directly:
+- **Articles**: `src/content/articles/*.md`
+- **Pages**: `src/content/pages/*.md`
+- **Settings**: `src/content/contacts/`, `src/content/navigation/`, etc.
+
+You can edit files using:
+- VS Code or any text editor locally
+- GitHub's web interface (click "Edit" on any file)
+- Any Git client
+
+After committing and pushing changes, the site rebuilds automatically.
 
 ## Documentation
 
@@ -146,10 +154,10 @@ dgkralupy/
 
 ## Tech Stack
 
-- **Framework**: Astro 4.x
+- **Framework**: Astro 5.x
 - **Styling**: TailwindCSS 3.x
 - **Language**: TypeScript 5.x
-- **CMS**: Decap CMS (to be configured)
+- **Content**: Markdown files with frontmatter
 - **Hosting**: GitHub Pages
 - **CI/CD**: GitHub Actions
 
@@ -173,4 +181,4 @@ dgkralupy/
 2. Create additional page templates (About, Studies, Activities, Contacts)
 3. Add search functionality
 4. Implement image optimization
-5. Set up Decap CMS for content management
+5. Add content editing documentation for non-technical users
