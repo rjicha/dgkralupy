@@ -91,7 +91,7 @@ const relatedArticles = articles
     {article.image && (
       <figure class="mb-8 -mx-4 md:mx-0">
         <img
-          src={article.image}
+          src={import.meta.env.BASE_URL + article.image}
           alt={article.title}
           class="w-full h-auto object-cover max-h-[500px]"
         />

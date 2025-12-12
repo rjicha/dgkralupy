@@ -12,7 +12,7 @@ const { article } = Astro.props;
   <!-- Background Image -->
   {article.image ? (
     <img
-      src={article.image}
+      src={import.meta.env.BASE_URL + article.image}
       alt={article.title}
       class="absolute inset-0 w-full h-full object-cover opacity-50"
     />

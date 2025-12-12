@@ -14,7 +14,7 @@ const { article, featured = false } = Astro.props;
   <div class="relative overflow-hidden bg-border-light aspect-video">
     {article.image ? (
       <img
-        src={article.image}
+        src={import.meta.env.BASE_URL + article.image}
         alt={article.title}
         class="w-full h-full object-cover"
         loading="lazy"
