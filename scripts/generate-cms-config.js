@@ -38,7 +38,10 @@ backend:
   name: github
   repo: rjicha/dgkralupy
   branch: main
-  base_url: https://api.netlify.com
+  # IMPORTANT: Replace with your OAuth provider URL after deployment
+  # Deploy https://github.com/vencax/netlify-cms-github-oauth-provider to Vercel/Netlify
+  # Then update this URL:
+  base_url: https://dgkralupy-oauth.vercel.app/
   auth_endpoint: auth
 
 # Site configuration
