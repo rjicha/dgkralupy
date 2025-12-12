@@ -3,19 +3,16 @@
 # DO NOT EDIT MANUALLY - Changes will be overwritten on next build
 
 backend:
-  name: github
-  repo: rjicha/dgkralupy
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
 
 # Site configuration
-site_url: https://rjicha.github.io/dgkralupy
-display_url: https://rjicha.github.io/dgkralupy
+site_url: http://localhost:4321
+display_url: http://localhost:4321
 
 # Media files configuration
 media_folder: "public/images"
-public_folder: "/dgkralupy/images"
+public_folder: "/images"
 
 # Locale
 locale: 'cs'

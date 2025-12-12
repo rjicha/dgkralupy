@@ -17,13 +17,15 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Determine environment from SITE_URL or default to staging
-const siteUrl = process.env.SITE_URL || 'https://rjicha.github.io/dgkralupy';
+// Determine environment from SITE_URL or NETLIFY environment
+const netlifyUrl = process.env.URL; // Netlify sets this automatically
+const siteUrl = process.env.SITE_URL || netlifyUrl || 'http://localhost:4321';
 const isProduction = siteUrl === 'https://dgkralupy.cz';
 
 // Set appropriate values
 const displayUrl = siteUrl;
-const publicFolder = isProduction ? '/images' : '/dgkralupy/images';
+// Netlify hosts at root, so no base path needed
+const publicFolder = '/images';
 
 console.log('🔧 Generating Decap CMS configuration...');
 console.log(`   Environment: ${isProduction ? 'Production' : 'Staging'}`);
@@ -35,14 +37,8 @@ const config = `# Decap CMS Configuration for Dvořákovo gymnázium
 # DO NOT EDIT MANUALLY - Changes will be overwritten on next build
 
 backend:
-  name: github
-  repo: rjicha/dgkralupy
+  name: git-gateway
   branch: main
-  # IMPORTANT: Replace with your OAuth provider URL after deployment
-  # Deploy https://github.com/vencax/netlify-cms-github-oauth-provider to Vercel/Netlify
-  # Then update this URL:
-  base_url: https://dgkralupy-oauth.vercel.app/
-  auth_endpoint: auth
 
 # Site configuration
 site_url: ${siteUrl}
