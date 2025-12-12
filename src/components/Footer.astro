@@ -1,5 +1,11 @@
 ---
-import { schoolContact, cafeteriaContact, socialMedia } from '../data/mockData';
+import { getEntry } from 'astro:content';
+
+// Get contacts data from Content Collections
+const contactsData = await getEntry('contacts', 'contacts');
+const schoolContact = contactsData?.data.school ?? {};
+const cafeteriaContact = contactsData?.data.cafeteria ?? {};
+const socialMedia = contactsData?.data.socialMedia ?? {};
 ---
 
 <footer class="bg-bg-content border-t border-border-light mt-12">

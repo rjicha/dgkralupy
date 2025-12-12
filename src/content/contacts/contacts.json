@@ -1,0 +1,21 @@
+{
+  "school": {
+    "name": "Dvořákovo gymnázium",
+    "address": "Dvořákovo nám. 800",
+    "city": "278 01 Kralupy nad Vltavou",
+    "phone": "315 727 311",
+    "email": "info@dgkralupy.cz",
+    "ico": "48588954",
+    "dic": "CZ48588954",
+    "bankAccount": "27-6451920297/0100"
+  },
+  "cafeteria": {
+    "phone": "315 722 552",
+    "email": "jidelna@dgkralupy.cz",
+    "submission": "7czbwjy"
+  },
+  "socialMedia": {
+    "facebook": "https://www.facebook.com/dvorakovogym",
+    "instagram": "https://www.instagram.com/dg_kralupy"
+  }
+}

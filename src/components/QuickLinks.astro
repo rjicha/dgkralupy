@@ -1,5 +1,9 @@
 ---
-import { quickLinks } from '../data/mockData';
+import { getEntry } from 'astro:content';
+
+// Get quick links data from Content Collections
+const quickLinksData = await getEntry('quick-links', 'quick-links');
+const quickLinks = quickLinksData?.data.links ?? [];
 
 // Map color strings to Tailwind classes
 const colorMap: Record<string, string> = {

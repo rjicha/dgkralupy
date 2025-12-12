@@ -1,14 +1,26 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import QuickLinks from '../components/QuickLinks.astro';
-import { articles } from '../data/mockData';
+
+// Get all published articles
+const allArticles = await getCollection('articles', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Sort by date (newest first)
+const sortedArticles = allArticles.sort((a, b) => {
+  const dateA = new Date(a.data.publishedAt.split('.').reverse().join('-'));
+  const dateB = new Date(b.data.publishedAt.split('.').reverse().join('-'));
+  return dateB.getTime() - dateA.getTime();
+});
 
 // Get featured articles and regular articles
-const featuredArticles = articles.filter(article => article.featured);
-const regularArticles = articles.filter(article => !article.featured);
-const heroArticle = featuredArticles.find(article => article.important) || featuredArticles[0];
+const featuredArticles = sortedArticles.filter(article => article.data.featured);
+const regularArticles = sortedArticles.filter(article => !article.data.featured);
+const heroArticle = featuredArticles.find(article => article.data.important) || featuredArticles[0];
 ---
 
 <BaseLayout
@@ -16,7 +28,7 @@ const heroArticle = featuredArticles.find(article => article.important) || featu
   description="Oficiální webové stránky Dvořákova gymnázia v Kralupech nad Vltavou. Aktuální informace o škole, studiu, aktivitách a akcích."
 >
   <!-- Hero Section -->
-  {heroArticle && <Hero article={heroArticle} />}
+  {heroArticle && <Hero article={heroArticle.data} slug={heroArticle.slug} />}
 
   <!-- Main Content -->
   <div class="container mx-auto px-4 py-8">
@@ -31,7 +43,7 @@ const heroArticle = featuredArticles.find(article => article.important) || featu
             </h2>
             <div class="grid grid-cols-1 gap-6">
               {featuredArticles.filter(article => article !== heroArticle).map((article) => (
-                <ArticleCard article={article} featured={true} />
+                <ArticleCard article={article.data} slug={article.slug} featured={true} />
               ))}
             </div>
           </section>
@@ -44,7 +56,7 @@ const heroArticle = featuredArticles.find(article => article.important) || featu
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {regularArticles.map((article) => (
-              <ArticleCard article={article} />
+              <ArticleCard article={article.data} slug={article.slug} />
             ))}
           </div>
 

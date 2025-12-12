@@ -1,0 +1,8 @@
+{
+  "links": [
+    { "title": "Suplování", "url": "/studium/suplovani", "color": "accent-coral" },
+    { "title": "Rozvrhy hodin", "url": "/studium/rozvrhy-hodin", "color": "secondary" },
+    { "title": "Přijímací řízení", "url": "/studium/prijimaci-rizeni", "color": "accent-rose" },
+    { "title": "Bakaláři", "url": "/studium/bakalari", "color": "accent-green" }
+  ]
+}

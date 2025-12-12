@@ -1,0 +1,87 @@
+{
+  "sections": [
+    {
+      "id": "about",
+      "title": "O škole",
+      "url": "/o-skole",
+      "color": "primary",
+      "subsections": [
+        { "title": "Popis školy", "url": "/o-skole/popis-skoly" },
+        { "title": "Základní dokumenty", "url": "/o-skole/zakladni-dokumenty" },
+        { "title": "Společnost pro rozvoj DG", "url": "/o-skole/spolecnost-pro-rozvoj-dg-ops" },
+        { "title": "Školní psycholog", "url": "/o-skole/skolni-psycholog" },
+        { "title": "Kariérový poradce", "url": "/o-skole/karierovy-poradce" },
+        { "title": "Rada rodičů", "url": "/o-skole/rada-rodicu" },
+        { "title": "Partneři", "url": "/o-skole/partneri" },
+        { "title": "Granty a dotace", "url": "/o-skole/granty-a-dotace" },
+        { "title": "GDPR", "url": "/o-skole/gdpr" },
+        { "title": "Školská rada", "url": "/o-skole/skolska-rada" },
+        { "title": "Ochrana oznamovatelů", "url": "/o-skole/ochrana-oznamovatelu" },
+        { "title": "Výchovný poradce a metodik prevence", "url": "/o-skole/vychovny-poradce-a-metodik-prevence" },
+        { "title": "Informace dle zákona 106/1999 Sb.", "url": "/o-skole/informace-dle-zakona-1061999-sb" }
+      ]
+    },
+    {
+      "id": "studies",
+      "title": "Studium",
+      "url": "/studium",
+      "color": "secondary",
+      "subsections": [
+        { "title": "Suplování", "url": "/studium/suplovani" },
+        { "title": "Rozvrhy hodin", "url": "/studium/rozvrhy-hodin" },
+        { "title": "Bakaláři", "url": "/studium/bakalari" },
+        { "title": "ISIC", "url": "/studium/isic" },
+        { "title": "Ke stažení", "url": "/studium/dokumenty-a-vzory-ke-stazeni" },
+        { "title": "Přijímací řízení", "url": "/studium/prijimaci-rizeni" },
+        { "title": "Maturita", "url": "/studium/maturita" },
+        { "title": "Výuka", "url": "/studium/vyuka" },
+        { "title": "Výuka angličtiny", "url": "/studium/vyuka-anglictiny" },
+        { "title": "Software ve výuce", "url": "/studium/software-ve-vyuce" },
+        { "title": "Jídelna", "url": "/studium/jidelna" }
+      ]
+    },
+    {
+      "id": "activities",
+      "title": "Aktivity",
+      "url": "/aktivity",
+      "color": "accent-green",
+      "subsections": [
+        { "title": "Studentský parlament", "url": "/aktivity/studentsky-parlament" },
+        { "title": "Zájmové kluby", "url": "/aktivity/zajmove-kluby" },
+        { "title": "Erasmus+", "url": "/aktivity/erasmus" },
+        { "title": "Den pro DG", "url": "/aktivity/den-pro-dg" },
+        { "title": "Fiktivní a reálné firmy", "url": "/aktivity/fiktivni-a-realne-firmy" },
+        { "title": "Pěvecký sbor DG", "url": "/aktivity/pevecky-sbor-dg" },
+        { "title": "Nota D", "url": "/aktivity/nota-d" },
+        { "title": "Knihovna", "url": "/aktivity/knihovna" },
+        { "title": "Úspěchy studentů", "url": "/aktivity/uspechy-studentu" },
+        { "title": "DofE", "url": "/aktivity/dofe" },
+        { "title": "Studentský časopis", "url": "/aktivity/studentsky-casopis" }
+      ]
+    },
+    {
+      "id": "news",
+      "title": "Aktuálně",
+      "url": "/aktualne",
+      "color": "accent-coral"
+    },
+    {
+      "id": "help",
+      "title": "Pomoc jiným",
+      "url": "/pomoc-jinym",
+      "color": "primary-dark"
+    },
+    {
+      "id": "contacts",
+      "title": "Kontakty",
+      "url": "/kontakty",
+      "color": "primary",
+      "subsections": [
+        { "title": "Škola", "url": "/kontakty/skola" },
+        { "title": "Učitelé", "url": "/kontakty/ucitele" },
+        { "title": "Předmětové komise", "url": "/kontakty/predmetove-komise" },
+        { "title": "Školní poradci", "url": "/kontakty/skolni-poradci" }
+      ]
+    }
+  ]
+}

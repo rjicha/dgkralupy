@@ -1,5 +1,9 @@
 ---
-import { navigationSections } from '../data/mockData';
+import { getEntry } from 'astro:content';
+
+// Get navigation data from Content Collections
+const navigationData = await getEntry('navigation', 'navigation');
+const navigationSections = navigationData?.data.sections ?? [];
 
 // Map color strings to Tailwind classes
 const colorMap: Record<string, string> = {

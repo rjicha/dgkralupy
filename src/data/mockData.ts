@@ -1,3 +1,22 @@
+/**
+ * DEPRECATED: This file is no longer used in production.
+ *
+ * All content has been migrated to Astro Content Collections as part of Phase 3.
+ * Content is now managed through Decap CMS and stored in /src/content/
+ *
+ * Migration details:
+ * - Articles: /src/content/articles/*.md
+ * - Pages: /src/content/pages/*.md
+ * - Navigation: /src/content/navigation/navigation.json
+ * - Contacts: /src/content/contacts/contacts.json
+ * - Quick Links: /src/content/quick-links/quick-links.json
+ *
+ * This file is kept temporarily for reference only.
+ * TODO: Remove this file after Phase 3 validation is complete.
+ *
+ * @deprecated Since Phase 3 (2025-12-12) - Use Astro Content Collections instead
+ */
+
 // Mock data from the real dgkralupy.cz website
 // Based on Phase 0 analysis conducted on 2025-12-02
 

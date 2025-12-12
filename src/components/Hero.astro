@@ -1,11 +1,12 @@
 ---
-import type { Article } from '../data/mockData';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  article: Article;
+  article: CollectionEntry<'articles'>['data'];
+  slug: string;
 }
 
-const { article } = Astro.props;
+const { article, slug } = Astro.props;
 ---
 
 <div class="relative w-full h-96 overflow-hidden bg-primary-dark">
@@ -54,7 +55,7 @@ const { article } = Astro.props;
 
       <!-- CTA Button -->
       <a
-        href={`/aktualne/${article.slug}`}
+        href={`/aktualne/${slug}`}
         class="inline-flex items-center gap-2 bg-accent-rose hover:bg-accent-rose/90 text-white px-6 py-3 text-base font-normal uppercase transition-colors"
       >
         Číst celý článek

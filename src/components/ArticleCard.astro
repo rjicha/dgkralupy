@@ -1,12 +1,13 @@
 ---
-import type { Article } from '../data/mockData';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  article: Article;
+  article: CollectionEntry<'articles'>['data'];
+  slug: string;
   featured?: boolean;
 }
 
-const { article, featured = false } = Astro.props;
+const { article, slug, featured = false } = Astro.props;
 ---
 
 <article class={`bg-bg-content border border-border-light overflow-hidden transition-shadow hover:shadow-lg ${featured ? 'md:col-span-2' : ''}`}>
@@ -39,7 +40,7 @@ const { article, featured = false } = Astro.props;
   <div class="p-4">
     <!-- Title -->
     <h3 class={`font-heading font-thin uppercase mb-2 ${featured ? 'text-xl' : 'text-lg'}`}>
-      <a href={`/aktualne/${article.slug}`} class="text-text-primary hover:text-accent-rose transition-colors">
+      <a href={`/aktualne/${slug}`} class="text-text-primary hover:text-accent-rose transition-colors">
         {article.title}
       </a>
     </h3>
@@ -72,7 +73,7 @@ const { article, featured = false } = Astro.props;
 
     <!-- Read more link -->
     <a
-      href={`/aktualne/${article.slug}`}
+      href={`/aktualne/${slug}`}
       class="inline-flex items-center text-sm text-accent-rose hover:underline font-normal"
     >
       Číst více

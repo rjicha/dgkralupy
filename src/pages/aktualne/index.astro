@@ -1,12 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import { articles } from '../../data/mockData';
+
+// Get all published articles
+const allArticles = await getCollection('articles', ({ data }) => {
+  return data.draft !== true;
+});
 
 // Sort articles by date (newest first)
-const sortedArticles = [...articles].sort((a, b) => {
-  const dateA = new Date(a.publishedAt.split('.').reverse().join('-'));
-  const dateB = new Date(b.publishedAt.split('.').reverse().join('-'));
+const sortedArticles = allArticles.sort((a, b) => {
+  const dateA = new Date(a.data.publishedAt.split('.').reverse().join('-'));
+  const dateB = new Date(b.data.publishedAt.split('.').reverse().join('-'));
   return dateB.getTime() - dateA.getTime();
 });
 
@@ -44,7 +49,7 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
     <!-- Articles Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {paginatedArticles.map((article) => (
-        <ArticleCard article={article} />
+        <ArticleCard article={article.data} slug={article.slug} />
       ))}
     </div>
 
@@ -92,7 +97,7 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
         <div>
           <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Podle kategorií</h3>
           <div class="flex flex-wrap gap-2">
-            {Array.from(new Set(articles.flatMap(a => a.tags))).map((tag) => (
+            {Array.from(new Set(allArticles.flatMap(a => a.data.tags))).map((tag) => (
               <a
                 href={`/hledej/?tag=${encodeURIComponent(tag)}`}
                 class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
