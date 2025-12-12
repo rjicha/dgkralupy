@@ -1,0 +1,288 @@
+# Decap CMS Configuration for Dvořákovo gymnázium Kralupy
+# Documentation: https://decapcms.org/docs/
+
+# Backend configuration
+backend:
+  name: github
+  repo: rjicha/dgkralupy
+  branch: main
+  # For production, you'll need to set up GitHub OAuth App
+  # For local development, use: npx decap-server
+
+# Site configuration
+site_url: https://rjicha.github.io/dgkralupy
+display_url: https://rjicha.github.io/dgkralupy
+logo_url: https://rjicha.github.io/dgkralupy/images/logo.png
+
+# Media files configuration
+media_folder: "public/images"
+public_folder: "/dgkralupy/images"
+
+# Locale
+locale: 'cs'
+
+# Enable editorial workflow (draft/review/ready)
+publish_mode: editorial_workflow
+
+# Collections
+collections:
+  # ========================================
+  # ARTICLES COLLECTION
+  # ========================================
+  - name: "articles"
+    label: "Články a aktuality"
+    label_singular: "Článek"
+    folder: "src/content/articles"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - label: "Nadpis"
+        name: "title"
+        widget: "string"
+        required: true
+        hint: "Hlavní nadpis článku"
+
+      - label: "Perex"
+        name: "excerpt"
+        widget: "text"
+        required: true
+        hint: "Krátký úvodní text (2-3 věty) - zobrazí se v náhledech článků"
+
+      - label: "Obsah článku"
+        name: "body"
+        widget: "markdown"
+        required: true
+        hint: "Plný text článku v Markdown formátu"
+
+      - label: "Datum publikace"
+        name: "publishedAt"
+        widget: "string"
+        required: true
+        hint: "Formát: DD.MM.YYYY (např. 15.12.2025)"
+        pattern: ['^[0-3][0-9]\.[0-1][0-9]\.[0-9]{4}$', "Musí být ve formátu DD.MM.YYYY"]
+
+      - label: "Autor"
+        name: "author"
+        widget: "string"
+        required: true
+        default: "Redakce"
+        hint: "Jméno autora článku"
+
+      - label: "Štítky"
+        name: "tags"
+        widget: "list"
+        required: false
+        hint: "Kategorie článku (např: Akce, Sport, Studium)"
+        default: []
+
+      - label: "Hlavní obrázek"
+        name: "image"
+        widget: "image"
+        required: false
+        hint: "Hlavní obrázek článku (doporučený formát: 1200x675px)"
+        media_library:
+          config:
+            multiple: false
+
+      - label: "Zvýrazněný článek"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Zobrazit na hlavní stránce mezi důležitými články"
+
+      - label: "Důležité oznámení"
+        name: "important"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Označit jako důležité (zobrazí se výrazněji)"
+
+      - label: "Koncept"
+        name: "draft"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Pokud je zaškrtnuto, článek se nezobrazí na webu"
+
+  # ========================================
+  # PAGES COLLECTION
+  # ========================================
+  - name: "pages"
+    label: "Stránky"
+    label_singular: "Stránka"
+    folder: "src/content/pages"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - label: "Nadpis stránky"
+        name: "title"
+        widget: "string"
+        required: true
+
+      - label: "Popis (SEO)"
+        name: "description"
+        widget: "text"
+        required: false
+        hint: "Popis stránky pro vyhledávače (150-160 znaků)"
+
+      - label: "Obsah"
+        name: "body"
+        widget: "markdown"
+        required: true
+
+      - label: "Nadřazená sekce"
+        name: "section"
+        widget: "select"
+        required: false
+        options:
+          - label: "O škole"
+            value: "O škole"
+          - label: "Studium"
+            value: "Studium"
+          - label: "Aktivity"
+            value: "Aktivity"
+          - label: "Kontakty"
+            value: "Kontakty"
+          - label: "Pomoc jiným"
+            value: "Pomoc jiným"
+          - label: "Ostatní"
+            value: "Ostatní"
+
+      - label: "Pořadí v menu"
+        name: "order"
+        widget: "number"
+        default: 0
+        value_type: "int"
+        required: false
+        hint: "Čím nižší číslo, tím výše v menu (0 = nejvýše)"
+
+      - label: "Skrýt z menu"
+        name: "hideFromNav"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Pokud je zaškrtnuto, stránka se nezobrazí v navigaci"
+
+      - label: "Koncept"
+        name: "draft"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Pokud je zaškrtnuto, stránka se nezobrazí na webu"
+
+  # ========================================
+  # SETTINGS - File-based collections
+  # ========================================
+  - name: "settings"
+    label: "Nastavení webu"
+    files:
+      # -------------------------------------
+      # CONTACTS SETTINGS
+      # -------------------------------------
+      - label: "Kontakty školy"
+        name: "contacts"
+        file: "src/content/contacts/contacts.json"
+        fields:
+          - label: "Škola"
+            name: "school"
+            widget: "object"
+            collapsed: false
+            fields:
+              - { label: "Název", name: "name", widget: "string", required: true }
+              - { label: "Adresa", name: "address", widget: "string", required: true }
+              - { label: "Město", name: "city", widget: "string", required: true }
+              - { label: "Telefon", name: "phone", widget: "string", required: true }
+              - { label: "Email", name: "email", widget: "string", required: true }
+              - { label: "IČO", name: "ico", widget: "string", required: true }
+              - { label: "DIČ", name: "dic", widget: "string", required: true }
+              - { label: "Číslo účtu", name: "bankAccount", widget: "string", required: true }
+
+          - label: "Jídelna"
+            name: "cafeteria"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Telefon", name: "phone", widget: "string", required: true }
+              - { label: "Email", name: "email", widget: "string", required: true }
+              - { label: "ID podatelny", name: "submission", widget: "string", required: true }
+
+          - label: "Sociální sítě"
+            name: "socialMedia"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Facebook URL", name: "facebook", widget: "string", required: false }
+              - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
+
+      # -------------------------------------
+      # NAVIGATION SETTINGS
+      # -------------------------------------
+      - label: "Navigace webu"
+        name: "navigation"
+        file: "src/content/navigation/navigation.json"
+        fields:
+          - label: "Hlavní menu"
+            name: "sections"
+            widget: "list"
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: "ID", name: "id", widget: "string", required: true, hint: "Unikátní identifikátor (např: about, studies)" }
+              - { label: "Název sekce", name: "title", widget: "string", required: true }
+              - { label: "URL", name: "url", widget: "string", required: true, hint: "Např: /o-skole" }
+              - label: "Barva"
+                name: "color"
+                widget: "select"
+                required: true
+                options:
+                  - { label: "Primární (modrá)", value: "primary" }
+                  - { label: "Primární tmavá", value: "primary-dark" }
+                  - { label: "Sekundární (světle modrá)", value: "secondary" }
+                  - { label: "Zelená", value: "accent-green" }
+                  - { label: "Korálová", value: "accent-coral" }
+                  - { label: "Růžová", value: "accent-rose" }
+
+              - label: "Podsekce"
+                name: "subsections"
+                widget: "list"
+                required: false
+                collapsed: true
+                summary: '{{fields.title}}'
+                fields:
+                  - { label: "Název", name: "title", widget: "string", required: true }
+                  - { label: "URL", name: "url", widget: "string", required: true }
+
+      # -------------------------------------
+      # QUICK LINKS SETTINGS
+      # -------------------------------------
+      - label: "Rychlé odkazy"
+        name: "quick-links"
+        file: "src/content/quick-links/quick-links.json"
+        fields:
+          - label: "Odkazy"
+            name: "links"
+            widget: "list"
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: "Název", name: "title", widget: "string", required: true }
+              - { label: "URL", name: "url", widget: "string", required: true, hint: "Může být externí (https://...) nebo interní (/studium/...)" }
+              - label: "Barva"
+                name: "color"
+                widget: "select"
+                required: true
+                options:
+                  - { label: "Primární (modrá)", value: "primary" }
+                  - { label: "Sekundární (světle modrá)", value: "secondary" }
+                  - { label: "Zelená", value: "accent-green" }
+                  - { label: "Korálová", value: "accent-coral" }
+                  - { label: "Růžová", value: "accent-rose" }

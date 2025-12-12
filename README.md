@@ -130,7 +130,26 @@ The site is automatically deployed to GitHub Pages on every push to the `main` b
 
 ### Content Management
 
-Content is managed by editing Markdown files directly:
+The website content can be managed in two ways:
+
+#### 1. Admin Interface (Recommended for Teachers)
+
+Access the user-friendly CMS admin interface at:
+**https://rjicha.github.io/dgkralupy/admin/**
+
+Features:
+- Visual editor for articles and pages
+- Image upload and management
+- No coding knowledge required
+- Editorial workflow (draft → review → publish)
+- Live preview before publishing
+
+**Setup required**: GitHub OAuth App configuration (see [CMS Setup Guide](docs/CMS_SETUP.md))
+**User guide in Czech**: [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md)
+
+#### 2. Direct File Editing (For Developers)
+
+Edit Markdown files directly:
 - **Articles**: `src/content/articles/*.md`
 - **Pages**: `src/content/pages/*.md`
 - **Settings**: `src/content/contacts/`, `src/content/navigation/`, etc.
@@ -144,6 +163,7 @@ After committing and pushing changes, the site rebuilds automatically.
 
 ## Documentation
 
+### Project Documentation
 - [Project Brief](docs/PROJECT_BRIEF.md) - High-level overview and objectives
 - [Requirements](docs/REQUIREMENTS.md) - Functional and technical requirements
 - [Tech Stack](docs/TECH_STACK.md) - Technology choices and rationale
@@ -152,12 +172,17 @@ After committing and pushing changes, the site rebuilds automatically.
 - [Phase 0 Analysis](docs/PHASE_0_ANALYSIS.md) - Current website analysis and findings
 - [Design System](docs/DESIGN_SYSTEM.md) - Design system and component specifications
 
+### Content Management
+- [CMS Setup Guide](docs/CMS_SETUP.md) - Technical setup for Decap CMS
+- [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md) - User guide in Czech for teachers
+
 ## Tech Stack
 
 - **Framework**: Astro 5.x
 - **Styling**: TailwindCSS 3.x
 - **Language**: TypeScript 5.x
 - **Content**: Markdown files with frontmatter
+- **CMS**: Decap CMS (formerly Netlify CMS)
 - **Hosting**: GitHub Pages
 - **CI/CD**: GitHub Actions
 
