@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "^9.0.2",
     "astro": "^5.16.5",
     "astro-decap-cms-oauth": "^0.5.1",
     "decap-cms-app": "^3.9.0",

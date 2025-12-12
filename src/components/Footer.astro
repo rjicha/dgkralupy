@@ -3,9 +3,10 @@ import { getEntry } from 'astro:content';
 
 // Get contacts data from Content Collections
 const contactsData = await getEntry('contacts', 'contacts');
-const schoolContact = contactsData?.data.school ?? {};
-const cafeteriaContact = contactsData?.data.cafeteria ?? {};
-const socialMedia = contactsData?.data.socialMedia ?? {};
+if (!contactsData) {
+  throw new Error('Contacts data not found');
+}
+const { school: schoolContact, cafeteria: cafeteriaContact, socialMedia } = contactsData.data;
 ---
 
 <footer class="bg-bg-content border-t border-border-light mt-12">
