@@ -2,7 +2,7 @@
 
 ## High-Level Overview
 
-CMS-like website for a local high school (Gymnázium Kralupy) in Czech Republic. The system enables school staff to manage content while providing accessible information to the general public.
+Static website for a local high school (Gymnázium Kralupy) in Czech Republic. The system enables school staff to manage content via direct markdown editing while providing accessible information to the general public.
 
 ## Target Audience
 

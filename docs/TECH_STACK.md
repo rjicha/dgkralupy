@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-Git-based CMS + Static Site Generator + GitHub Pages
+Static Site Generator + GitHub Pages
 
 **Key Benefits:**
 
@@ -11,29 +11,25 @@ Git-based CMS + Static Site Generator + GitHub Pages
 - Low maintenance (no servers to manage)
 - Handles traffic spikes automatically
 - Optimal SEO (static HTML)
+- Simple content editing via direct markdown file editing
 
 ## Technologies
 
 ### Frontend (Public Website)
 
-- **Static Site Generator**: Astro / Next.js (static export) / Gatsby
-- **Content Format**: Markdown, JSON, or YAML files stored in Git
-- **Styling**: TailwindCSS or similar utility-first CSS framework
+- **Static Site Generator**: Astro 5.x
+- **Content Format**: Markdown files with frontmatter, managed via Astro Content Collections
+- **Styling**: TailwindCSS 3.x
 - **Language**: TypeScript
 
-### CMS (Admin Panel)
+### Content Management
 
-- **Decap CMS** (formerly Netlify CMS)
-  - Git-based content management
-  - Editorial workflow support (draft → review → publish)
-  - Content stored as files in GitHub repository
-  - Admin interface served as static files at `/admin`
-  - Customizable content collections and fields
-
-### Authentication
-
-- **Netlify Identity** (free tier: 1,000 users) or **GitHub OAuth**
-- Role-based access control configured in Decap CMS
+- **Direct Markdown Editing**: Content files are edited directly in the repository
+- **Content Collections**: Organized using Astro's built-in Content Collections API
+- **Editing Options**:
+  - GitHub web interface for simple edits
+  - Local development environment for complex changes
+  - Any text editor or IDE
 
 ### Build & Deployment
 
@@ -62,6 +58,5 @@ Git-based CMS + Static Site Generator + GitHub Pages
 
 - GitHub Pages: **$0/month**
 - GitHub Actions (public repo): **$0/month**
-- Decap CMS: **$0/month** (open source)
-- Netlify Identity (free tier): **$0/month**
+- Astro (open source): **$0/month**
 - **Total: $0/month**

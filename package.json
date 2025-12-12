@@ -1,7 +1,7 @@
 {
   "name": "dgkralupy-website",
   "version": "0.1.0",
-  "description": "CMS-based website for Gymnázium Kralupy",
+  "description": "Static website for Gymnázium Kralupy",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
