@@ -1,15 +1,16 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import decapCmsOauth from 'astro-decap-cms-oauth';
 
 // https://astro.build/config
 export default defineConfig({
-  // Site URL will be set by Netlify automatically, or use env var
-  site: process.env.SITE_URL || process.env.URL || 'http://localhost:4321',
-  // No base path needed for Netlify (hosts at root domain)
+  site: process.env.SITE_URL || 'http://localhost:4321',
+  base: process.env.BASE_PATH || '',
   integrations: [
     tailwind({
       applyBaseStyles: false, // We'll use custom base styles
     }),
+    decapCmsOauth(),
   ],
   build: {
     assets: '_assets',

@@ -44,12 +44,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Update site URL for production
-        run: |
-          sed -i "s|site: 'https://rjicha.github.io'|site: 'https://dgkralupy.cz'|g" astro.config.mjs
-          sed -i "s|base: '/dgkralupy'|base: '/'|g" astro.config.mjs
-
       - name: Build with Astro
+        env:
+          SITE_URL: https://dgkralupy.cz
+          OAUTH_GITHUB_CLIENT_ID: ${{ secrets.OAUTH_GITHUB_CLIENT_ID }}
+          OAUTH_GITHUB_CLIENT_SECRET: ${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}
         run: npm run build
 
       - name: Upload artifact

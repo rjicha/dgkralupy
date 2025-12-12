@@ -17,14 +17,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Determine environment from SITE_URL or NETLIFY environment
-const netlifyUrl = process.env.URL; // Netlify sets this automatically
-const siteUrl = process.env.SITE_URL || netlifyUrl || 'http://localhost:4321';
+// Determine environment from SITE_URL
+const siteUrl = process.env.SITE_URL || 'http://localhost:4321';
 const isProduction = siteUrl === 'https://dgkralupy.cz';
 
 // Set appropriate values
 const displayUrl = siteUrl;
-// Netlify hosts at root, so no base path needed
 const publicFolder = '/images';
 
 console.log('🔧 Generating Decap CMS configuration...');
@@ -37,8 +35,10 @@ const config = `# Decap CMS Configuration for Dvořákovo gymnázium
 # DO NOT EDIT MANUALLY - Changes will be overwritten on next build
 
 backend:
-  name: git-gateway
+  name: github
+  repo: rjicha/dgkralupy
   branch: main
+  auth_endpoint: oauth
 
 # Site configuration
 site_url: ${siteUrl}
