@@ -23,7 +23,7 @@ const colorMap: Record<string, string> = {
       {navigationSections.map((section) => (
         <li class="relative group flex-1">
           <a
-            href={section.url}
+            href={import.meta.env.BASE_URL + section.url}
             class={`block px-4 py-3 text-center text-lg font-sans font-normal uppercase transition-colors ${colorMap[section.color]}`}
           >
             {section.title}
@@ -34,7 +34,7 @@ const colorMap: Record<string, string> = {
               {section.subsections.map((subsection) => (
                 <li>
                   <a
-                    href={subsection.url}
+                    href={import.meta.env.BASE_URL + subsection.url}
                     class="block px-4 py-3 text-base hover:bg-bg-page transition-colors border-b border-border-light last:border-b-0"
                   >
                     {subsection.title}
@@ -65,7 +65,7 @@ const colorMap: Record<string, string> = {
         {navigationSections.map((section) => (
           <div class="border-t border-primary/30">
             <a
-              href={section.url}
+              href={import.meta.env.BASE_URL + section.url}
               class={`block px-4 py-3 text-sm font-sans uppercase ${colorMap[section.color]}`}
             >
               {section.title}
@@ -76,7 +76,7 @@ const colorMap: Record<string, string> = {
                 {section.subsections.map((subsection) => (
                   <li>
                     <a
-                      href={subsection.url}
+                      href={import.meta.env.BASE_URL + subsection.url}
                       class="block px-6 py-2 text-xs hover:bg-primary-dark/70 transition-colors"
                     >
                       {subsection.title}

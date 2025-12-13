@@ -21,7 +21,7 @@ const colorMap: Record<string, string> = {
   <div class="space-y-3">
     {quickLinks.map((link) => (
       <a
-        href={link.url}
+        href={import.meta.env.BASE_URL + link.url}
         class={`block w-full px-4 py-3 text-white text-center text-sm font-normal uppercase transition-colors ${colorMap[link.color]}`}
       >
         {link.title}
@@ -32,19 +32,19 @@ const colorMap: Record<string, string> = {
   <!-- Additional useful links -->
   <div class="mt-6 pt-6 border-t border-border-light space-y-2">
     <a
-      href="/studium/jidelna"
+      href={import.meta.env.BASE_URL + "/studium/jidelna"}
       class="block text-sm text-accent-rose hover:underline"
     >
       → Jídelna
     </a>
     <a
-      href="/kontakty/ucitele"
+      href={import.meta.env.BASE_URL + "/kontakty/ucitele"}
       class="block text-sm text-accent-rose hover:underline"
     >
       → Kontakty na učitele
     </a>
     <a
-      href="/o-skole/zakladni-dokumenty"
+      href={import.meta.env.BASE_URL + "/o-skole/zakladni-dokumenty"}
       class="block text-sm text-accent-rose hover:underline"
     >
       → Základní dokumenty

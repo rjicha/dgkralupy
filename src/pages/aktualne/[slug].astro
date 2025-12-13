@@ -35,9 +35,9 @@ const relatedArticles = allArticles
     <!-- Breadcrumbs -->
     <nav class="mb-6 text-sm">
       <ol class="flex items-center gap-2 text-text-muted">
-        <li><a href="/" class="hover:text-accent-rose transition-colors">Domů</a></li>
+        <li><a href={import.meta.env.BASE_URL + "/"} class="hover:text-accent-rose transition-colors">Domů</a></li>
         <li>/</li>
-        <li><a href="/aktualne" class="hover:text-accent-rose transition-colors">Aktuality</a></li>
+        <li><a href={import.meta.env.BASE_URL + "/aktualne"} class="hover:text-accent-rose transition-colors">Aktuality</a></li>
         <li>/</li>
         <li class="text-text-primary truncate max-w-xs">{article.data.title}</li>
       </ol>
@@ -81,7 +81,7 @@ const relatedArticles = allArticles
         <div class="flex flex-wrap gap-2 mb-6">
           {article.data.tags.map((tag) => (
             <a
-              href={`/hledej/?tag=${encodeURIComponent(tag)}`}
+              href={import.meta.env.BASE_URL + `/hledej/?tag=${encodeURIComponent(tag)}`}
               class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
             >
               {tag}
@@ -144,7 +144,7 @@ const relatedArticles = allArticles
           </div>
         </div>
         <a
-          href="/aktualne"
+          href={import.meta.env.BASE_URL + "/aktualne"}
           class="inline-flex items-center gap-2 text-sm text-accent-rose hover:underline font-normal uppercase"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +164,7 @@ const relatedArticles = allArticles
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {relatedArticles.map((relatedArticle) => (
             <article class="bg-bg-content border border-border-light overflow-hidden hover:shadow-lg transition-shadow">
-              <a href={`/aktualne/${relatedArticle.slug}`} class="block">
+              <a href={import.meta.env.BASE_URL + `/aktualne/${relatedArticle.slug}`} class="block">
                 {relatedArticle.data.image ? (
                   <img
                     src={import.meta.env.BASE_URL + relatedArticle.data.image}

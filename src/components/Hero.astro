@@ -55,7 +55,7 @@ const { article, slug } = Astro.props;
 
       <!-- CTA Button -->
       <a
-        href={`/aktualne/${slug}`}
+        href={import.meta.env.BASE_URL + `/aktualne/${slug}`}
         class="inline-flex items-center gap-2 bg-accent-rose hover:bg-accent-rose/90 text-white px-6 py-3 text-base font-normal uppercase transition-colors"
       >
         Číst celý článek

@@ -30,7 +30,7 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
     <!-- Breadcrumbs -->
     <nav class="mb-6 text-sm">
       <ol class="flex items-center gap-2 text-text-muted">
-        <li><a href="/" class="hover:text-accent-rose transition-colors">Domů</a></li>
+        <li><a href={import.meta.env.BASE_URL + "/"} class="hover:text-accent-rose transition-colors">Domů</a></li>
         <li>/</li>
         <li class="text-text-primary">Aktuality</li>
       </ol>
@@ -66,7 +66,7 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
         <div class="flex gap-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <a
-              href={page === 1 ? '/aktualne' : `/aktualne/page/${page}`}
+              href={import.meta.env.BASE_URL + (page === 1 ? '/aktualne' : `/aktualne/page/${page}`)}
               class={`px-4 py-2 border transition-colors ${
                 page === currentPage
                   ? 'bg-accent-rose text-white border-accent-rose'
@@ -99,7 +99,7 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
           <div class="flex flex-wrap gap-2">
             {Array.from(new Set(allArticles.flatMap(a => a.data.tags))).map((tag) => (
               <a
-                href={`/hledej/?tag=${encodeURIComponent(tag)}`}
+                href={import.meta.env.BASE_URL + `/hledej/?tag=${encodeURIComponent(tag)}`}
                 class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
               >
                 {tag}
@@ -113,12 +113,12 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
           <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Archiv</h3>
           <ul class="space-y-2 text-sm">
             <li>
-              <a href="/aktualne/archiv/2025" class="text-text-secondary hover:text-accent-rose transition-colors">
+              <a href={import.meta.env.BASE_URL + "/aktualne/archiv/2025"} class="text-text-secondary hover:text-accent-rose transition-colors">
                 → 2025
               </a>
             </li>
             <li>
-              <a href="/aktualne/archiv/2024" class="text-text-secondary hover:text-accent-rose transition-colors">
+              <a href={import.meta.env.BASE_URL + "/aktualne/archiv/2024"} class="text-text-secondary hover:text-accent-rose transition-colors">
                 → 2024
               </a>
             </li>
