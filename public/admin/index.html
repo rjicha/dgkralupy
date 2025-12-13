@@ -8,14 +8,23 @@
   <link rel="icon" type="image/x-icon" href="/dgkralupy/favicon.ico" />
 </head>
 <body>
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 
-  <!-- Custom initialization script (optional) -->
+  <!-- Netlify Identity redirect handling -->
   <script>
-    // You can add custom preview templates or configuration here
-    // For example:
-    // CMS.registerPreviewStyle("/dgkralupy/styles/preview.css");
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/dgkralupy/admin/";
+          });
+        }
+      });
+    }
   </script>
 </body>
 </html>

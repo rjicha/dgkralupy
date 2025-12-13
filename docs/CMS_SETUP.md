@@ -2,6 +2,10 @@
 
 This guide explains how to set up and use the Decap CMS admin interface for managing content on the dgkralupy.cz website.
 
+## Quick Start
+
+**⚡ For the fastest setup, see the [OAuth Setup Guide](OAUTH_SETUP_GUIDE.md) - 15 minutes to get up and running!**
+
 ## What is Decap CMS?
 
 Decap CMS (formerly Netlify CMS) is a Git-based content management system that provides a user-friendly interface for editing content. When you make changes through the CMS:
@@ -15,6 +19,13 @@ Decap CMS (formerly Netlify CMS) is a Git-based content management system that p
 Once configured, the CMS admin interface will be available at:
 
 **https://rjicha.github.io/dgkralupy/admin/**
+
+## Deployment Strategy
+
+Your site uses:
+- **Hosting**: GitHub Pages (free, already configured)
+- **OAuth**: Netlify (free, for CMS authentication only)
+- **No changes needed** to your current deployment!
 
 ## GitHub OAuth App Setup (Required for Production)
 

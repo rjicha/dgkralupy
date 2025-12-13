@@ -144,8 +144,9 @@ Features:
 - Editorial workflow (draft → review → publish)
 - Live preview before publishing
 
-**Setup required**: GitHub OAuth App configuration (see [CMS Setup Guide](docs/CMS_SETUP.md))
-**User guide in Czech**: [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md)
+**Quick Setup**: [15-minute OAuth setup guide](docs/OAUTH_SETUP_GUIDE.md) ⚡
+**User Guide (Czech)**: [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md)
+**Technical Details**: [CMS Setup Guide](docs/CMS_SETUP.md)
 
 #### 2. Direct File Editing (For Developers)
 
@@ -173,8 +174,9 @@ After committing and pushing changes, the site rebuilds automatically.
 - [Design System](docs/DESIGN_SYSTEM.md) - Design system and component specifications
 
 ### Content Management
-- [CMS Setup Guide](docs/CMS_SETUP.md) - Technical setup for Decap CMS
+- [OAuth Setup Guide](docs/OAUTH_SETUP_GUIDE.md) - Quick 15-minute setup ⚡ **START HERE**
 - [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md) - User guide in Czech for teachers
+- [CMS Setup Guide](docs/CMS_SETUP.md) - Technical details and troubleshooting
 
 ## Tech Stack
 

@@ -3,12 +3,8 @@
 
 # Backend configuration
 backend:
-  name: github
-  repo: rjicha/dgkralupy
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
-  site_domain: dgkralupy-stg.netlify.app
   # For local development, use: npx decap-server
 
 # Site configuration
