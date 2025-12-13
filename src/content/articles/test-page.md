@@ -4,7 +4,7 @@ excerpt: Lorem ipsum
 publishedAt: 13.12.2025
 author: Redakce
 tags: []
-image: /dgkralupy/images/oip.webp
+image: ""
 featured: false
 important: false
 draft: false
