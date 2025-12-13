@@ -17,6 +17,8 @@ display_url: https://rjicha.github.io/dgkralupy
 logo_url: https://rjicha.github.io/dgkralupy/images/logo.png
 
 # Media files configuration
+# media_folder: where files are physically stored (relative to repo root)
+# public_folder: what path gets written to markdown frontmatter (relative to site root, WITHOUT /dgkralupy)
 media_folder: "public/images"
 public_folder: "/images"
 
