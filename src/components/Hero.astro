@@ -21,8 +21,8 @@ const { article, slug } = Astro.props;
     <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-primary via-secondary to-accent-green opacity-30" />
   )}
 
-  <!-- Overlay -->
-  <div class="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary-dark/60 to-primary-dark/30" />
+  <!-- Overlay - Gradient from left (solid) to right (transparent) -->
+  <div class="absolute inset-0 bg-gradient-to-r from-primary-dark from-20% via-primary-dark/70 via-40% to-transparent to-70%" />
 
   <!-- Content -->
   <div class="relative h-full container mx-auto px-4 flex items-end pb-12">
