@@ -6,65 +6,8 @@
   <meta name="robots" content="noindex" />
   <title>Správa obsahu - Dvořákovo gymnázium Kralupy</title>
   <link rel="icon" type="image/x-icon" href="/dgkralupy/favicon.ico" />
-
-  <!-- Netlify Identity Widget - load in head -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Initialize Netlify Identity BEFORE CMS loads -->
-  <script>
-    // Ensure we're always on the correct domain
-    var correctURL = 'https://rjicha.github.io/dgkralupy/admin/';
-    var currentURL = window.location.href;
-
-    // If we're on netlify.app and logged in, redirect to GitHub Pages
-    if (currentURL.includes('netlify.app') && currentURL.includes('/admin')) {
-      // Check if user is logged in
-      var checkAndRedirect = setInterval(function() {
-        if (window.netlifyIdentity) {
-          var user = window.netlifyIdentity.currentUser();
-          if (user) {
-            clearInterval(checkAndRedirect);
-            window.location.href = correctURL;
-          }
-        }
-      }, 100);
-
-      // Stop checking after 5 seconds
-      setTimeout(function() { clearInterval(checkAndRedirect); }, 5000);
-    }
-
-    // Wait for Identity widget to load, then configure it
-    (function() {
-      var initIdentity = function() {
-        if (window.netlifyIdentity) {
-          window.netlifyIdentity.init({
-            APIUrl: 'https://dgkralupy-stg.netlify.app/.netlify/identity'
-          });
-
-          // Handle login redirect - use absolute URL to ensure we return to GitHub Pages
-          window.netlifyIdentity.on("init", user => {
-            if (!user) {
-              window.netlifyIdentity.on("login", () => {
-                window.location.href = correctURL;
-              });
-            }
-          });
-        } else {
-          // If not loaded yet, try again
-          setTimeout(initIdentity, 100);
-        }
-      };
-
-      // Start initialization
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initIdentity);
-      } else {
-        initIdentity();
-      }
-    })();
-  </script>
-
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 </body>

@@ -3,8 +3,12 @@
 
 # Backend configuration
 backend:
-  name: git-gateway
+  name: github
+  repo: rjicha/dgkralupy
   branch: main
+  # Replace YOUR_WORKER_URL with your Cloudflare Worker URL after deployment
+  # Example: https://sveltia-cms-auth.your-subdomain.workers.dev
+  base_url: https://dgkralupy-stg.radekjicha.workers.dev
   # For local development, use: npx decap-server
 
 # Site configuration
