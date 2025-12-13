@@ -6,7 +6,9 @@ backend:
   name: github
   repo: rjicha/dgkralupy
   branch: main
-  # For production, you'll need to set up GitHub OAuth App
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+  site_domain: dgkralupy-stg.netlify.app
   # For local development, use: npx decap-server
 
 # Site configuration
