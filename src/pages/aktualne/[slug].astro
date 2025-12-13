@@ -97,7 +97,7 @@ const relatedArticles = allArticles
         <img
           src={import.meta.env.BASE_URL + article.data.image}
           alt={article.data.title}
-          class="w-full h-auto object-cover max-h-[500px]"
+          class="w-full h-auto object-contain max-h-[500px]"
         />
       </figure>
     )}
@@ -169,7 +169,7 @@ const relatedArticles = allArticles
                   <img
                     src={import.meta.env.BASE_URL + relatedArticle.data.image}
                     alt={relatedArticle.data.title}
-                    class="w-full h-48 object-cover"
+                    class="w-full h-48 object-contain"
                     loading="lazy"
                   />
                 ) : (

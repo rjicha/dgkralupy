@@ -17,7 +17,7 @@ const { article, slug, featured = false } = Astro.props;
       <img
         src={import.meta.env.BASE_URL + article.image}
         alt={article.title}
-        class="w-full h-full object-cover"
+        class="w-full h-full object-contain"
         loading="lazy"
       />
     ) : (
