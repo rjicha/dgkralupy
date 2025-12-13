@@ -18,7 +18,7 @@ logo_url: https://rjicha.github.io/dgkralupy/images/logo.png
 
 # Media files configuration
 media_folder: "public/images"
-public_folder: "/dgkralupy/images"
+public_folder: "/images"
 
 # Locale
 locale: 'cs'
