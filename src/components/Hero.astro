@@ -15,7 +15,7 @@ const { article, slug } = Astro.props;
     <img
       src={import.meta.env.BASE_URL + article.image}
       alt={article.title}
-      class="absolute inset-0 w-full h-full object-contain opacity-50"
+      class="absolute inset-0 w-full h-full object-cover opacity-50"
     />
   ) : (
     <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-primary via-secondary to-accent-green opacity-30" />
