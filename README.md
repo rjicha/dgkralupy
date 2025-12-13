@@ -143,10 +143,9 @@ Features:
 - No coding knowledge required
 - Editorial workflow (draft → review → publish)
 - Live preview before publishing
+- Authentication via GitHub using Cloudflare Workers
 
-**Quick Setup**: [15-minute OAuth setup guide](docs/OAUTH_SETUP_GUIDE.md) ⚡
 **User Guide (Czech)**: [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md)
-**Technical Details**: [CMS Setup Guide](docs/CMS_SETUP.md)
 
 #### 2. Direct File Editing (For Developers)
 
@@ -168,15 +167,12 @@ After committing and pushing changes, the site rebuilds automatically.
 - [Project Brief](docs/PROJECT_BRIEF.md) - High-level overview and objectives
 - [Requirements](docs/REQUIREMENTS.md) - Functional and technical requirements
 - [Tech Stack](docs/TECH_STACK.md) - Technology choices and rationale
-- [Implementation Plan](docs/IMPLEMENTATION_PLAN.md) - Detailed development roadmap
 - [Workflow](docs/WORKFLOW.md) - Development process and personas
 - [Phase 0 Analysis](docs/PHASE_0_ANALYSIS.md) - Current website analysis and findings
 - [Design System](docs/DESIGN_SYSTEM.md) - Design system and component specifications
 
 ### Content Management
-- [OAuth Setup Guide](docs/OAUTH_SETUP_GUIDE.md) - Quick 15-minute setup ⚡ **START HERE**
 - [Návod pro učitele](docs/NAVOD_PRO_UCITELE.md) - User guide in Czech for teachers
-- [CMS Setup Guide](docs/CMS_SETUP.md) - Technical details and troubleshooting
 
 ## Tech Stack
 
