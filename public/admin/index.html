@@ -21,11 +21,11 @@
             APIUrl: 'https://dgkralupy-stg.netlify.app/.netlify/identity'
           });
 
-          // Handle login redirect
+          // Handle login redirect - use absolute URL to ensure we return to GitHub Pages
           window.netlifyIdentity.on("init", user => {
             if (!user) {
               window.netlifyIdentity.on("login", () => {
-                document.location.href = "/dgkralupy/admin/";
+                document.location.href = "https://rjicha.github.io/dgkralupy/admin/";
               });
             }
           });
