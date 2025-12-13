@@ -6,35 +6,45 @@
   <meta name="robots" content="noindex" />
   <title>Správa obsahu - Dvořákovo gymnázium Kralupy</title>
   <link rel="icon" type="image/x-icon" href="/dgkralupy/favicon.ico" />
+
+  <!-- Netlify Identity Widget - load in head -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-  <!-- Initialize Netlify Identity with site URL -->
+  <!-- Initialize Netlify Identity BEFORE CMS loads -->
   <script>
-    // Configure Netlify Identity to use the correct site
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.init({
-        APIUrl: 'https://dgkralupy-stg.netlify.app/.netlify/identity'
-      });
-    }
+    // Wait for Identity widget to load, then configure it
+    (function() {
+      var initIdentity = function() {
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.init({
+            APIUrl: 'https://dgkralupy-stg.netlify.app/.netlify/identity'
+          });
+
+          // Handle login redirect
+          window.netlifyIdentity.on("init", user => {
+            if (!user) {
+              window.netlifyIdentity.on("login", () => {
+                document.location.href = "/dgkralupy/admin/";
+              });
+            }
+          });
+        } else {
+          // If not loaded yet, try again
+          setTimeout(initIdentity, 100);
+        }
+      };
+
+      // Start initialization
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initIdentity);
+      } else {
+        initIdentity();
+      }
+    })();
   </script>
 
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
-
-  <!-- Netlify Identity redirect handling -->
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/dgkralupy/admin/";
-          });
-        }
-      });
-    }
-  </script>
 </body>
 </html>
