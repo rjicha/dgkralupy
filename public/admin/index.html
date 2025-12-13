@@ -11,6 +11,16 @@
   <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
+  <!-- Initialize Netlify Identity with site URL -->
+  <script>
+    // Configure Netlify Identity to use the correct site
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.init({
+        APIUrl: 'https://dgkralupy-stg.netlify.app/.netlify/identity'
+      });
+    }
+  </script>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 
