@@ -27,16 +27,21 @@ Modern static website for Gymnázium Kralupy built with Astro and deployed to Gi
 - ✅ GitHub Actions CI/CD configured
 - ✅ Docker setup for local testing
 
-**Phase 2: Frontend Development** - ⏳ ~30% Complete
+**Phase 2: Frontend Development** - ⏳ ~40% Complete
 
 - ✅ Homepage with featured articles and quick links
-- ✅ News listing page (/aktualne) with sorting and filtering
+- ✅ News listing page (/aktualne) with article cards and categories
 - ✅ Article detail pages with full content and related articles
-- ✅ Real images fetched from original website (6 article images)
-- ✅ Responsive article cards and hero components
+- ✅ Section landing pages (O škole, Studium, Aktivity) with navigation
+- ✅ 20+ subsection pages across all main sections
+- ✅ Responsive navigation with dropdown menus
+- ✅ Sidebar navigation with active states
+- ✅ Breadcrumb navigation
 - ✅ Base layout with navigation and footer
-- ⏳ Complete navigation menu implementation
-- ⏳ Additional page templates and components
+- ❌ Search functionality (not implemented)
+- ❌ Pagination (UI ready, routes not created)
+- ❌ Calendar page (not implemented)
+- ❌ Archive pages (not implemented)
 
 ## Quick Start
 
@@ -103,7 +108,7 @@ The development container (if using docker:dev) will be available at: **http://l
 dgkralupy/
 ├── .github/
 │   └── workflows/          # GitHub Actions for deployment
-├── content/                # Content files (Markdown/JSON)
+├── src/content/           # Content files (Markdown/JSON)
 │   ├── articles/          # Blog articles
 │   ├── pages/             # Static pages
 │   └── settings/          # Site settings
@@ -168,7 +173,6 @@ After committing and pushing changes, the site rebuilds automatically.
 - [Requirements](docs/REQUIREMENTS.md) - Functional and technical requirements
 - [Tech Stack](docs/TECH_STACK.md) - Technology choices and rationale
 - [Workflow](docs/WORKFLOW.md) - Development process and personas
-- [Phase 0 Analysis](docs/PHASE_0_ANALYSIS.md) - Current website analysis and findings
 - [Design System](docs/DESIGN_SYSTEM.md) - Design system and component specifications
 
 ### Content Management
@@ -184,24 +188,53 @@ After committing and pushing changes, the site rebuilds automatically.
 - **Hosting**: GitHub Pages
 - **CI/CD**: GitHub Actions
 
-## Recent Updates (2025-12-02)
+## Recent Updates (2025-12-14)
+
+### Cleanup and Documentation Audit
+- **Code Cleanup**: Removed unused utility functions, constants, and types
+- **Navigation Update**: Cleaned up navigation config to only include implemented pages
+- **Link Fixes**: Removed broken links to non-existent pages (search, calendar, archive)
+- **Documentation**: Removed empty documentation files, updated README with accurate status
+- **Structure**: Removed empty placeholder directories
 
 ### Completed Features
 - **News System**: Full news/articles functionality with listing and detail pages
-- **Real Content**: Homepage, news listing, and 6 article detail pages with real images
-- **Image Assets**: All article images fetched from original dgkralupy.cz website
+- **Section Pages**: Landing pages for O škole, Studium, and Aktivity with sidebar navigation
+- **Content Pages**: 20+ subsection pages across all main sections
+- **Navigation**: Responsive navigation with dropdown menus and mobile support
 - **Responsive Design**: Mobile-friendly layouts using TailwindCSS
-- **Mock Data**: Comprehensive mock data structure for development
+- **Real Content**: 7 published articles with images and full content
 
 ### Available Pages
+
+#### Main Sections
 - **Homepage**: `/` - Featured articles, quick links, upcoming events
-- **News Listing**: `/aktualne` - All articles with sorting, tags, and pagination structure
+- **News**: `/aktualne` - All articles with category tags
 - **Article Details**: `/aktualne/[slug]` - Individual article pages with related articles
+- **O škole**: `/o-skole` - About school section with 8 subsections
+- **Studium**: `/studium` - Studies section with 7 subsections
+- **Aktivity**: `/aktivity` - Activities section with 5 subsections
+
+#### Implemented Subsections (20 pages)
+
+**O škole (8 pages):**
+- Popis školy, Základní dokumenty, Školní psycholog, Kariérový poradce,
+  Výchovný poradce a metodik prevence, Rada rodičů, Partneři, GDPR
+
+**Studium (7 pages):**
+- Suplování, Rozvrhy hodin, Bakaláři, Přijímací řízení,
+  Maturita, Výuka, Jídelna
+
+**Aktivity (5 pages):**
+- Studentský parlament, Zájmové kluby, Erasmus+, Knihovna, DofE
 
 ## Next Steps
 
-1. Implement complete navigation menu with all sections
-2. Create additional page templates (About, Studies, Activities, Contacts)
-3. Add search functionality
-4. Implement image optimization
-5. Add content editing documentation for non-technical users
+1. Create remaining subsection pages (30+ pages configured but not yet implemented)
+2. Implement search functionality with tag filtering
+3. Create pagination routes for news listing
+4. Add calendar page for upcoming events
+5. Implement archive pages for news by year
+6. Add contacts section with teacher and school information
+7. Implement image optimization and lazy loading
+8. Add 404 error page

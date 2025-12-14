@@ -87,43 +87,17 @@ const paginatedArticles = sortedArticles.slice(0, articlesPerPage);
       </nav>
     )}
 
-    <!-- Archive & Tags Section (placeholder) -->
+    <!-- Tags Cloud -->
     <aside class="mt-12 p-6 bg-bg-content border border-border-light">
       <h2 class="text-xl font-heading font-thin uppercase mb-4 text-text-primary">
-        Procházet
+        Kategorie
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Tags Cloud -->
-        <div>
-          <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Podle kategorií</h3>
-          <div class="flex flex-wrap gap-2">
-            {Array.from(new Set(allArticles.flatMap(a => a.data.tags))).map((tag) => (
-              <a
-                href={import.meta.env.BASE_URL + `/hledej/?tag=${encodeURIComponent(tag)}`}
-                class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
-              >
-                {tag}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <!-- Archive Links -->
-        <div>
-          <h3 class="text-sm font-normal uppercase text-text-muted mb-3">Archiv</h3>
-          <ul class="space-y-2 text-sm">
-            <li>
-              <a href={import.meta.env.BASE_URL + "/aktualne/archiv/2025"} class="text-text-secondary hover:text-accent-rose transition-colors">
-                → 2025
-              </a>
-            </li>
-            <li>
-              <a href={import.meta.env.BASE_URL + "/aktualne/archiv/2024"} class="text-text-secondary hover:text-accent-rose transition-colors">
-                → 2024
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div class="flex flex-wrap gap-2">
+        {Array.from(new Set(allArticles.flatMap(a => a.data.tags))).map((tag) => (
+          <span class="px-3 py-1 text-sm bg-bg-page text-text-secondary border border-border-light">
+            {tag}
+          </span>
+        ))}
       </div>
     </aside>
   </div>

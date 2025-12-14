@@ -80,12 +80,9 @@ const relatedArticles = allArticles
       {article.data.tags && article.data.tags.length > 0 && (
         <div class="flex flex-wrap gap-2 mb-6">
           {article.data.tags.map((tag) => (
-            <a
-              href={import.meta.env.BASE_URL + `/hledej/?tag=${encodeURIComponent(tag)}`}
-              class="px-3 py-1 text-sm bg-bg-page text-text-secondary hover:bg-accent-rose hover:text-white transition-colors border border-border-light"
-            >
+            <span class="px-3 py-1 text-sm bg-bg-page text-text-secondary border border-border-light">
               {tag}
-            </a>
+            </span>
           ))}
         </div>
       )}
