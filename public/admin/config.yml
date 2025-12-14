@@ -298,3 +298,22 @@ collections:
                   - { label: "Zelená", value: "accent-green" }
                   - { label: "Korálová", value: "accent-coral" }
                   - { label: "Růžová", value: "accent-rose" }
+
+      # -------------------------------------
+      # SPONSORS SETTINGS
+      # -------------------------------------
+      - label: "Partneři školy"
+        name: "sponsors"
+        file: "src/content/sponsors/partners.json"
+        fields:
+          - label: "Partneři"
+            name: "partners"
+            widget: "list"
+            collapsed: true
+            summary: '{{fields.name}}'
+            fields:
+              - { label: "Název partnera", name: "name", widget: "string", required: true, hint: "Celý název organizace" }
+              - { label: "Logo", name: "logo", widget: "image", required: true, hint: "Logo partnera (doporučený formát: PNG nebo JPG, transparentní pozadí)", media_folder: "/public/images/sponsors", public_folder: "/images/sponsors" }
+              - { label: "Webová stránka", name: "url", widget: "string", required: false, hint: "URL webu partnera (např: https://www.partner.cz)" }
+              - { label: "Alternativní text", name: "alt", widget: "string", required: true, hint: "Popis loga pro čtečky obrazovky a SEO" }
+              - { label: "Pořadí zobrazení", name: "order", widget: "number", required: true, default: 0, value_type: "int", hint: "Čím nižší číslo, tím výše se logo zobrazí" }

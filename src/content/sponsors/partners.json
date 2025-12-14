@@ -1,0 +1,71 @@
+{
+  "partners": [
+    {
+      "name": "Středočeský kraj",
+      "logo": "/images/sponsors/stredocesky-kraj.jpg",
+      "url": "https://www.kr-stredocesky.cz/",
+      "alt": "Logo Středočeského kraje",
+      "order": 1
+    },
+    {
+      "name": "Město Kralupy nad Vltavou",
+      "logo": "/images/sponsors/mesto-kralupy.png",
+      "url": "http://www.mestokralupy.cz",
+      "alt": "Logo města Kralupy nad Vltavou",
+      "order": 2
+    },
+    {
+      "name": "Evropská komise",
+      "logo": "/images/sponsors/evropska-komise.jpg",
+      "alt": "Logo Evropské komise",
+      "order": 3
+    },
+    {
+      "name": "DofE - The Duke of Edinburgh's International Award",
+      "logo": "/images/sponsors/dofe.jpg",
+      "alt": "Logo DofE - The Duke of Edinburgh's International Award",
+      "order": 4
+    },
+    {
+      "name": "Cambridge Park",
+      "logo": "/images/sponsors/cambridge-park.jpg",
+      "url": "http://www.zkouskypark.cz/cs",
+      "alt": "Logo Cambridge Park",
+      "order": 5
+    },
+    {
+      "name": "Škola paměti národa",
+      "logo": "/images/sponsors/skola-pameti-naroda.jpg",
+      "alt": "Certifikát Škola paměti národa",
+      "order": 6
+    },
+    {
+      "name": "Bidfood Czech Republic, s. r. o.",
+      "logo": "/images/sponsors/bidfood.png",
+      "url": "http://www.bidfood.cz",
+      "alt": "Logo Bidfood Czech Republic",
+      "order": 7
+    },
+    {
+      "name": "MERO ČR, a. s.",
+      "logo": "/images/sponsors/mero.jpg",
+      "url": "http://www.mero.cz",
+      "alt": "Logo MERO ČR",
+      "order": 8
+    },
+    {
+      "name": "LAMA Energy",
+      "logo": "/images/sponsors/lama-energy.png",
+      "url": "https://www.lamaenergy.cz/",
+      "alt": "Logo LAMA Energy",
+      "order": 9
+    },
+    {
+      "name": "EG Energie, a. s.",
+      "logo": "/images/sponsors/eg-energie.jpg",
+      "url": "http://www.egenergie.cz",
+      "alt": "Logo EG Energie",
+      "order": 10
+    }
+  ]
+}

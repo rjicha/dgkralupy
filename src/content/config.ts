@@ -90,6 +90,21 @@ const quickLinksCollection = defineCollection({
   }),
 });
 
+const sponsorsCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    partners: z.array(
+      z.object({
+        name: z.string(),
+        logo: z.string(), // Path to logo image
+        url: z.string().optional(), // Optional URL to partner website
+        alt: z.string(), // Alt text for accessibility
+        order: z.number().default(0), // Display order
+      }),
+    ),
+  }),
+});
+
 // Export collections
 export const collections = {
   articles: articlesCollection,
@@ -97,4 +112,5 @@ export const collections = {
   contacts: contactsCollection,
   navigation: navigationCollection,
   'quick-links': quickLinksCollection,
+  sponsors: sponsorsCollection,
 };

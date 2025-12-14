@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import QuickLinks from '../components/QuickLinks.astro';
+import Sponsors from '../components/Sponsors.astro';
 
 // Get all published articles
 const allArticles = await getCollection('articles', ({ data }) => {
@@ -112,6 +113,9 @@ const heroArticle = featuredArticles.find(article => article.data.important) || 
             Přijímací řízení
           </a>
         </div>
+
+        <!-- Sponsors -->
+        <Sponsors />
       </aside>
     </div>
   </div>
