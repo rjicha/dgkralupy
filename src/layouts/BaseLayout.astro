@@ -31,8 +31,17 @@ const { title, description = 'Gymnázium Kralupy' } = Astro.props;
   <body class="bg-bg-page font-sans text-sm">
     <header class="bg-primary-dark text-white">
       <div class="container mx-auto px-4 py-4">
-        <h1 class="text-2xl font-heading font-thin uppercase">Dvořákovo gymnázium</h1>
-        <p class="text-xs text-text-muted mt-1">Kralupy nad Vltavou</p>
+        <div class="flex items-center gap-4">
+          <img
+            src={`${import.meta.env.BASE_URL}/images/dg-logo.png`}
+            alt="Logo DG Kralupy"
+            class="h-12 w-auto"
+          />
+          <div>
+            <h1 class="text-2xl font-heading font-thin uppercase">Dvořákovo gymnázium</h1>
+            <p class="text-xs text-text-muted mt-1">Kralupy nad Vltavou</p>
+          </div>
+        </div>
       </div>
       <Navigation />
     </header>
