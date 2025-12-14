@@ -28,6 +28,14 @@ locale: 'cs'
 # Enable editorial workflow (draft/review/ready)
 publish_mode: editorial_workflow
 
+# Show GitHub Actions deployment status in the CMS
+# This displays commit status checks (CI/CD results) in the workflow panel
+status_checks:
+  required: true  # Editors will see if checks pass/fail
+  contexts:
+    - "build"     # Matches the "build" job in deploy.yml
+    - "deploy"    # Matches the "deploy" job in deploy.yml
+
 # Collections
 collections:
   # ========================================
