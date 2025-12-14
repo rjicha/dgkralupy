@@ -15,6 +15,15 @@ export async function getStaticPaths() {
 
 const { page } = Astro.props;
 const { Content } = await page.render();
+
+// Section mapping for proper breadcrumb titles
+const sectionMap: Record<string, { title: string; url: string }> = {
+  'o-skole': { title: 'O škole', url: '/o-skole' },
+  'studium': { title: 'Studium', url: '/studium' },
+  'aktivity': { title: 'Aktivity', url: '/aktivity' },
+  'kontakty': { title: 'Kontakty', url: '/kontakty' },
+  'pomoc-jinym': { title: 'Pomoc jiným', url: '/pomoc-jinym' },
+};
 ---
 
 <BaseLayout
@@ -27,10 +36,17 @@ const { Content } = await page.render();
       <nav class="text-sm text-text-muted mb-6">
         <ol class="flex items-center gap-2">
           <li><a href={import.meta.env.BASE_URL + "/"} class="hover:text-accent-rose">Úvod</a></li>
-          {page.data.section && (
+          {page.data.section && sectionMap[page.data.section] && (
             <>
               <li>/</li>
-              <li class="capitalize">{page.data.section.replace('-', ' ')}</li>
+              <li>
+                <a
+                  href={import.meta.env.BASE_URL + sectionMap[page.data.section].url}
+                  class="hover:text-accent-rose"
+                >
+                  {sectionMap[page.data.section].title}
+                </a>
+              </li>
             </>
           )}
           <li>/</li>
