@@ -103,16 +103,14 @@ const relatedArticles = allArticles
     )}
 
     <!-- Article Content -->
-    <div class="prose prose-lg max-w-none mb-12">
+    <div class="prose max-w-none mb-12">
       <!-- Excerpt -->
       <p class="text-xl text-text-secondary leading-relaxed mb-6 font-light">
         {article.data.excerpt}
       </p>
 
       <!-- Main Content -->
-      <div class="text-text-primary leading-relaxed space-y-4">
-        <Content />
-      </div>
+      <Content />
     </div>
 
     <!-- Share & Actions -->

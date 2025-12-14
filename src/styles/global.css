@@ -12,52 +12,8 @@
   }
 
   body {
-    @apply bg-white text-text-secondary antialiased;
+    @apply bg-white text-gray-900 antialiased;
     font-family: 'Open Sans', Arial, sans-serif;
-    font-size: 1rem; /* 16px */
-    line-height: 1.625; /* relaxed line height for readability */
-  }
-
-  /* Improved heading defaults */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-thin text-text-primary;
-    line-height: 1.25; /* tighter line height for headings */
-    margin-top: 0;
-  }
-
-  /* Better paragraph spacing */
-  p {
-    margin-bottom: 1.5rem; /* 24px spacing between paragraphs */
-    line-height: 1.625;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Link defaults */
-  a {
-    @apply text-accent-rose transition-colors;
-  }
-
-  a:hover {
-    @apply text-accent-coral;
-  }
-
-  /* Improved list spacing */
-  ul, ol {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-    line-height: 1.625;
-  }
-
-  /* Better strong/bold visibility */
-  strong, b {
-    @apply text-text-primary font-bold;
   }
 }
 
