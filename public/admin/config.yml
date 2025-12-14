@@ -14,7 +14,7 @@ backend:
 # Site configuration
 site_url: https://rjicha.github.io/dgkralupy
 display_url: https://rjicha.github.io/dgkralupy
-logo_url: https://rjicha.github.io/dgkralupy/images/logo.png
+logo_url: https://rjicha.github.io/dgkralupy/images/dg-logo.png
 
 # Media files configuration
 # media_folder: where files are physically stored (relative to repo root)

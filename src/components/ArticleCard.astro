@@ -21,8 +21,13 @@ const { article, slug, featured = false } = Astro.props;
         loading="lazy"
       />
     ) : (
-      <div class="w-full h-full flex items-center justify-center bg-primary/10">
-        <span class="text-primary text-4xl">📰</span>
+      <div class="w-full h-full flex items-center justify-center bg-primary-dark">
+        <img
+          src="/images/dg-logo.png"
+          alt="Dvořákovo gymnázium logo"
+          class="w-32 h-auto object-contain opacity-70"
+          loading="lazy"
+        />
       </div>
     )}
 
