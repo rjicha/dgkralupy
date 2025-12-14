@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Get navigation data to build subsection links
+const navigationData = await getEntry('navigation', 'navigation');
+const studiesSection = navigationData?.data.sections.find(s => s.id === 'studies');
+
+// Get all pages in the studium section
+const pages = await getCollection('pages', ({ data, slug }) => {
+  return data.draft !== true && slug.startsWith('studium/');
+});
+
+// Sort by order
+const sortedPages = pages.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+---
+
+<BaseLayout
+  title="Studium | Dvořákovo gymnázium Kralupy nad Vltavou"
+  description="Informace o studiu na Dvořákově gymnáziu - přijímací řízení, výuka, maturita, rozvrhy, jídelna a další užitečné informace pro studenty."
+>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-heading font-thin uppercase text-text-primary border-b-2 border-secondary pb-4 mb-6">
+        Studium
+      </h1>
+      <p class="text-lg text-text-secondary max-w-3xl">
+        Vítejte v sekci věnované studiu na našem gymnáziu. Zde najdete vše důležité pro úspěšné studium -
+        od přijímacího řízení přes denní rozvrhy až po informace o maturitní zkoušce.
+      </p>
+    </header>
+
+    <!-- Important Links Highlight -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <a
+        href={import.meta.env.BASE_URL + "/studium/prijimaci-rizeni"}
+        class="bg-accent-green/10 border-2 border-accent-green p-6 hover:bg-accent-green/20 transition-all group"
+      >
+        <h3 class="text-xl font-heading font-thin uppercase text-text-primary mb-2">
+          Přijímací řízení
+        </h3>
+        <p class="text-sm text-text-secondary">
+          Informace pro uchazeče o studium
+        </p>
+      </a>
+      <a
+        href={import.meta.env.BASE_URL + "/studium/suplovani"}
+        class="bg-accent-coral/10 border-2 border-accent-coral p-6 hover:bg-accent-coral/20 transition-all group"
+      >
+        <h3 class="text-xl font-heading font-thin uppercase text-text-primary mb-2">
+          Suplování
+        </h3>
+        <p class="text-sm text-text-secondary">
+          Aktuální zastupování a změny v rozvrhu
+        </p>
+      </a>
+      <a
+        href={import.meta.env.BASE_URL + "/studium/bakalari"}
+        class="bg-accent-rose/10 border-2 border-accent-rose p-6 hover:bg-accent-rose/20 transition-all group"
+      >
+        <h3 class="text-xl font-heading font-thin uppercase text-text-primary mb-2">
+          Bakaláři
+        </h3>
+        <p class="text-sm text-text-secondary">
+          Elektronická žákovská knížka
+        </p>
+      </a>
+    </div>
+
+    <!-- All Subsections -->
+    <h2 class="text-3xl font-heading font-thin uppercase text-text-primary border-b border-border-light pb-3 mb-6">
+      Všechny sekce
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPages.map((page) => (
+        <a
+          href={import.meta.env.BASE_URL + `/${page.slug}`}
+          class="block bg-bg-content border border-border-light p-6 hover:border-secondary hover:shadow-lg transition-all group"
+        >
+          <h3 class="text-xl font-heading font-thin uppercase text-text-primary mb-3 group-hover:text-secondary transition-colors">
+            {page.data.title}
+          </h3>
+          {page.data.description && (
+            <p class="text-sm text-text-secondary">
+              {page.data.description}
+            </p>
+          )}
+          <div class="mt-4 text-accent-rose group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
+            <span class="text-sm uppercase">Více informací</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

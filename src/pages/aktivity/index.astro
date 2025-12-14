@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Get navigation data to build subsection links
+const navigationData = await getEntry('navigation', 'navigation');
+const activitiesSection = navigationData?.data.sections.find(s => s.id === 'activities');
+
+// Get all pages in the aktivity section
+const pages = await getCollection('pages', ({ data, slug }) => {
+  return data.draft !== true && slug.startsWith('aktivity/');
+});
+
+// Sort by order
+const sortedPages = pages.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+---
+
+<BaseLayout
+  title="Aktivity | Dvořákovo gymnázium Kralupy nad Vltavou"
+  description="Mimoškolní aktivity, zájmové kroužky, studentský parlament, Erasmus+, knihovna a další aktivity na Dvořákově gymnáziu."
+>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-heading font-thin uppercase text-text-primary border-b-2 border-accent-green pb-4 mb-6">
+        Aktivity
+      </h1>
+      <p class="text-lg text-text-secondary max-w-3xl">
+        Život na gymnáziu není jen o učení! Zapojte se do široké škály mimoškolních aktivit,
+        zájmových kroužků, projektů a mezinárodních programů. Objevte své talenty a poznejte nové přátele.
+      </p>
+    </header>
+
+    <!-- Highlighted Activities -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <div class="bg-gradient-to-br from-accent-green/20 to-accent-green/5 border border-accent-green/30 p-8">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">🌍</div>
+          <div>
+            <h3 class="text-2xl font-heading font-thin uppercase text-text-primary mb-3">
+              Erasmus+
+            </h3>
+            <p class="text-text-secondary mb-4">
+              Mezinárodní výměnné pobyty, stáže a projekty v zemích EU.
+              Od roku 2023 máme akreditaci, která nám umožňuje pravidelně vysílat studenty do zahraničí.
+            </p>
+            <a
+              href={import.meta.env.BASE_URL + "/aktivity/erasmus"}
+              class="inline-flex items-center gap-2 text-accent-rose hover:underline"
+            >
+              <span>Zjistit více</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-accent-coral/20 to-accent-coral/5 border border-accent-coral/30 p-8">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">🗳️</div>
+          <div>
+            <h3 class="text-2xl font-heading font-thin uppercase text-text-primary mb-3">
+              Studentský parlament
+            </h3>
+            <p class="text-text-secondary mb-4">
+              Zapojte se do správy školy, organizujte akce, získávejte granty na projekty
+              a buďte hlasem studentů!
+            </p>
+            <a
+              href={import.meta.env.BASE_URL + "/aktivity/studentsky-parlament"}
+              class="inline-flex items-center gap-2 text-accent-rose hover:underline"
+            >
+              <span>Zjistit více</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Activities -->
+    <h2 class="text-3xl font-heading font-thin uppercase text-text-primary border-b border-border-light pb-3 mb-6">
+      Všechny aktivity
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPages.map((page) => (
+        <a
+          href={import.meta.env.BASE_URL + `/${page.slug}`}
+          class="block bg-bg-content border border-border-light p-6 hover:border-accent-green hover:shadow-lg transition-all group"
+        >
+          <h3 class="text-xl font-heading font-thin uppercase text-text-primary mb-3 group-hover:text-accent-green transition-colors">
+            {page.data.title}
+          </h3>
+          {page.data.description && (
+            <p class="text-sm text-text-secondary">
+              {page.data.description}
+            </p>
+          )}
+          <div class="mt-4 text-accent-rose group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
+            <span class="text-sm uppercase">Více informací</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="mt-12 bg-accent-rose/10 border border-accent-rose/30 p-8 text-center">
+      <h3 class="text-2xl font-heading font-thin uppercase text-text-primary mb-4">
+        Máte nápad na novou aktivitu?
+      </h3>
+      <p class="text-text-secondary mb-6 max-w-2xl mx-auto">
+        Rádi bychom podpořili vaše nápady! Obraťte se na studentský parlament nebo vedení školy
+        a společně můžeme vytvořit nový kroužek nebo projekt.
+      </p>
+      <a
+        href={import.meta.env.BASE_URL + "/aktivity/studentsky-parlament"}
+        class="inline-block bg-accent-rose hover:bg-accent-rose/90 text-white px-6 py-3 uppercase transition-colors"
+      >
+        Kontaktovat studentský parlament
+      </a>
+    </div>
+  </div>
+</BaseLayout>

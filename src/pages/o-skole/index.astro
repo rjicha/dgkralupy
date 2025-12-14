@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Get navigation data to build subsection links
+const navigationData = await getEntry('navigation', 'navigation');
+const aboutSection = navigationData?.data.sections.find(s => s.id === 'about');
+
+// Get all pages in the o-skole section
+const pages = await getCollection('pages', ({ data, slug }) => {
+  return data.draft !== true && slug.startsWith('o-skole/');
+});
+
+// Sort by order
+const sortedPages = pages.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+---
+
+<BaseLayout
+  title="O škole | Dvořákovo gymnázium Kralupy nad Vltavou"
+  description="Informace o Dvořákově gymnáziu Kralupy nad Vltavou - historie, dokumenty, organizace školy a další důležité informace."
+>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-heading font-thin uppercase text-text-primary border-b-2 border-primary pb-4 mb-6">
+        O škole
+      </h1>
+      <p class="text-lg text-text-secondary max-w-3xl">
+        Dvořákovo gymnázium Kralupy nad Vltavou je moderní vzdělávací instituce s dlouholetou tradicí.
+        Poskytujeme kvalitní gymnaziální vzdělání v osmiletém i čtyřletém programu.
+      </p>
+    </header>
+
+    <!-- Subsections Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {sortedPages.map((page) => (
+        <a
+          href={import.meta.env.BASE_URL + `/${page.slug}`}
+          class="block bg-bg-content border border-border-light p-6 hover:border-primary hover:shadow-lg transition-all group"
+        >
+          <h2 class="text-xl font-heading font-thin uppercase text-text-primary mb-3 group-hover:text-primary transition-colors">
+            {page.data.title}
+          </h2>
+          {page.data.description && (
+            <p class="text-sm text-text-secondary">
+              {page.data.description}
+            </p>
+          )}
+          <div class="mt-4 text-accent-rose group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
+            <span class="text-sm uppercase">Více informací</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Additional Info Section -->
+    <div class="bg-primary/5 border border-primary/20 p-8 mt-12">
+      <h2 class="text-2xl font-heading font-thin uppercase text-text-primary mb-4">
+        Kontaktní informace
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-normal text-text-primary mb-2">Adresa</h3>
+          <p class="text-text-secondary">
+            Dvořákovo nám. 800<br />
+            278 01 Kralupy nad Vltavou
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-normal text-text-primary mb-2">Kontakt</h3>
+          <p class="text-text-secondary">
+            <strong>Telefon:</strong> 315 727 311<br />
+            <strong>E-mail:</strong> info@dgkralupy.cz<br />
+            <strong>IČO:</strong> 49 51 89 25
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
