@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.3.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",

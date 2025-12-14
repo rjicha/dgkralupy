@@ -39,15 +39,23 @@ export default {
         heading: ['"Roboto"', 'sans-serif'],
       },
       fontSize: {
-        // Typography scale matching current site
-        'xs': '0.7rem',    // 11.2px - metadata, footer
-        'sm': '0.8rem',    // 12.8px - body, breadcrumb
-        'base': '0.9rem',  // 14.4px - dropdown
-        'lg': '1.05rem',   // 16.8px - navbar
-        'xl': '1.3rem',    // 20.8px - h4
+        // Improved typography scale for better readability
+        'xs': '0.75rem',   // 12px - metadata, footer
+        'sm': '0.875rem',  // 14px - small text, breadcrumb
+        'base': '1rem',    // 16px - body text (web standard)
+        'lg': '1.125rem',  // 18px - large body text
+        'xl': '1.25rem',   // 20px - h4
         '2xl': '1.5rem',   // 24px - h3
-        '3xl': '1.7rem',   // 27.2px - h2
-        '4xl': '2rem',     // 32px - h1
+        '3xl': '1.875rem', // 30px - h2
+        '4xl': '2.25rem',  // 36px - h1
+        '5xl': '3rem',     // 48px - hero titles
+      },
+      lineHeight: {
+        'tight': '1.25',
+        'snug': '1.375',
+        'normal': '1.5',
+        'relaxed': '1.625',
+        'loose': '1.75',
       },
       fontWeight: {
         thin: '100',
@@ -55,7 +63,137 @@ export default {
         normal: '400',
         bold: '700',
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            // Base text styling
+            color: theme('colors.text.secondary'),
+            fontSize: theme('fontSize.base'),
+            lineHeight: theme('lineHeight.relaxed'),
+
+            // Headings
+            'h1, h2, h3, h4, h5, h6': {
+              color: theme('colors.text.primary'),
+              fontFamily: theme('fontFamily.heading').join(', '),
+              fontWeight: theme('fontWeight.thin'),
+              textTransform: 'uppercase',
+              letterSpacing: '0.025em',
+            },
+            h1: {
+              fontSize: theme('fontSize.4xl'),
+              marginTop: '0',
+              marginBottom: theme('spacing.6'),
+              paddingBottom: theme('spacing.4'),
+              borderBottomWidth: '2px',
+              borderBottomColor: theme('colors.accent.coral'),
+            },
+            h2: {
+              fontSize: theme('fontSize.3xl'),
+              marginTop: theme('spacing.12'),
+              marginBottom: theme('spacing.4'),
+              paddingBottom: theme('spacing.2'),
+              borderBottomWidth: '2px',
+              borderBottomColor: theme('colors.secondary'),
+            },
+            h3: {
+              fontSize: theme('fontSize.2xl'),
+              marginTop: theme('spacing.8'),
+              marginBottom: theme('spacing.3'),
+            },
+            h4: {
+              fontSize: theme('fontSize.xl'),
+              marginTop: theme('spacing.6'),
+              marginBottom: theme('spacing.2'),
+            },
+
+            // Paragraphs
+            p: {
+              marginTop: '0',
+              marginBottom: theme('spacing.6'), // Good spacing between paragraphs
+              lineHeight: theme('lineHeight.relaxed'),
+            },
+
+            // Links
+            a: {
+              color: theme('colors.accent.rose'),
+              textDecoration: 'none',
+              fontWeight: theme('fontWeight.normal'),
+              '&:hover': {
+                textDecoration: 'underline',
+                color: theme('colors.accent.coral'),
+              },
+            },
+
+            // Strong/Bold
+            strong: {
+              color: theme('colors.text.primary'),
+              fontWeight: theme('fontWeight.bold'),
+            },
+
+            // Lists
+            'ul, ol': {
+              marginTop: theme('spacing.4'),
+              marginBottom: theme('spacing.6'),
+              paddingLeft: theme('spacing.6'),
+            },
+            li: {
+              marginTop: theme('spacing.2'),
+              marginBottom: theme('spacing.2'),
+              lineHeight: theme('lineHeight.relaxed'),
+            },
+            'li p': {
+              marginTop: theme('spacing.2'),
+              marginBottom: theme('spacing.2'),
+            },
+
+            // Blockquotes
+            blockquote: {
+              fontStyle: 'italic',
+              color: theme('colors.text.secondary'),
+              borderLeftWidth: '4px',
+              borderLeftColor: theme('colors.secondary'),
+              paddingLeft: theme('spacing.4'),
+              marginTop: theme('spacing.6'),
+              marginBottom: theme('spacing.6'),
+            },
+
+            // Code blocks
+            code: {
+              color: theme('colors.accent.rose'),
+              backgroundColor: theme('colors.bg.page'),
+              padding: '0.2em 0.4em',
+              borderRadius: theme('borderRadius.sm'),
+              fontSize: '0.9em',
+            },
+            'code::before': {
+              content: '""',
+            },
+            'code::after': {
+              content: '""',
+            },
+
+            // Tables
+            table: {
+              width: '100%',
+              marginTop: theme('spacing.6'),
+              marginBottom: theme('spacing.6'),
+            },
+            'th, td': {
+              padding: theme('spacing.3'),
+              borderWidth: '1px',
+              borderColor: theme('colors.border.DEFAULT'),
+            },
+            th: {
+              backgroundColor: theme('colors.bg.page'),
+              fontWeight: theme('fontWeight.bold'),
+              textAlign: 'left',
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
