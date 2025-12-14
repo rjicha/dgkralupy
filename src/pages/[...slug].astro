@@ -32,14 +32,14 @@ const sectionMap: Record<string, { title: string; url: string }> = {
   description={page.data.description || page.data.title}
 >
   <div class="container mx-auto px-4 py-8">
-    <div class="flex gap-8 max-w-7xl mx-auto">
+    <div class="flex gap-8">
       <!-- Sidebar Navigation -->
       {page.data.section && (
         <Sidebar currentSection={page.data.section} currentSlug={page.slug} />
       )}
 
       <!-- Main Content -->
-      <article class="flex-1 min-w-0">
+      <article class="flex-1 min-w-0 max-w-4xl">
         <!-- Breadcrumb -->
         <nav class="text-sm text-text-muted mb-6">
           <ol class="flex items-center gap-2">

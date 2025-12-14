@@ -36,19 +36,21 @@ const finalSectionData = sectionData || navigationSections.find(section =>
 ---
 
 {finalSectionData && finalSectionData.subsections && (
-  <aside class="w-64 flex-shrink-0">
+  <aside class="w-80 flex-shrink-0">
     <nav class="sticky top-4">
-      <div class="bg-white rounded-lg shadow-sm border border-border-light p-4">
+      <div class="bg-bg-content border border-border-light p-6">
         <!-- Section title -->
-        <a
-          href={import.meta.env.BASE_URL + finalSectionData.url}
-          class="block text-lg font-semibold text-text-primary hover:text-accent-rose transition-colors mb-3 pb-2 border-b border-border-light"
-        >
-          {finalSectionData.title}
-        </a>
+        <h2 class="text-xl font-heading font-thin uppercase mb-4 text-text-primary">
+          <a
+            href={import.meta.env.BASE_URL + finalSectionData.url}
+            class="hover:text-accent-rose transition-colors"
+          >
+            {finalSectionData.title}
+          </a>
+        </h2>
 
         <!-- Subsections -->
-        <ul class="space-y-1">
+        <ul class="space-y-3">
           {finalSectionData.subsections.map((subsection) => {
             const subsectionSlug = subsection.url.replace(/^\//, '');
             const isActive = currentSlug === subsectionSlug;
@@ -57,10 +59,10 @@ const finalSectionData = sectionData || navigationSections.find(section =>
               <li>
                 <a
                   href={import.meta.env.BASE_URL + subsection.url}
-                  class={`block px-3 py-2 text-sm rounded transition-colors ${
+                  class={`block px-4 py-3 text-sm font-normal transition-colors ${
                     isActive
-                      ? 'text-accent-rose font-medium bg-accent-rose/5'
-                      : 'text-text-primary hover:text-accent-rose hover:bg-bg-page'
+                      ? 'text-accent-rose bg-accent-rose/5 border-l-4 border-accent-rose'
+                      : 'text-text-primary hover:text-accent-rose border-l-4 border-transparent hover:border-accent-rose/30'
                   }`}
                 >
                   {subsection.title}
