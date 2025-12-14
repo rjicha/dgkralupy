@@ -1,0 +1,75 @@
+---
+import { getEntry } from 'astro:content';
+
+interface Props {
+  currentSection: string;
+  currentSlug: string;
+}
+
+const { currentSection, currentSlug } = Astro.props;
+
+// Get navigation data
+const navigationData = await getEntry('navigation', 'navigation');
+const navigationSections = navigationData?.data.sections ?? [];
+
+// Find the current section data
+const sectionData = navigationSections.find(section => {
+  // Match by section ID or URL path
+  const urlPath = section.url.replace(/^\//, '');
+  return section.id === currentSection || urlPath === currentSection;
+});
+
+// Map section slugs to IDs
+const sectionMap: Record<string, string> = {
+  'o-skole': 'about',
+  'studium': 'studies',
+  'aktivity': 'activities',
+  'aktualne': 'news',
+  'pomoc-jinym': 'help',
+  'kontakty': 'contacts',
+};
+
+// Try alternate lookup if not found
+const finalSectionData = sectionData || navigationSections.find(section =>
+  section.id === sectionMap[currentSection]
+);
+---
+
+{finalSectionData && finalSectionData.subsections && (
+  <aside class="w-64 flex-shrink-0">
+    <nav class="sticky top-4">
+      <div class="bg-white rounded-lg shadow-sm border border-border-light p-4">
+        <!-- Section title -->
+        <a
+          href={import.meta.env.BASE_URL + finalSectionData.url}
+          class="block text-lg font-semibold text-text-primary hover:text-accent-rose transition-colors mb-3 pb-2 border-b border-border-light"
+        >
+          {finalSectionData.title}
+        </a>
+
+        <!-- Subsections -->
+        <ul class="space-y-1">
+          {finalSectionData.subsections.map((subsection) => {
+            const subsectionSlug = subsection.url.replace(/^\//, '');
+            const isActive = currentSlug === subsectionSlug;
+
+            return (
+              <li>
+                <a
+                  href={import.meta.env.BASE_URL + subsection.url}
+                  class={`block px-3 py-2 text-sm rounded transition-colors ${
+                    isActive
+                      ? 'text-accent-rose font-medium bg-accent-rose/5'
+                      : 'text-text-primary hover:text-accent-rose hover:bg-bg-page'
+                  }`}
+                >
+                  {subsection.title}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </nav>
+  </aside>
+)}
