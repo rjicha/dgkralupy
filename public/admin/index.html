@@ -7,13 +7,38 @@
   <title>Správa obsahu - Dvořákovo gymnázium Kralupy</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <style>
+    /* ========================================
+       DESIGN SYSTEM TOKENS
+       ======================================== */
+    :root {
+      /* Color tokens from DG Kralupy design system */
+      --color-primary: #3b5f78;
+      --color-primary-dark: #273946;
+      --color-secondary: #44c2c4;
+      --color-accent-green: #bfcc34;
+      --color-accent-coral: #ff6b6b;
+      --color-text-muted: #a09f9f;
+      --color-bg-page: #f0f0f0;
+
+      /* Typography tokens */
+      --font-body: "Open Sans", Arial, sans-serif;
+      --font-size-xs: 0.75rem;    /* 12px - minimum readable */
+      --font-size-base: 1rem;     /* 16px - body text */
+      --font-weight-bold: 700;
+
+      /* Spacing tokens (TailwindCSS scale) */
+      --spacing-1-5: 0.375rem;    /* 6px */
+      --spacing-2-5: 0.625rem;    /* 10px */
+      --spacing-4: 1rem;          /* 16px */
+    }
+
     /* Three-column grid layout: Left (branding) | Center (status) | Right (user) */
     [class*="AppHeader"] [class*="AppHeaderContent"] {
       display: grid !important;
       grid-template-columns: 1fr auto 1fr !important;
       align-items: center !important;
-      gap: 16px !important;
-      padding: 0 16px !important;
+      gap: var(--spacing-4) !important;
+      padding: 0 var(--spacing-4) !important;
     }
 
     /* Left: Site branding */
@@ -21,7 +46,7 @@
       order: -1 !important;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: var(--spacing-2-5);
       justify-self: start;
     }
 
@@ -31,10 +56,10 @@
     }
 
     .admin-branding span {
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-base);
       color: inherit;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: var(--font-body);
     }
 
     /* Center: Deployment status */
@@ -47,17 +72,27 @@
     .deployment-status a {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: var(--spacing-1-5);
       text-decoration: none;
       color: inherit;
-      padding: 6px 10px;
+      padding: var(--spacing-1-5) var(--spacing-2-5);
       border-radius: 4px;
       transition: background-color 0.2s;
       cursor: pointer;
     }
 
     .deployment-status a:hover {
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: var(--color-bg-page);
+    }
+
+    .deployment-status a:focus {
+      outline: 2px solid var(--color-secondary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .deployment-status a:focus:not(:focus-visible) {
+      outline: none;  /* Remove outline for mouse users */
     }
 
     .github-icon {
@@ -74,16 +109,16 @@
     }
 
     .status-dot.success {
-      background-color: #28a745;
+      background-color: var(--color-accent-green);  /* #bfcc34 */
     }
 
     .status-dot.failure,
     .status-dot.cancelled {
-      background-color: #dc3545;
+      background-color: var(--color-accent-coral);  /* #ff6b6b */
     }
 
     .status-dot.in_progress {
-      background-color: #ffc107;
+      background-color: var(--color-secondary);  /* #44c2c4 */
       animation: pulse 2s infinite;
     }
 
@@ -91,11 +126,11 @@
     .status-dot.pending,
     .status-dot.waiting,
     .status-dot.requested {
-      background-color: #6c757d;
+      background-color: var(--color-text-muted);  /* #a09f9f */
     }
 
     .status-dot.loading {
-      background-color: #e9ecef;
+      background-color: var(--color-bg-page);  /* #f0f0f0 */
     }
 
     @keyframes pulse {
@@ -109,17 +144,17 @@
       bottom: -50px;
       left: 50%;
       transform: translateX(-50%);
-      background: #333;
+      background: var(--color-primary-dark);
       color: white;
       padding: 8px 12px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: var(--font-size-xs);
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s;
       z-index: 1000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: var(--font-body);
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -135,7 +170,7 @@
       height: 0;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-bottom: 5px solid #333;
+      border-bottom: 5px solid var(--color-primary-dark);
     }
 
     .deployment-status a:hover .status-tooltip {
@@ -143,7 +178,7 @@
     }
 
     #deployment-time {
-      font-size: 11px;
+      font-size: var(--font-size-xs);  /* 12px instead of 11px */
       opacity: 0.8;
     }
 
@@ -163,6 +198,16 @@
 
       [class*="AppHeader"] [class*="AppHeaderContent"] {
         grid-template-columns: auto 1fr auto !important;
+      }
+
+      /* Larger touch targets for mobile */
+      .deployment-status a {
+        padding: 0.75rem;  /* 12px - min 44x44px touch target */
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
       }
     }
   </style>
