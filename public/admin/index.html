@@ -7,18 +7,14 @@
   <title>Správa obsahu - Dvořákovo gymnázium Kralupy</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <style>
-    /* Deployment status badge styling */
+    /* Integrate deployment status into CMS top bar */
     .deployment-status {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 10000;
-      background: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 12px;
+      color: inherit;
     }
     .deployment-status a {
       text-decoration: none;
@@ -29,6 +25,23 @@
     }
     .deployment-status img {
       display: block;
+    }
+
+    /* Position deployment status in CMS header, before user menu */
+    [class*="AppHeader"] [class*="AppHeaderContent"] {
+      display: flex !important;
+      align-items: center !important;
+      gap: 16px !important;
+    }
+    [class*="AppHeader"] [class*="AppHeaderContent"] > *:last-child {
+      margin-left: auto !important;
+    }
+    [class*="AppHeader"] .deployment-status {
+      order: 998;
+    }
+    [class*="AppHeader"] [class*="AppHeaderButton"],
+    [class*="AppHeader"] [class*="SettingsDropdown"] {
+      order: 999 !important;
     }
   </style>
 </head>
@@ -46,5 +59,37 @@
 
   <!-- Custom author auto-population widget -->
   <script src="./author-widget.js"></script>
+
+  <!-- Move deployment status into CMS header -->
+  <script>
+    (function() {
+      function moveDeploymentStatus() {
+        const deploymentStatus = document.querySelector('.deployment-status');
+        const appHeaderContent = document.querySelector('[class*="AppHeaderContent"]');
+
+        if (deploymentStatus && appHeaderContent && !appHeaderContent.contains(deploymentStatus)) {
+          appHeaderContent.appendChild(deploymentStatus);
+          return true;
+        }
+        return false;
+      }
+
+      // Try to move once CMS loads
+      const observer = new MutationObserver(() => {
+        if (moveDeploymentStatus()) {
+          observer.disconnect();
+        }
+      });
+
+      // Watch for CMS to render
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      // Also try immediately in case CMS is already loaded
+      setTimeout(moveDeploymentStatus, 1000);
+    })();
+  </script>
 </body>
 </html>
