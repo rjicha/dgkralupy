@@ -79,10 +79,10 @@ collections:
 
       - label: "Autor"
         name: "author"
-        widget: "string"
+        widget: "author-auto"
         required: true
         default: "Redakce"
-        hint: "Jméno autora článku"
+        hint: "Automaticky vyplněno podle přihlášeného uživatele"
 
       - label: "Štítky"
         name: "tags"
@@ -150,6 +150,13 @@ collections:
         name: "body"
         widget: "markdown"
         required: true
+
+      - label: "Autor"
+        name: "author"
+        widget: "author-auto"
+        required: false
+        default: "Redakce"
+        hint: "Automaticky vyplněno podle přihlášeného uživatele (volitelné)"
 
       - label: "Nadřazená sekce"
         name: "section"
@@ -317,3 +324,20 @@ collections:
               - { label: "Webová stránka", name: "url", widget: "string", required: false, hint: "URL webu partnera (např: https://www.partner.cz)" }
               - { label: "Alternativní text", name: "alt", widget: "string", required: true, hint: "Popis loga pro čtečky obrazovky a SEO" }
               - { label: "Pořadí zobrazení", name: "order", widget: "number", required: true, default: 0, value_type: "int", hint: "Čím nižší číslo, tím výše se logo zobrazí" }
+
+      # -------------------------------------
+      # AUTHORS MAPPING
+      # -------------------------------------
+      - label: "Mapování autorů"
+        name: "authors"
+        file: "src/content/authors/authors.json"
+        fields:
+          - label: "Mapování GitHub → Jméno"
+            name: "mapping"
+            widget: "object"
+            hint: "GitHub username → Zobrazované jméno autora"
+          - label: "Výchozí autor"
+            name: "defaultAuthor"
+            widget: "string"
+            default: "Redakce"
+            hint: "Použije se, pokud GitHub uživatel není v mapování"

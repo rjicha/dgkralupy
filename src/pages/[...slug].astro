@@ -67,6 +67,17 @@ const sectionMap: Record<string, { title: string; url: string }> = {
           <h1 class="text-4xl md:text-5xl font-heading font-thin uppercase text-text-primary border-b-2 border-accent-coral pb-4">
             {page.data.title}
           </h1>
+
+          <!-- Author metadata (if present) -->
+          {page.data.author && (
+            <div class="flex items-center gap-2 mt-4 text-text-muted">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span class="text-sm uppercase">{page.data.author}</span>
+            </div>
+          )}
         </header>
 
         <!-- Page Content -->

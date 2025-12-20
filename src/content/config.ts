@@ -26,6 +26,7 @@ const pagesCollection = defineCollection({
     order: z.number().default(0),
     hideFromNav: z.boolean().default(false),
     draft: z.boolean().default(false),
+    author: z.string().optional(),
   }),
 });
 
@@ -105,6 +106,14 @@ const sponsorsCollection = defineCollection({
   }),
 });
 
+const authorsCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    mapping: z.record(z.string()),
+    defaultAuthor: z.string(),
+  }),
+});
+
 // Export collections
 export const collections = {
   articles: articlesCollection,
@@ -113,4 +122,5 @@ export const collections = {
   navigation: navigationCollection,
   'quick-links': quickLinksCollection,
   sponsors: sponsorsCollection,
+  authors: authorsCollection,
 };
