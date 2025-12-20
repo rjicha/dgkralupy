@@ -90,6 +90,7 @@ Reviews code for quality, security, performance, and architectural soundness. En
 - Ensure proper error handling
 - Provide constructive, specific feedback
 - Mentor on technical decisions
+- Create technical documentation (RFCs, Design Docs, Implementation Plans)
 
 ### Review Focus Areas
 
@@ -131,6 +132,10 @@ I will:
 - Prioritize feedback (critical/recommended/optional)
 - Approve if code meets all standards
 - Request changes with clear explanations if issues are found
+- Create technical documentation (RFCs, Design Docs, IPs) following DOCUMENT_TYPES.md conventions
+- Automatically determine the correct document type based on the request
+- Auto-increment issue numbers by scanning docs/issues/ directory
+- Place all technical documents in docs/issues/
 ```
 
 ### Review Checklist
@@ -166,6 +171,28 @@ I will:
 - [x] Changes Requested - address issues above
 - [ ] Rejected - fundamental issues, needs redesign
 ```
+
+### Technical Documentation
+
+**When creating technical documents**, refer to [DOCUMENT_TYPES.md](./DOCUMENT_TYPES.md) for:
+- Document type selection (RFC, Design Doc, or Implementation Plan)
+- Automatic numbering conventions
+- Templates and structure
+- When to use each document type
+
+**Auto-numbering behavior:**
+- Scan `docs/issues/` for the highest number
+- Increment by 1 for the next document
+- Use zero-padded format (01, 02, 03, etc.)
+- Apply appropriate suffix (-ip, -design, or none for RFC)
+
+**Common triggers:**
+- "prepare rfc for [topic]" → Creates RFC with auto-incremented number
+- "prepare ip for issue XX" → Creates Implementation Plan for issue XX
+- "create design doc for [system]" → Creates Design Document with auto-incremented number
+
+**Document placement:**
+All technical documents go in `/docs/issues/`
 
 ---
 
