@@ -26,18 +26,45 @@
     .deployment-status img {
       display: block;
     }
+    #deployment-state {
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-weight: 500;
+      text-transform: lowercase;
+    }
+    #deployment-state.success {
+      background-color: #28a745;
+      color: white;
+    }
+    #deployment-state.failure,
+    #deployment-state.cancelled {
+      background-color: #dc3545;
+      color: white;
+    }
+    #deployment-state.in_progress {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    #deployment-state.queued,
+    #deployment-state.pending,
+    #deployment-state.waiting {
+      background-color: #6c757d;
+      color: white;
+    }
+    #deployment-state.loading {
+      background-color: #e9ecef;
+      color: #6c757d;
+    }
 
-    /* Position deployment status in CMS header, before user menu */
+    /* Position deployment status and user menu on the right side of CMS header */
     [class*="AppHeader"] [class*="AppHeaderContent"] {
       display: flex !important;
       align-items: center !important;
       gap: 16px !important;
     }
-    [class*="AppHeader"] [class*="AppHeaderContent"] > *:last-child {
-      margin-left: auto !important;
-    }
     [class*="AppHeader"] .deployment-status {
       order: 998;
+      margin-left: auto !important;
     }
     [class*="AppHeader"] [class*="AppHeaderButton"],
     [class*="AppHeader"] [class*="SettingsDropdown"] {
@@ -50,7 +77,7 @@
   <div class="deployment-status">
     <a href="https://github.com/rjicha/dgkralupy/actions/workflows/deploy.yml" target="_blank" title="Zobrazit stav nasazení">
       <span>Nasazení:</span>
-      <img src="https://github.com/rjicha/dgkralupy/actions/workflows/deploy.yml/badge.svg" alt="Deployment Status" />
+      <span id="deployment-state">načítání...</span>
     </a>
   </div>
 
@@ -89,6 +116,72 @@
 
       // Also try immediately in case CMS is already loaded
       setTimeout(moveDeploymentStatus, 1000);
+    })();
+
+    // Fetch and display actual deployment status
+    (function() {
+      const REPO_OWNER = 'rjicha';
+      const REPO_NAME = 'dgkralupy';
+      const WORKFLOW_FILE = 'deploy.yml';
+      const API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/runs?per_page=1`;
+
+      const stateElement = document.getElementById('deployment-state');
+
+      const STATE_LABELS = {
+        'success': 'úspěch',
+        'failure': 'selhání',
+        'cancelled': 'zrušeno',
+        'in_progress': 'běží',
+        'queued': 've frontě',
+        'pending': 'čeká',
+        'waiting': 'čeká',
+        'requested': 've frontě',
+        'action_required': 'vyžaduje akci'
+      };
+
+      async function fetchDeploymentStatus() {
+        try {
+          const response = await fetch(API_URL);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          if (data.workflow_runs && data.workflow_runs.length > 0) {
+            const latestRun = data.workflow_runs[0];
+            const status = latestRun.status; // 'completed', 'in_progress', 'queued', etc.
+            const conclusion = latestRun.conclusion; // 'success', 'failure', 'cancelled', etc. (null if not completed)
+
+            let state, label;
+            if (status === 'completed' && conclusion) {
+              state = conclusion;
+              label = STATE_LABELS[conclusion] || conclusion;
+            } else {
+              state = status;
+              label = STATE_LABELS[status] || status;
+            }
+
+            stateElement.textContent = label;
+            stateElement.className = state;
+
+            // Poll more frequently if deployment is in progress
+            const pollInterval = (status === 'in_progress' || status === 'queued') ? 10000 : 60000;
+            setTimeout(fetchDeploymentStatus, pollInterval);
+          } else {
+            stateElement.textContent = 'neznámý';
+            stateElement.className = 'loading';
+            setTimeout(fetchDeploymentStatus, 60000);
+          }
+        } catch (error) {
+          console.error('Failed to fetch deployment status:', error);
+          stateElement.textContent = 'chyba';
+          stateElement.className = 'failure';
+          setTimeout(fetchDeploymentStatus, 60000);
+        }
+      }
+
+      // Start fetching status
+      fetchDeploymentStatus();
     })();
   </script>
 </body>
