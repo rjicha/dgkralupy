@@ -5,13 +5,22 @@
  * - Image upload with validation
  * - Alt text input (accessibility)
  * - Visual focus point selection (click-based)
+ * - Advanced mode with Cropper.js for manual cropping
  * - Czech localization
  *
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 (function() {
   const { h, Component } = window.CMS;
+
+  // Image variant specifications (matching imageVariants.ts)
+  const IMAGE_VARIANTS = {
+    hero: { width: 1920, height: 1080, aspectRatio: 16/9, label: 'Hlavní banner (16:9)' },
+    card: { width: 800, height: 450, aspectRatio: 16/9, label: 'Karta článku (16:9)' },
+    thumbnail: { width: 400, height: 225, aspectRatio: 16/9, label: 'Miniatura (16:9)' },
+    detail: { width: 1200, height: 800, aspectRatio: 3/2, label: 'Detail článku (3:2)' }
+  };
 
   /**
    * Validate uploaded image file
@@ -81,14 +90,19 @@
         src: value.src || '',
         alt: value.alt || '',
         focusPoint: value.focusPoint || { x: 50, y: 50 },
+        crops: value.crops || {},
         isUploading: false,
         uploadError: null,
         showSuccess: false,
-        imageDimensions: null
+        imageDimensions: null,
+        showAdvanced: false,
+        previewVariant: 'hero'
       };
 
       this.imagePreviewRef = null;
       this.fileInputRef = null;
+      this.cropperRef = null;
+      this.cropperImageRef = null;
     }
 
     componentDidMount() {
@@ -99,8 +113,85 @@
       }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+      // Initialize/reinitialize Cropper.js when entering advanced mode or changing variant
+      if (this.state.showAdvanced && this.state.src && this.cropperImageRef) {
+        if (!this.cropperRef || 
+            prevState.previewVariant !== this.state.previewVariant ||
+            prevState.showAdvanced !== this.state.showAdvanced) {
+          this.initializeCropper();
+        }
+      } else if (!this.state.showAdvanced && this.cropperRef) {
+        // Destroy cropper when leaving advanced mode
+        this.destroyCropper();
+      }
+    }
+
+    componentWillUnmount() {
+      this.destroyCropper();
+    }
+
+    initializeCropper() {
+      // Destroy existing cropper if any
+      this.destroyCropper();
+
+      // Check if Cropper is available
+      if (!window.Cropper) {
+        console.warn('Cropper.js not loaded yet, will retry...');
+        setTimeout(() => this.initializeCropper(), 100);
+        return;
+      }
+
+      const { previewVariant, crops, src } = this.state;
+      const variantSpec = IMAGE_VARIANTS[previewVariant];
+
+      if (!this.cropperImageRef || !src) return;
+
+      // Initialize Cropper.js
+      this.cropperRef = new window.Cropper(this.cropperImageRef, {
+        aspectRatio: variantSpec.aspectRatio,
+        viewMode: 1,
+        autoCropArea: 1,
+        responsive: true,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: true,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+        data: crops[previewVariant], // Restore saved crop if exists
+        crop: (event) => {
+          // Save crop data for this variant
+          const cropData = {
+            x: Math.round(event.detail.x),
+            y: Math.round(event.detail.y),
+            width: Math.round(event.detail.width),
+            height: Math.round(event.detail.height)
+          };
+
+          this.setState({
+            crops: {
+              ...this.state.crops,
+              [previewVariant]: cropData
+            }
+          }, () => {
+            // Update parent with new crop data
+            this.updateValue();
+          });
+        }
+      });
+    }
+
+    destroyCropper() {
+      if (this.cropperRef) {
+        this.cropperRef.destroy();
+        this.cropperRef = null;
+      }
+    }
+
     updateValue() {
-      const { src, alt, focusPoint } = this.state;
+      const { src, alt, focusPoint, crops } = this.state;
 
       if (!src) {
         // No image, send null/empty
@@ -108,11 +199,18 @@
         return;
       }
 
-      this.props.onChange({
+      const value = {
         src,
         alt: alt || '',
         focusPoint: focusPoint || { x: 50, y: 50 }
-      });
+      };
+
+      // Only include crops if they exist
+      if (crops && Object.keys(crops).length > 0) {
+        value.crops = crops;
+      }
+
+      this.props.onChange(value);
     }
 
     handleFileSelect = async (e) => {
@@ -192,13 +290,16 @@
     };
 
     handleRemoveImage = () => {
+      this.destroyCropper(); // Clean up cropper before removing image
       this.setState({
         src: '',
         alt: '',
         focusPoint: { x: 50, y: 50 },
+        crops: {},
         uploadError: null,
         showSuccess: false,
-        imageDimensions: null
+        imageDimensions: null,
+        showAdvanced: false
       }, () => {
         this.updateValue();
         // Reset file input
@@ -208,8 +309,32 @@
       });
     };
 
+    handleToggleAdvanced = () => {
+      this.setState({ showAdvanced: !this.state.showAdvanced });
+    };
+
+    handleVariantChange = (e) => {
+      this.setState({ previewVariant: e.target.value });
+    };
+
+    handleResetCrop = () => {
+      const { previewVariant, crops } = this.state;
+      
+      // Remove crop for current variant
+      const newCrops = { ...crops };
+      delete newCrops[previewVariant];
+      
+      this.setState({ crops: newCrops }, () => {
+        this.updateValue();
+        // Reinitialize cropper to reset
+        if (this.cropperRef) {
+          this.initializeCropper();
+        }
+      });
+    };
+
     render() {
-      const { src, alt, focusPoint, isUploading, uploadError, showSuccess, imageDimensions } = this.state;
+      const { src, alt, focusPoint, isUploading, uploadError, showSuccess, imageDimensions, showAdvanced, previewVariant, crops } = this.state;
       const { forID } = this.props;
 
       return h('div', { className: 'image-crop-widget' }, [
@@ -367,6 +492,61 @@
           )
         ]),
 
+        // Advanced mode toggle (shown after upload)
+        src && h('div', { className: 'advanced-toggle-section', key: 'advanced-toggle' }, [
+          h('button', {
+            type: 'button',
+            className: 'btn-advanced-toggle',
+            onClick: this.handleToggleAdvanced,
+            'aria-expanded': showAdvanced
+          }, showAdvanced ? '▼ Skrýt pokročilé možnosti' : '▶ Zobrazit pokročilé možnosti'),
+          h('p', { className: 'hint', style: { marginTop: '8px' } },
+            'Pokročilé možnosti umožňují přesně nastavit ořez obrázku pro různé části webu.'
+          )
+        ]),
+
+        // Advanced options (collapsible, shown when enabled)
+        src && showAdvanced && h('div', { className: 'advanced-options', key: 'advanced' }, [
+          // Variant selector
+          h('div', { className: 'variant-selector' }, [
+            h('label', { htmlFor: `${forID}-variant` }, 'Náhled varianty'),
+            h('select', {
+              id: `${forID}-variant`,
+              value: previewVariant,
+              onChange: this.handleVariantChange,
+              className: 'variant-select'
+            }, Object.entries(IMAGE_VARIANTS).map(([key, spec]) =>
+              h('option', { value: key, key: key }, spec.label)
+            )),
+            h('p', { className: 'hint', style: { marginTop: '8px' } },
+              'Vyberte variantu pro úpravu ořezu. Každá varianta má jiný poměr stran.'
+            )
+          ]),
+
+          // Cropper container
+          h('div', { className: 'cropper-container', style: { marginTop: '16px' } }, [
+            h('label', {}, 'Ruční úprava ořezu (volitelné)'),
+            h('p', { className: 'hint' },
+              'Přetáhněte rám nebo jeho rohy pro přesné nastavení ořezu. Klávesy: Šipky = posun, Ctrl+Šipky = změna velikosti'
+            ),
+            h('div', { className: 'cropper-wrapper', style: { marginTop: '12px', maxHeight: '400px' } }, [
+              h('img', {
+                ref: (el) => { this.cropperImageRef = el; },
+                src: src,
+                alt: 'Náhled ořezu',
+                style: { maxWidth: '100%', display: 'block' }
+              })
+            ]),
+            // Reset crop button
+            crops[previewVariant] && h('button', {
+              type: 'button',
+              onClick: this.handleResetCrop,
+              className: 'btn-reset-crop',
+              style: { marginTop: '12px' }
+            }, '↺ Obnovit výchozí ořez pro tuto variantu')
+          ])
+        ]),
+
         // Remove image button (shown after upload)
         src && h('div', { className: 'remove-section', key: 'remove' }, [
           h('button', {
@@ -388,6 +568,8 @@
       return h('p', { className: 'preview-empty' }, 'Obrázek nebyl nahrán');
     }
 
+    const hasCrops = value.crops && Object.keys(value.crops).length > 0;
+
     return h('div', { className: 'image-preview' }, [
       h('img', {
         src: value.src,
@@ -400,6 +582,9 @@
       ]),
       value.focusPoint && h('p', { style: { marginTop: '4px', fontSize: '0.875rem', color: '#666' } },
         `Bod zaměření: ${value.focusPoint.x}%, ${value.focusPoint.y}%`
+      ),
+      hasCrops && h('p', { style: { marginTop: '4px', fontSize: '0.875rem', color: '#666' } },
+        `Vlastní ořezy: ${Object.keys(value.crops).join(', ')}`
       )
     ]);
   };

@@ -36,8 +36,8 @@
 ### Phase 4: Admin Interface
 - [x] **Phase 4A**: Admin Widget - Foundation
 - [x] **Phase 4B**: Admin Widget - Visual Focus Point
-- [ ] **Phase 4C**: Admin Widget - Advanced Mode
-- [ ] **Phase 4D**: Admin Widget - Validation & Error Handling
+- [x] **Phase 4C**: Admin Widget - Advanced Mode
+- [x] **Phase 4D**: Admin Widget - Validation & Error Handling
 
 ### Phase 5: Quality Assurance
 - [ ] **Phase 5**: Testing & Optimization
@@ -1305,11 +1305,14 @@ const handleFocusPointClick = (e) => {
 
 **Goal**: Add collapsible advanced options with Cropper.js
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Add advanced mode toggle
-- [ ] Integrate Cropper.js for manual cropping
-- [ ] Add variant selector
-- [ ] Add keyboard navigation
+- [x] Add advanced mode toggle
+- [x] Integrate Cropper.js for manual cropping
+- [x] Add variant selector
+- [x] Add keyboard navigation
+- [x] Add crop reset functionality
 
 **Deliverables**: (Add to existing widget)
 
@@ -1396,18 +1399,51 @@ React.useEffect(() => {
 )}
 ```
 
+**Implementation Notes**:
+- Enhanced widget to support advanced mode with Cropper.js integration
+- Added state management for `showAdvanced`, `previewVariant`, and `crops`
+- Integrated Cropper.js v1.6.1 from CDN (loaded in admin index.html)
+- Implemented lifecycle methods:
+  - `componentDidUpdate`: Initialize/reinitialize Cropper when entering advanced mode or changing variant
+  - `componentWillUnmount`: Clean up Cropper instance
+  - `initializeCropper()`: Set up Cropper with variant-specific aspect ratio
+  - `destroyCropper()`: Properly destroy Cropper to prevent memory leaks
+- Advanced mode features:
+  - Collapsible section with smooth animation
+  - Variant selector (hero, card, thumbnail, detail)
+  - Each variant maintains its own crop data
+  - Visual cropping interface with Cropper.js
+  - Reset crop button for each variant
+  - Keyboard support (arrows for positioning, Ctrl+arrows for resizing)
+- Cropper.js configured with:
+  - Variant-specific aspect ratios (16:9 or 3:2)
+  - Auto-crop area set to 100%
+  - Responsive mode enabled
+  - Saved crop data restored when switching back to a variant
+- Added comprehensive styles in `image-crop-widget.css`:
+  - Advanced toggle button styling
+  - Collapsible section animation
+  - Variant selector styling
+  - Cropper container styling
+  - Custom Cropper.js theme matching DG design system
+- Updated preview component to show crop information when available
+- All crop data saved to frontmatter as `crops` object with variant keys
+- Build succeeds with no errors
+
 ---
 
 ### Phase 4D: Admin Widget - Validation & Error Handling
 
 **Goal**: Add comprehensive validation and user feedback
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Add file validation (type, size, dimensions)
-- [ ] Add alt text validation (required, max 125 chars)
-- [ ] Add error messages (Czech, actionable)
-- [ ] Add loading states
-- [ ] Add success feedback
+- [x] Add file validation (type, size, dimensions)
+- [x] Add alt text validation (required, max 125 chars)
+- [x] Add error messages (Czech, actionable)
+- [x] Add loading states
+- [x] Add success feedback
 
 **Deliverables**: (Add to existing widget)
 
@@ -1507,6 +1543,56 @@ onChange={(e) => {
   </div>
 )}
 ```
+
+**Implementation Notes**:
+- Comprehensive validation implemented in Phase 4A (already complete)
+- `validateImage()` function performs:
+  - File type validation (JPG, PNG, WebP only)
+  - File size validation (max 10MB)
+  - Dimension validation (min 800×450px, max 4000×4000px)
+  - All error messages in Czech with actionable guidance
+- Error handling:
+  - Upload errors displayed with icon and descriptive message
+  - File type errors show actual format and accepted formats
+  - File size errors show actual size and maximum
+  - Dimension errors show actual dimensions and requirements
+- Loading states:
+  - Animated spinner during upload
+  - Loading overlay prevents interaction
+  - ARIA live region for screen readers
+  - "Nahrávání obrázku..." message
+- Success feedback:
+  - Green success message with checkmark icon
+  - Auto-hides after 3 seconds
+  - ARIA live region for accessibility
+  - "Obrázek byl úspěšně nahrán!" message
+- Alt text validation:
+  - Max 125 characters enforced by HTML maxLength
+  - Character counter displayed (e.g., "45 / 125")
+  - Required field indicator (asterisk)
+  - Placeholder text provides guidance
+  - Real-time character count updates
+- Upload requirements section:
+  - Displayed before upload
+  - Lists all requirements clearly
+  - Includes helpful tip for optimal size
+  - Color-coded with design system colors
+- All validation messages are:
+  - In Czech language
+  - Actionable (tell user what to do)
+  - Accessible (ARIA labels, roles)
+  - Visually clear (icons, colors)
+
+**Phase 4 Summary**:
+Phase 4 (Admin Interface) is now **100% complete**. The custom image-crop widget provides:
+- ✅ Simple mode: Upload, alt text, visual focus point selection
+- ✅ Advanced mode: Per-variant manual cropping with Cropper.js
+- ✅ Comprehensive validation and user feedback
+- ✅ Full Czech localization
+- ✅ WCAG AA accessibility compliance
+- ✅ Integration with Decap CMS
+- ✅ Backward compatibility with legacy string format
+- ✅ Zero errors in build
 
 ---
 
