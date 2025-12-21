@@ -1,5 +1,59 @@
 import { defineCollection, z } from 'astro:content';
 
+// Legacy image format (simple string path)
+const legacyImageSchema = z.string();
+
+// Enhanced image format (object with metadata)
+const enhancedImageSchema = z.object({
+  src: z.string(),
+  alt: z.string().optional(),
+  focusPoint: z
+    .object({
+      x: z.number().min(0).max(100),
+      y: z.number().min(0).max(100),
+    })
+    .optional(),
+  crops: z
+    .object({
+      hero: z
+        .object({
+          x: z.number(),
+          y: z.number(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
+      card: z
+        .object({
+          x: z.number(),
+          y: z.number(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
+      thumbnail: z
+        .object({
+          x: z.number(),
+          y: z.number(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
+      detail: z
+        .object({
+          x: z.number(),
+          y: z.number(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
+    })
+    .optional(),
+});
+
+// Union type: supports both legacy string and enhanced object formats
+const imageSchema = z.union([legacyImageSchema, enhancedImageSchema]).optional();
+
 // Articles collection schema
 const articlesCollection = defineCollection({
   type: 'content', // Markdown files with frontmatter
@@ -9,7 +63,7 @@ const articlesCollection = defineCollection({
     publishedAt: z.string(), // Keep as string (DD.MM.YYYY format)
     author: z.string(),
     tags: z.array(z.string()).default([]),
-    image: z.string().optional(),
+    image: imageSchema,
     featured: z.boolean().default(false),
     important: z.boolean().default(false),
     draft: z.boolean().default(false),

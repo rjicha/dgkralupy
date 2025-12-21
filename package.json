@@ -14,6 +14,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "migrate:images": "tsx scripts/migrate-article-images.ts",
+    "migrate:images:dry": "tsx scripts/migrate-article-images.ts --dry-run",
+    "migrate:images:verbose": "tsx scripts/migrate-article-images.ts --verbose",
     "docker:build": "docker-compose -f docker/docker-compose.yml build web",
     "docker:up": "docker-compose -f docker/docker-compose.yml up web",
     "docker:up:detached": "docker-compose -f docker/docker-compose.yml up -d web",
@@ -37,8 +40,10 @@
     "@vitest/ui": "^4.0.16",
     "eslint": "^8.0.0",
     "eslint-plugin-astro": "^0.31.0",
+    "gray-matter": "^4.0.3",
     "prettier": "^3.1.0",
     "prettier-plugin-astro": "^0.12.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.3.0",
     "vitest": "^4.0.16"
   }

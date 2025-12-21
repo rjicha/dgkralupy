@@ -29,8 +29,8 @@
 - [x] **Phase 2D**: Component Integration - Article Detail
 
 ### Phase 3: Content Schema & Migration
-- [ ] **Phase 3A**: Schema Update - Dual Format Support
-- [ ] **Phase 3B**: Migration Script
+- [x] **Phase 3A**: Schema Update - Dual Format Support
+- [x] **Phase 3B**: Migration Script
 - [ ] **Phase 3C**: Run Migration
 
 ### Phase 4: Admin Interface
@@ -659,11 +659,13 @@ const { title, description, image, date } = article.data;
 
 **Goal**: Update schema to support both old and new formats
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Update `src/content/config.ts` with union type
-- [ ] Add validation for both formats
-- [ ] Ensure backward compatibility
-- [ ] Add schema tests
+- [x] Update `src/content/config.ts` with union type
+- [x] Add validation for both formats
+- [x] Ensure backward compatibility
+- [ ] Add schema tests (deferred to Phase 5)
 
 **Deliverables**:
 
@@ -730,17 +732,26 @@ export const collections = {
 };
 ```
 
+**Implementation Notes**:
+- Updated schema to use union type supporting both string and object formats
+- Made `alt` field optional to maintain backward compatibility
+- All existing articles with string images continue to work
+- Build succeeds with no errors (verified 2025-12-21)
+- Backward compatibility verified: 7 existing articles still render correctly
+
 ---
 
 ### Phase 3B: Migration Script
 
 **Goal**: Create migration script for existing content
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Create `scripts/migrate-article-images.ts`
-- [ ] Add dry-run mode
-- [ ] Add rollback capability
-- [ ] Test with existing articles
+- [x] Create `scripts/migrate-article-images.ts`
+- [x] Add dry-run mode
+- [x] Add rollback capability
+- [x] Test with existing articles
 
 **Deliverables**:
 
@@ -882,6 +893,17 @@ npm run migrate:images:dry
 # Run actual migration
 npm run migrate:images
 ```
+
+**Implementation Notes**:
+- Created migration script with TypeScript
+- Implemented dry-run mode for safe testing
+- Implemented verbose mode for detailed output
+- Added proper error handling and validation
+- Installed dependencies: `gray-matter` and `tsx`
+- Added npm scripts: `migrate:images`, `migrate:images:dry`, `migrate:images:verbose`
+- Tested with dry-run: 7 articles ready to migrate, 0 errors
+- Migration script uses article title as default alt text
+- All images get default focus point (50%, 50%)
 
 ---
 
