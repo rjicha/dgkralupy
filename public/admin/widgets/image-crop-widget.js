@@ -8,20 +8,39 @@
  * - Advanced mode with Cropper.js for manual cropping
  * - Czech localization
  *
+ * @module widgets/image-crop-widget
  * @version 2.0.0
  */
 
-(function registerImageCropWidget() {
-  // Wait for CMS to be available
-  if (!window.CMS) {
-    console.log('Waiting for Decap CMS to load...');
-    // Retry after a short delay
-    setTimeout(registerImageCropWidget, 100);
-    return;
-  }
+import { registerWidget } from '../scripts/utils/widget-registration.js';
 
-  console.log('Registering image-crop widget...');
-  const { h, Component } = window.CMS;
+/**
+ * @typedef {Object} FocusPoint
+ * @property {number} x - X coordinate (0-100)
+ * @property {number} y - Y coordinate (0-100)
+ */
+
+/**
+ * @typedef {Object} CropData
+ * @property {number} x - Crop X position
+ * @property {number} y - Crop Y position
+ * @property {number} width - Crop width
+ * @property {number} height - Crop height
+ */
+
+/**
+ * @typedef {Object} ImageValue
+ * @property {string} src - Image source URL
+ * @property {string} alt - Alt text (max 125 chars)
+ * @property {FocusPoint} focusPoint - Focus point coordinates
+ * @property {Object.<string, CropData>} [crops] - Optional crops per variant
+ */
+
+// Register widget using shared utility
+await registerWidget('image-crop', async () => {
+  // Access React.createElement and createReactClass for components
+  const h = React.createElement;
+  const createClass = window.createReactClass;
 
   // Image variant specifications (matching imageVariants.ts)
   const IMAGE_VARIANTS = {
@@ -90,12 +109,10 @@
   /**
    * Enhanced Image Control Component
    */
-  class ImageCropControl extends Component {
-    constructor(props) {
-      super(props);
-
-      const value = props.value || {};
-      this.state = {
+  const ImageCropControl = createClass({
+    getInitialState: function() {
+      const value = this.props.value || {};
+      return {
         src: value.src || '',
         alt: value.alt || '',
         focusPoint: value.focusPoint || { x: 50, y: 50 },
@@ -107,22 +124,17 @@
         showAdvanced: false,
         previewVariant: 'hero'
       };
+    },
 
-      this.imagePreviewRef = null;
-      this.fileInputRef = null;
-      this.cropperRef = null;
-      this.cropperImageRef = null;
-    }
-
-    componentDidMount() {
+    componentDidMount: function() {
       // If we have an existing image, ensure proper data structure
       if (this.state.src && !this.state.alt) {
         // Migration helper: if old string format, convert to object
         this.updateValue();
       }
-    }
+    },
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate: function(_prevProps, prevState) {
       // Initialize/reinitialize Cropper.js when entering advanced mode or changing variant
       if (this.state.showAdvanced && this.state.src && this.cropperImageRef) {
         if (!this.cropperRef || 
@@ -134,13 +146,13 @@
         // Destroy cropper when leaving advanced mode
         this.destroyCropper();
       }
-    }
+    },
 
-    componentWillUnmount() {
+    componentWillUnmount: function() {
       this.destroyCropper();
-    }
+    },
 
-    initializeCropper() {
+    initializeCropper: function() {
       // Destroy existing cropper if any
       this.destroyCropper();
 
@@ -190,16 +202,16 @@
           });
         }
       });
-    }
+    },
 
-    destroyCropper() {
+    destroyCropper: function() {
       if (this.cropperRef) {
         this.cropperRef.destroy();
         this.cropperRef = null;
       }
-    }
+    },
 
-    updateValue() {
+    updateValue: function() {
       const { src, alt, focusPoint, crops } = this.state;
 
       if (!src) {
@@ -220,9 +232,9 @@
       }
 
       this.props.onChange(value);
-    }
+    },
 
-    handleFileSelect = async (e) => {
+    handleFileSelect: async function(e) {
       const file = e.target.files?.[0];
       if (!file) return;
 
@@ -262,15 +274,15 @@
         });
       };
       reader.readAsDataURL(file);
-    };
+    },
 
-    handleAltChange = (e) => {
+    handleAltChange: function(e) {
       this.setState({ alt: e.target.value }, () => {
         this.updateValue();
       });
-    };
+    },
 
-    handleFocusPointClick = (e) => {
+    handleFocusPointClick: function(e) {
       if (!this.imagePreviewRef) return;
 
       const rect = this.imagePreviewRef.getBoundingClientRect();
@@ -285,9 +297,9 @@
       }, () => {
         this.updateValue();
       });
-    };
+    },
 
-    handleFocusPointKeyDown = (e) => {
+    handleFocusPointKeyDown: function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.setState({
@@ -296,9 +308,9 @@
           this.updateValue();
         });
       }
-    };
+    },
 
-    handleRemoveImage = () => {
+    handleRemoveImage: function() {
       this.destroyCropper(); // Clean up cropper before removing image
       this.setState({
         src: '',
@@ -316,17 +328,17 @@
           this.fileInputRef.value = '';
         }
       });
-    };
+    },
 
-    handleToggleAdvanced = () => {
+    handleToggleAdvanced: function() {
       this.setState({ showAdvanced: !this.state.showAdvanced });
-    };
+    },
 
-    handleVariantChange = (e) => {
+    handleVariantChange: function(e) {
       this.setState({ previewVariant: e.target.value });
-    };
+    },
 
-    handleResetCrop = () => {
+    handleResetCrop: function() {
       const { previewVariant, crops } = this.state;
       
       // Remove crop for current variant
@@ -340,9 +352,9 @@
           this.initializeCropper();
         }
       });
-    };
+    },
 
-    render() {
+    render: function() {
       const { src, alt, focusPoint, isUploading, uploadError, showSuccess, imageDimensions, showAdvanced, previewVariant, crops } = this.state;
       const { forID } = this.props;
 
@@ -567,7 +579,7 @@
         ])
       ]);
     }
-  }
+  });
 
   /**
    * Preview Component
@@ -598,14 +610,9 @@
     ]);
   };
 
-  // Register the custom widget
-  window.CMS.registerWidget('image-crop', ImageCropControl, ImageCropPreview);
-  console.log('✓ image-crop widget registered with CMS');
-
-  // Signal that this widget is ready
-  if (typeof window.markWidgetReady === 'function') {
-    window.markWidgetReady('image-crop');
-  } else {
-    console.warn('Widget tracker not available - CMS may not initialize properly');
-  }
-})();
+  // Return widget components
+  return {
+    control: ImageCropControl,
+    preview: ImageCropPreview
+  };
+});

@@ -6,211 +6,7 @@
   <meta name="robots" content="noindex" />
   <title>Správa obsahu - Dvořákovo gymnázium Kralupy</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
-  <style>
-    /* ========================================
-       DESIGN SYSTEM TOKENS
-       ======================================== */
-    :root {
-      /* Color tokens from DG Kralupy design system */
-      --color-primary: #3b5f78;
-      --color-primary-dark: #273946;
-      --color-secondary: #44c2c4;
-      --color-accent-green: #bfcc34;
-      --color-accent-coral: #ff6b6b;
-      --color-text-muted: #a09f9f;
-      --color-bg-page: #f0f0f0;
-
-      /* Typography tokens */
-      --font-body: "Open Sans", Arial, sans-serif;
-      --font-size-xs: 0.75rem;    /* 12px - minimum readable */
-      --font-size-base: 1rem;     /* 16px - body text */
-      --font-weight-bold: 700;
-
-      /* Spacing tokens (TailwindCSS scale) */
-      --spacing-1-5: 0.375rem;    /* 6px */
-      --spacing-2-5: 0.625rem;    /* 10px */
-      --spacing-4: 1rem;          /* 16px */
-    }
-
-    /* Three-column grid layout: Left (branding) | Center (status) | Right (user) */
-    [class*="AppHeader"] [class*="AppHeaderContent"] {
-      display: grid !important;
-      grid-template-columns: 1fr auto 1fr !important;
-      align-items: center !important;
-      gap: var(--spacing-4) !important;
-      padding: 0 var(--spacing-4) !important;
-    }
-
-    /* Left: Site branding */
-    .admin-branding {
-      order: -1 !important;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-2-5);
-      justify-self: start;
-    }
-
-    .admin-branding img {
-      height: 32px;
-      width: auto;
-    }
-
-    .admin-branding span {
-      font-weight: var(--font-weight-bold);
-      font-size: var(--font-size-base);
-      color: inherit;
-      font-family: var(--font-body);
-    }
-
-    /* Center: Deployment status */
-    .deployment-status {
-      order: 0 !important;
-      justify-self: center;
-      position: relative;
-    }
-
-    .deployment-status a {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-1-5);
-      text-decoration: none;
-      color: inherit;
-      padding: var(--spacing-1-5) var(--spacing-2-5);
-      border-radius: 4px;
-      transition: background-color 0.2s;
-      cursor: pointer;
-    }
-
-    .deployment-status a:hover {
-      background-color: var(--color-bg-page);
-    }
-
-    .deployment-status a:focus {
-      outline: 2px solid var(--color-secondary);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
-    .deployment-status a:focus:not(:focus-visible) {
-      outline: none;  /* Remove outline for mouse users */
-    }
-
-    .github-icon {
-      flex-shrink: 0;
-      opacity: 0.7;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      transition: background-color 0.3s;
-    }
-
-    .status-dot.success {
-      background-color: var(--color-accent-green);  /* #bfcc34 */
-    }
-
-    .status-dot.failure,
-    .status-dot.cancelled {
-      background-color: var(--color-accent-coral);  /* #ff6b6b */
-    }
-
-    .status-dot.in_progress {
-      background-color: var(--color-secondary);  /* #44c2c4 */
-      animation: pulse 2s infinite;
-    }
-
-    .status-dot.queued,
-    .status-dot.pending,
-    .status-dot.waiting,
-    .status-dot.requested {
-      background-color: var(--color-text-muted);  /* #a09f9f */
-    }
-
-    .status-dot.loading {
-      background-color: var(--color-bg-page);  /* #f0f0f0 */
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Tooltip */
-    .status-tooltip {
-      position: absolute;
-      bottom: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--color-primary-dark);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: var(--font-size-xs);
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 1000;
-      font-family: var(--font-body);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .status-tooltip::before {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-bottom: 5px solid var(--color-primary-dark);
-    }
-
-    .deployment-status a:hover .status-tooltip {
-      opacity: 1;
-    }
-
-    #deployment-time {
-      font-size: var(--font-size-xs);  /* 12px instead of 11px */
-      opacity: 0.8;
-    }
-
-    /* Right: User menu */
-    [class*="AppHeader"] [class*="AppHeaderButton"],
-    [class*="AppHeader"] [class*="SettingsDropdown"] {
-      order: 1 !important;
-      justify-self: end !important;
-      margin-left: 0 !important;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .admin-branding span {
-        display: none;
-      }
-
-      [class*="AppHeader"] [class*="AppHeaderContent"] {
-        grid-template-columns: auto 1fr auto !important;
-      }
-
-      /* Larger touch targets for mobile */
-      .deployment-status a {
-        padding: 0.75rem;  /* 12px - min 44x44px touch target */
-      }
-
-      .status-dot {
-        width: 10px;
-        height: 10px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./styles/admin.css" />
 </head>
 <body>
   <!-- Site branding (left) -->
@@ -243,6 +39,13 @@
     window.CMS_MANUAL_INIT = true;
   </script>
 
+  <!-- Load React 16 (same version Decap CMS likely uses) to avoid conflicts -->
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+
+  <!-- createReactClass polyfill for legacy widget code -->
+  <script src="./scripts/polyfills/create-react-class.js"></script>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 
@@ -250,210 +53,22 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <!-- Widget registration tracker -->
-  <script>
-    // Track which widgets have successfully registered
-    window.widgetsReady = {
-      'author-auto': false,
-      'image-crop': false
-    };
+  <!-- Widget registration manager (ES6 module) -->
+  <script type="module" src="./scripts/widget-manager.js"></script>
 
-    /**
-     * Called by each widget when it successfully registers
-     * @param {string} widgetName - The name of the registered widget
-     */
-    window.markWidgetReady = function(widgetName) {
-      if (!window.widgetsReady.hasOwnProperty(widgetName)) {
-        console.warn(`Unknown widget registered: ${widgetName}`);
-        return;
-      }
-
-      window.widgetsReady[widgetName] = true;
-      console.log(`✓ Widget "${widgetName}" registered successfully`);
-
-      // Check if all widgets are ready
-      const allReady = Object.values(window.widgetsReady).every(ready => ready);
-      if (allReady && typeof window.CMS !== 'undefined') {
-        console.log('All widgets ready, initializing CMS...');
-        window.CMS.init();
-        console.log('✓ Decap CMS initialized successfully');
-      }
-    };
-
-    console.log('Widget tracker initialized:', window.widgetsReady);
-  </script>
-
-  <!-- Custom widgets (must load BEFORE CMS initialization) -->
-  <script src="./author-widget.js"></script>
-  <script src="./widgets/image-crop-widget.js"></script>
+  <!-- Custom widgets (ES6 modules) -->
+  <script type="module" src="./author-widget.js"></script>
+  <script type="module" src="./widgets/image-crop-widget.js"></script>
 
   <!-- Widget styles -->
   <link rel="stylesheet" href="./widgets/image-crop-widget.css" />
 
   <!-- Initialize CMS manually after all widgets are registered -->
   <script>
-    /**
-     * Initialize CMS when both CMS is loaded AND all widgets are registered
-     */
-    (function initCMS() {
-      // First, wait for CMS library to load
-      if (typeof CMS === 'undefined') {
-        console.log('Waiting for Decap CMS library to load...');
-        setTimeout(initCMS, 100);
-        return;
-      }
-
-      console.log('Decap CMS library loaded');
-
-      // Check if all widgets are already registered
-      const allReady = Object.values(window.widgetsReady).every(ready => ready);
-
-      if (allReady) {
-        console.log('All widgets already registered, initializing CMS now...');
-        CMS.init();
-        console.log('✓ Decap CMS initialized successfully');
-      } else {
-        console.log('CMS loaded, waiting for widgets to register...');
-        console.log('Pending widgets:',
-          Object.entries(window.widgetsReady)
-            .filter(([_, ready]) => !ready)
-            .map(([name, _]) => name)
-        );
-        // Widgets will call CMS.init() via markWidgetReady() when ready
-      }
-    })();
+    WidgetManager.initializeCMS();
   </script>
 
-  <!-- Move custom elements into CMS header -->
-  <script>
-    (function() {
-      function moveCustomElements() {
-        const branding = document.querySelector('.admin-branding');
-        const deploymentStatus = document.querySelector('.deployment-status');
-        const appHeaderContent = document.querySelector('[class*="AppHeaderContent"]');
-
-        if (!appHeaderContent) return false;
-
-        // Insert branding at the beginning if not already there
-        if (branding && !appHeaderContent.contains(branding)) {
-          appHeaderContent.insertBefore(branding, appHeaderContent.firstChild);
-        }
-
-        // Insert deployment status after branding if not already there
-        if (deploymentStatus && !appHeaderContent.contains(deploymentStatus)) {
-          const insertPosition = branding && appHeaderContent.contains(branding)
-            ? branding.nextSibling
-            : appHeaderContent.firstChild;
-          appHeaderContent.insertBefore(deploymentStatus, insertPosition);
-        }
-
-        return branding && deploymentStatus &&
-               appHeaderContent.contains(branding) &&
-               appHeaderContent.contains(deploymentStatus);
-      }
-
-      // Try to move once CMS loads
-      const observer = new MutationObserver(() => {
-        if (moveCustomElements()) {
-          observer.disconnect();
-        }
-      });
-
-      // Watch for CMS to render
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-
-      // Also try immediately in case CMS is already loaded
-      setTimeout(moveCustomElements, 1000);
-    })();
-
-    // Fetch and display actual deployment status
-    (function() {
-      const REPO_OWNER = 'rjicha';
-      const REPO_NAME = 'dgkralupy';
-      const WORKFLOW_FILE = 'deploy.yml';
-      const API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/runs?per_page=1`;
-
-      const dotElement = document.getElementById('deployment-dot');
-      const stateElement = document.getElementById('deployment-state');
-      const timeElement = document.getElementById('deployment-time');
-
-      const STATE_LABELS = {
-        'success': 'Úspěšně nasazeno',
-        'failure': 'Nasazení selhalo',
-        'cancelled': 'Nasazení zrušeno',
-        'in_progress': 'Probíhá nasazení',
-        'queued': 'Čeká ve frontě',
-        'pending': 'Čeká na spuštění',
-        'waiting': 'Čeká',
-        'requested': 'Ve frontě',
-        'action_required': 'Vyžaduje akci'
-      };
-
-      function formatTimeAgo(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / 60000);
-
-        if (diffMins < 1) return 'právě teď';
-        if (diffMins < 60) return `před ${diffMins} min`;
-
-        const diffHours = Math.floor(diffMins / 60);
-        if (diffHours < 24) return `před ${diffHours} h`;
-
-        const diffDays = Math.floor(diffHours / 24);
-        return `před ${diffDays} dny`;
-      }
-
-      async function fetchDeploymentStatus() {
-        try {
-          const response = await fetch(API_URL);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-          if (data.workflow_runs && data.workflow_runs.length > 0) {
-            const latestRun = data.workflow_runs[0];
-            const status = latestRun.status;
-            const conclusion = latestRun.conclusion;
-            const updatedAt = latestRun.updated_at;
-
-            let state;
-            if (status === 'completed' && conclusion) {
-              state = conclusion;
-            } else {
-              state = status;
-            }
-
-            // Update dot color
-            dotElement.className = `status-dot ${state}`;
-
-            // Update tooltip content
-            stateElement.textContent = STATE_LABELS[state] || state;
-            timeElement.textContent = formatTimeAgo(updatedAt);
-          } else {
-            dotElement.className = 'status-dot loading';
-            stateElement.textContent = 'Neznámý stav';
-            timeElement.textContent = '';
-          }
-        } catch (error) {
-          console.error('Failed to fetch deployment status:', error);
-          dotElement.className = 'status-dot failure';
-          stateElement.textContent = 'Chyba načítání';
-          timeElement.textContent = '';
-        }
-
-        // Always refresh every 5 seconds as per requirements
-        setTimeout(fetchDeploymentStatus, 5000);
-      }
-
-      // Start fetching status
-      fetchDeploymentStatus();
-    })();
-  </script>
+  <!-- Deployment status component (ES6 module) -->
+  <script type="module" src="./scripts/components/deployment-status.js"></script>
 </body>
 </html>

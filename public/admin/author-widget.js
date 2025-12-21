@@ -1,14 +1,23 @@
-// Custom widget that auto-populates author from logged-in GitHub user
-(async function registerAuthorWidget() {
-  // Wait for CMS to be available
-  if (!window.CMS) {
-    console.log('Author widget: Waiting for Decap CMS to load...');
-    setTimeout(registerAuthorWidget, 100);
-    return;
-  }
+/**
+ * Author Auto-populate Widget
+ * Custom widget that auto-populates author from logged-in GitHub user
+ *
+ * @module author-widget
+ */
 
-  console.log('Registering author-auto widget...');
-  const { h, Component } = window.CMS;
+import { registerWidget } from './scripts/utils/widget-registration.js';
+
+/**
+ * @typedef {Object} AuthorData
+ * @property {Object.<string, string>} mapping - GitHub username to display name mapping
+ * @property {string} defaultAuthor - Default author name
+ */
+
+// Register widget using shared utility
+await registerWidget('author-auto', async () => {
+  // Access React.createElement and createReactClass for components
+  const h = React.createElement;
+  const createClass = window.createReactClass;
 
   // Fetch author mappings
   let authorsData = { mapping: {}, defaultAuthor: "Redakce" };
@@ -21,15 +30,15 @@
     console.warn('Could not load author mappings, using defaults', e);
   }
 
-  class AuthorControl extends Component {
-    componentDidMount() {
+  const AuthorControl = createClass({
+    componentDidMount: function() {
       // Auto-populate only if field is empty
       if (!this.props.value) {
         this.setAuthorFromCurrentUser();
       }
-    }
+    },
 
-    setAuthorFromCurrentUser() {
+    setAuthorFromCurrentUser: function() {
       // Try to get current user from window context
       // Decap CMS exposes this after login
       const getUserInfo = () => {
@@ -42,9 +51,9 @@
           const cmsApp = document.querySelector('[class*="CMS"]');
           if (cmsApp && cmsApp.__reactInternalInstance$) {
             // React internal access (fragile, but sometimes necessary)
-            const fiber = cmsApp._reactRootContainer?._internalRoot?.current;
+            // Note: This approach is CMS version-dependent and currently unused
+            // const fiber = cmsApp._reactRootContainer?._internalRoot?.current;
             // Navigate fiber tree to find user context
-            // This is CMS version-dependent
           }
           return null;
         } catch (e) {
@@ -63,13 +72,13 @@
         : authorsData.defaultAuthor;
 
       this.props.onChange(displayName);
-    }
+    },
 
-    handleChange = (e) => {
+    handleChange: function(e) {
       this.props.onChange(e.target.value);
-    }
+    },
 
-    render() {
+    render: function() {
       return h('div', { className: 'nc-controlPane-control' },
         h('input', {
           id: this.props.forID,
@@ -81,18 +90,17 @@
         })
       );
     }
-  }
+  });
 
-  const AuthorPreview = ({ value }) =>
-    h('div', {}, value || 'Autor nebyl zadán');
+  const AuthorPreview = createClass({
+    render: function() {
+      return h('div', {}, this.props.value || 'Autor nebyl zadán');
+    }
+  });
 
-  window.CMS.registerWidget('author-auto', AuthorControl, AuthorPreview);
-  console.log('✓ author-auto widget registered with CMS');
-
-  // Signal that this widget is ready
-  if (typeof window.markWidgetReady === 'function') {
-    window.markWidgetReady('author-auto');
-  } else {
-    console.warn('Widget tracker not available - CMS may not initialize properly');
-  }
-})();
+  // Return widget components
+  return {
+    control: AuthorControl,
+    preview: AuthorPreview
+  };
+});
