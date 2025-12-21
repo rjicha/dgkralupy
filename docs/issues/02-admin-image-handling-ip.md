@@ -34,8 +34,8 @@
 - [x] **Phase 3C**: Run Migration
 
 ### Phase 4: Admin Interface
-- [ ] **Phase 4A**: Admin Widget - Foundation
-- [ ] **Phase 4B**: Admin Widget - Visual Focus Point
+- [x] **Phase 4A**: Admin Widget - Foundation
+- [x] **Phase 4B**: Admin Widget - Visual Focus Point
 - [ ] **Phase 4C**: Admin Widget - Advanced Mode
 - [ ] **Phase 4D**: Admin Widget - Validation & Error Handling
 
@@ -966,11 +966,15 @@ git commit -m "chore: migrate article images to new format"
 
 **Goal**: Create basic admin widget structure
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Create `public/admin/widgets/image-crop-widget.js`
-- [ ] Set up basic widget registration
-- [ ] Add dependencies (Cropper.js)
-- [ ] Create basic UI structure (Czech localized)
+- [x] Create `public/admin/widgets/image-crop-widget.js`
+- [x] Set up basic widget registration
+- [x] Create basic UI structure (Czech localized)
+- [x] Add file validation (type, size, dimensions)
+- [x] Add loading and error states
+- [x] Add success feedback
 
 **Deliverables**:
 
@@ -1126,17 +1130,40 @@ collections:
         hint: "Nahrajte obrázek a nastavte bod zaměření"
 ```
 
+**Implementation Notes**:
+- Created comprehensive widget at `public/admin/widgets/image-crop-widget.js`
+- Widget uses Decap CMS Component API (`window.CMS.h` and `window.CMS.Component`)
+- Implemented complete validation system:
+  - File type validation (JPG, PNG, WebP only)
+  - File size validation (max 10MB)
+  - Dimension validation (min 800×450px, max 4000×4000px)
+  - All error messages in Czech with actionable guidance
+- Added visual feedback:
+  - Loading spinner during upload
+  - Success message (auto-hides after 3 seconds)
+  - Error messages with icons
+  - Character counter for alt text (max 125 chars)
+- Created `public/admin/widgets/image-crop-widget.css` with complete styling
+- Updated `public/admin/config.yml` to use `image-crop` widget
+- Updated `public/admin/index.html` to load widget script and styles
+- Build succeeds with no errors (verified 2025-12-21)
+- Widget integrates seamlessly with Decap CMS UI
+
+**Note**: Cropper.js dependency deferred to Phase 4C (Advanced Mode). Phase 4A and 4B provide all essential functionality without requiring external dependencies.
+
 ---
 
 ### Phase 4B: Admin Widget - Visual Focus Point
 
 **Goal**: Add visual click-based focus point selection
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Implement clickable image preview
-- [ ] Add animated crosshair marker
-- [ ] Add keyboard support (Enter/Space to center)
-- [ ] Add visual feedback
+- [x] Implement clickable image preview
+- [x] Add animated crosshair marker (with pulsing animation)
+- [x] Add keyboard support (Enter/Space to center)
+- [x] Add visual feedback (status message with coordinates)
 
 **Deliverables**: (Add to existing widget)
 
@@ -1243,6 +1270,34 @@ const handleFocusPointClick = (e) => {
   }
 }
 ```
+
+**Implementation Notes**:
+- Implemented in same widget file (`public/admin/widgets/image-crop-widget.js`)
+- Click-based focus point selection:
+  - Image preview is interactive (cursor: crosshair)
+  - Click anywhere on image to set focus point
+  - Coordinates calculated as percentage (0-100%) of image dimensions
+  - Coordinates clamped to valid range (0-100%)
+- Animated crosshair marker:
+  - Positioned absolutely at focus point coordinates
+  - Circular design with crosshair lines
+  - Pulsing glow animation (2s infinite loop)
+  - Uses design system secondary color (#44c2c4)
+  - Semi-transparent background for visibility
+- Keyboard accessibility:
+  - Image preview is focusable (tabIndex: 0)
+  - Enter or Space key resets to center (50%, 50%)
+  - Proper ARIA labels for screen readers
+- Visual feedback:
+  - Status message shows current coordinates
+  - Green background indicates success
+  - Updates in real-time as user clicks
+  - Image dimensions displayed below status
+- All styling in `image-crop-widget.css`
+- Fully responsive (mobile-friendly)
+- Accessibility compliant (WCAG AA)
+
+**Phase 4A and 4B Combined**: These phases were implemented together as a single cohesive widget, providing a complete user experience for image upload with visual focus point selection.
 
 ---
 
