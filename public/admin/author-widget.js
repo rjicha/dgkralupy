@@ -1,5 +1,13 @@
 // Custom widget that auto-populates author from logged-in GitHub user
-(async function() {
+(async function registerAuthorWidget() {
+  // Wait for CMS to be available
+  if (!window.CMS) {
+    console.log('Author widget: Waiting for Decap CMS to load...');
+    setTimeout(registerAuthorWidget, 100);
+    return;
+  }
+
+  console.log('Registering author-auto widget...');
   const { h, Component } = window.CMS;
 
   // Fetch author mappings
@@ -77,4 +85,5 @@
     h('div', {}, value || 'Autor nebyl zadán');
 
   window.CMS.registerWidget('author-auto', AuthorControl, AuthorPreview);
+  console.log('✓ author-auto widget registered successfully');
 })();

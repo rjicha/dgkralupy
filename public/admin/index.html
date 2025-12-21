@@ -238,6 +238,11 @@
     </a>
   </div>
 
+  <!-- Enable manual initialization to ensure widgets load before CMS init -->
+  <script>
+    window.CMS_MANUAL_INIT = true;
+  </script>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 
@@ -245,12 +250,28 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <!-- Custom widgets -->
+  <!-- Custom widgets (must load BEFORE CMS initialization) -->
   <script src="./author-widget.js"></script>
   <script src="./widgets/image-crop-widget.js"></script>
 
   <!-- Widget styles -->
   <link rel="stylesheet" href="./widgets/image-crop-widget.css" />
+
+  <!-- Initialize CMS manually after all widgets are registered -->
+  <script>
+    // Wait for all widgets to register, then initialize CMS
+    (function initCMS() {
+      if (typeof CMS === 'undefined') {
+        console.log('Waiting for CMS to load...');
+        setTimeout(initCMS, 100);
+        return;
+      }
+
+      console.log('Initializing Decap CMS with custom widgets...');
+      CMS.init();
+      console.log('✓ Decap CMS initialized successfully');
+    })();
+  </script>
 
   <!-- Move custom elements into CMS header -->
   <script>
