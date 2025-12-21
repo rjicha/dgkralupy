@@ -1,10 +1,20 @@
 ---
-title: "Halloween na DG"
-excerpt: "Studenti si užili tradiční halloweenskou oslavu s kostýmy, soutěžemi a strašidelnou atmosférou."
-publishedAt: "01.11.2025"
-author: "Studentský parlament"
-tags: ["Akce", "Studentský parlament", "Zábava"]
-image: "/images/halloween.jpg"
+title: Halloween na DG
+excerpt: >-
+  Studenti si užili tradiční halloweenskou oslavu s kostýmy, soutěžemi a
+  strašidelnou atmosférou.
+publishedAt: 01.11.2025
+author: Studentský parlament
+tags:
+  - Akce
+  - Studentský parlament
+  - Zábava
+image:
+  src: /images/halloween.jpg
+  alt: Halloween na DG
+  focusPoint:
+    x: 50
+    'y': 50
 featured: false
 important: false
 draft: false

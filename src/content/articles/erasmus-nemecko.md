@@ -1,10 +1,20 @@
 ---
-title: "Erasmus+ výměnný pobyt v Německu"
-excerpt: "Skupina našich studentů se vrátila z týdenního pobytu v německém partnerském gymnáziu v rámci programu Erasmus+."
-publishedAt: "10.10.2025"
-author: "Mgr. Eva Černá"
-tags: ["Erasmus+", "Zahraniční pobyt", "Studium"]
-image: "/images/erasmus-germany.jpg"
+title: Erasmus+ výměnný pobyt v Německu
+excerpt: >-
+  Skupina našich studentů se vrátila z týdenního pobytu v německém partnerském
+  gymnáziu v rámci programu Erasmus+.
+publishedAt: 10.10.2025
+author: Mgr. Eva Černá
+tags:
+  - Erasmus+
+  - Zahraniční pobyt
+  - Studium
+image:
+  src: /images/erasmus-germany.jpg
+  alt: Erasmus+ výměnný pobyt v Německu
+  focusPoint:
+    x: 50
+    'y': 50
 featured: false
 important: false
 draft: false

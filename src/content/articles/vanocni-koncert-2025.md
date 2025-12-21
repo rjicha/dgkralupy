@@ -1,10 +1,20 @@
 ---
-title: "Vánoční koncert"
-excerpt: "Pěvecký sbor DG a další hudební uskupení vás srdečně zvou na tradiční vánoční koncert, který se koná 18. prosince 2025."
-publishedAt: "25.11.2025"
-author: "Mgr. Marie Dvořáková"
-tags: ["Kultura", "Hudba", "Akce"]
-image: "/images/christmas-concert.jpg"
+title: Vánoční koncert
+excerpt: >-
+  Pěvecký sbor DG a další hudební uskupení vás srdečně zvou na tradiční vánoční
+  koncert, který se koná 18. prosince 2025.
+publishedAt: 25.11.2025
+author: Mgr. Marie Dvořáková
+tags:
+  - Kultura
+  - Hudba
+  - Akce
+image:
+  src: /images/christmas-concert.jpg
+  alt: Vánoční koncert
+  focusPoint:
+    x: 50
+    'y': 50
 featured: false
 important: false
 draft: false

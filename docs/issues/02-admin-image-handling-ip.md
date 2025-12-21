@@ -31,7 +31,7 @@
 ### Phase 3: Content Schema & Migration
 - [x] **Phase 3A**: Schema Update - Dual Format Support
 - [x] **Phase 3B**: Migration Script
-- [ ] **Phase 3C**: Run Migration
+- [x] **Phase 3C**: Run Migration
 
 ### Phase 4: Admin Interface
 - [ ] **Phase 4A**: Admin Widget - Foundation
@@ -911,12 +911,14 @@ npm run migrate:images
 
 **Goal**: Actually migrate existing content
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Backup existing content
-- [ ] Run migration script
-- [ ] Verify all articles still work
-- [ ] Test build with migrated content
-- [ ] Visual regression testing
+- [x] Backup existing content
+- [x] Run migration script
+- [x] Verify all articles still work
+- [x] Test build with migrated content
+- [ ] Visual regression testing (deferred to Phase 5)
 
 **Checklist**:
 ```bash
@@ -941,6 +943,22 @@ npm run dev
 git add src/content/articles/
 git commit -m "chore: migrate article images to new format"
 ```
+
+**Implementation Notes**:
+- Created local backup branch: `backup/pre-migration`
+- Ran dry-run migration: 7 articles ready, 0 errors
+- Executed migration successfully: all 7 articles migrated
+  - adventni-behani.md
+  - den-otevrenych-dveri-prosinec-2025.md
+  - erasmus-nemecko.md
+  - halloween-oslava.md
+  - rekonstrukce-knihovny.md
+  - test-page.md
+  - vanocni-koncert-2025.md
+- Build verification: ✅ All 32 pages generated successfully
+- All migrated articles now use enhanced image format with alt text and focus points
+- Default alt text derived from article titles
+- Default focus point set to center (50%, 50%)
 
 ---
 
