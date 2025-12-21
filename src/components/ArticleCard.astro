@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import ResponsiveImage from './ResponsiveImage.astro';
 
 interface Props {
   article: CollectionEntry<'articles'>['data'];
@@ -14,11 +15,11 @@ const { article, slug, featured = false } = Astro.props;
   <!-- Image -->
   <div class="relative overflow-hidden bg-border-light aspect-video">
     {article.image ? (
-      <img
-        src={import.meta.env.BASE_URL + article.image}
-        alt={article.title}
-        class="w-full h-full object-cover"
+      <ResponsiveImage
+        image={article.image}
+        variant="card"
         loading="lazy"
+        class="w-full h-full object-cover"
       />
     ) : (
       <div class="w-full h-full flex items-center justify-center bg-primary-dark">

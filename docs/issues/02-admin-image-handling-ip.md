@@ -25,8 +25,8 @@
 ### Phase 2: Component Implementation
 - [x] **Phase 2A**: Responsive Image Component - Foundation
 - [x] **Phase 2B**: Component Integration - Hero
-- [ ] **Phase 2C**: Component Integration - Article Card
-- [ ] **Phase 2D**: Component Integration - Article Detail
+- [x] **Phase 2C**: Component Integration - Article Card
+- [x] **Phase 2D**: Component Integration - Article Detail
 
 ### Phase 3: Content Schema & Migration
 - [ ] **Phase 3A**: Schema Update - Dual Format Support
@@ -505,11 +505,13 @@ const { title, description, image } = Astro.props;
 
 **Goal**: Update ArticleCard to use ResponsiveImage
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Update `src/components/ArticleCard.astro`
-- [ ] Maintain backward compatibility
-- [ ] Test with existing articles
-- [ ] Update component tests
+- [x] Update `src/components/ArticleCard.astro`
+- [x] Maintain backward compatibility
+- [x] Test with existing articles
+- [x] Update component tests
 
 **Deliverables**:
 
@@ -557,17 +559,26 @@ const { title, description, image, date } = article.data;
 </article>
 ```
 
+**Implementation Notes**:
+- Updated ArticleCard component to use ResponsiveImage with "card" variant
+- Component maintains backward compatibility with legacy string format
+- Preserved existing fallback when no image is present (DG logo)
+- All styling and functionality preserved from original implementation
+- Build succeeds with all article cards rendering correctly
+
 ---
 
 ### Phase 2D: Component Integration - Article Detail
 
 **Goal**: Update article detail page to use ResponsiveImage
 
+**Status**: ✅ **Completed** (2025-12-21)
+
 **Tasks**:
-- [ ] Update `src/pages/articles/[slug].astro`
-- [ ] Update related articles section
-- [ ] Maintain backward compatibility
-- [ ] Test with all existing articles
+- [x] Update `src/pages/aktualne/[slug].astro`
+- [x] Update related articles section
+- [x] Maintain backward compatibility
+- [x] Test with all existing articles
 
 **Deliverables**:
 
@@ -633,6 +644,14 @@ const { title, description, image, date } = article.data;
   )}
 </Layout>
 ```
+
+**Implementation Notes**:
+- Updated article detail page to use ResponsiveImage with "detail" variant for featured images
+- Updated related articles section to use ResponsiveImage with "thumbnail" variant
+- All images maintain backward compatibility with legacy string format
+- Build succeeds with no errors, all 32 pages generated successfully
+- Featured images use `loading="eager"` for better UX
+- Related article thumbnails use `loading="lazy"` for performance
 
 ---
 

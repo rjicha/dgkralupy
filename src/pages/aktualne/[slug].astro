@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
 
 // Get the slug from the URL
 export async function getStaticPaths() {
@@ -91,9 +92,10 @@ const relatedArticles = allArticles
     <!-- Featured Image -->
     {article.data.image && (
       <figure class="mb-8 -mx-4 md:mx-0">
-        <img
-          src={import.meta.env.BASE_URL + article.data.image}
-          alt={article.data.title}
+        <ResponsiveImage
+          image={article.data.image}
+          variant="detail"
+          loading="eager"
           class="w-full h-auto object-cover max-h-[500px]"
         />
       </figure>
@@ -161,11 +163,11 @@ const relatedArticles = allArticles
             <article class="bg-bg-content border border-border-light overflow-hidden hover:shadow-lg transition-shadow">
               <a href={import.meta.env.BASE_URL + `/aktualne/${relatedArticle.slug}`} class="block">
                 {relatedArticle.data.image ? (
-                  <img
-                    src={import.meta.env.BASE_URL + relatedArticle.data.image}
-                    alt={relatedArticle.data.title}
-                    class="w-full h-48 object-cover"
+                  <ResponsiveImage
+                    image={relatedArticle.data.image}
+                    variant="thumbnail"
                     loading="lazy"
+                    class="w-full h-48 object-cover"
                   />
                 ) : (
                   <div class="w-full h-48 flex items-center justify-center bg-primary/10">
