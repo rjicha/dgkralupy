@@ -93,12 +93,44 @@ collections:
 
       - label: "Hlavní obrázek"
         name: "image"
-        widget: "image"
+        widget: "object"
         required: false
         hint: "Hlavní obrázek článku (doporučený formát: 1200x675px)"
-        media_library:
-          config:
-            multiple: false
+        collapsed: false
+        fields:
+          - label: "Obrázek"
+            name: "src"
+            widget: "image"
+            required: false
+            media_library:
+              config:
+                multiple: false
+          - label: "Alternativní text"
+            name: "alt"
+            widget: "string"
+            required: false
+            hint: "Popis obrázku pro čtečky obrazovky a SEO"
+          - label: "Zaostření obrázku"
+            name: "focusPoint"
+            widget: "object"
+            required: false
+            hint: "Bod zaostření pro ořez (0-100, výchozí: 50,50)"
+            collapsed: true
+            fields:
+              - label: "Horizontální pozice (X)"
+                name: "x"
+                widget: "number"
+                default: 50
+                value_type: "int"
+                min: 0
+                max: 100
+              - label: "Vertikální pozice (Y)"
+                name: "y"
+                widget: "number"
+                default: 50
+                value_type: "int"
+                min: 0
+                max: 100
 
       - label: "Zvýrazněný článek"
         name: "featured"
