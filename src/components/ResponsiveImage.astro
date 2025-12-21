@@ -56,7 +56,7 @@ const altText = altOverride || imageData.alt || '';
 // Construct full image path with BASE_URL
 const fullImageSrc = imageData.src.startsWith('http')
   ? imageData.src
-  : import.meta.env.BASE_URL + imageData.src.replace(/^\//, '');
+  : `${import.meta.env.BASE_URL}/${imageData.src.replace(/^\//, '')}`;
 
 // Calculate object-position from focus point
 const objectPosition = imageData.focusPoint
