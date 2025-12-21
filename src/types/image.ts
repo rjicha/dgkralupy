@@ -32,7 +32,7 @@ export interface CropData {
  */
 export interface EnhancedImageData {
   src: string;
-  alt: string;
+  alt?: string;
   focusPoint?: FocusPoint;
   crops?: Partial<Record<ImageVariant, CropData>>;
 }
