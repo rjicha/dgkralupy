@@ -1,0 +1,90 @@
+---
+/**
+ * ResponsiveImage Component
+ *
+ * Displays images with support for both legacy (string) and enhanced (object) formats.
+ * Provides graceful fallback when image optimization is not available.
+ *
+ * @component
+ * @example
+ * <!-- Legacy format (string) -->
+ * <ResponsiveImage image="/images/photo.jpg" variant="hero" />
+ *
+ * @example
+ * <!-- Enhanced format (object) -->
+ * <ResponsiveImage
+ *   image={{ src: "/images/photo.jpg", alt: "Description", focusPoint: { x: 60, y: 40 } }}
+ *   variant="card"
+ *   loading="lazy"
+ * />
+ */
+
+import { normalizeImageData } from '../lib/utils/imageProcessing';
+import type { ImageData } from '../types/image';
+import type { ImageVariant } from '../lib/utils/imageVariants';
+
+interface Props {
+  /** Image data (supports both string path and object format) */
+  image: ImageData;
+  /** Variant to use (hero, card, thumbnail, detail) */
+  variant: ImageVariant;
+  /** Loading strategy (lazy or eager) */
+  loading?: 'lazy' | 'eager';
+  /** Additional CSS classes */
+  class?: string;
+  /** Additional inline styles */
+  style?: string;
+  /** Alt text override (fallback if not in image data) */
+  alt?: string;
+}
+
+const {
+  image,
+  variant,
+  loading = 'lazy',
+  class: className = '',
+  style = '',
+  alt: altOverride
+} = Astro.props;
+
+// Normalize image data (handles both string and object formats)
+const imageData = normalizeImageData(image);
+
+// Use alt from props, then from image data, then empty string
+const altText = altOverride || imageData.alt || '';
+
+// Construct full image path with BASE_URL
+const fullImageSrc = imageData.src.startsWith('http')
+  ? imageData.src
+  : import.meta.env.BASE_URL + imageData.src.replace(/^\//, '');
+
+// Calculate object-position from focus point
+const objectPosition = imageData.focusPoint
+  ? `${imageData.focusPoint.x}% ${imageData.focusPoint.y}%`
+  : 'center';
+
+/**
+ * Note: This is Phase 2A implementation using direct image references.
+ * Future enhancement (when images move to src/assets/):
+ * - Use generateImageVariants() for multi-format optimization (AVIF, WebP, JPG)
+ * - Generate responsive srcset for different screen sizes
+ * - Apply custom crops per variant
+ *
+ * Current implementation provides:
+ * - Backward compatibility with existing string format
+ * - Support for new object format with focus points
+ * - Proper alt text handling
+ * - Object-position based on focus point
+ */
+---
+
+<img
+  src={fullImageSrc}
+  alt={altText}
+  loading={loading}
+  decoding="async"
+  class={className}
+  style={`object-position: ${objectPosition}; ${style}`}
+  data-variant={variant}
+  data-focus-point={imageData.focusPoint ? `${imageData.focusPoint.x},${imageData.focusPoint.y}` : undefined}
+/>

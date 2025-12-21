@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import ResponsiveImage from './ResponsiveImage.astro';
 
 interface Props {
   article: CollectionEntry<'articles'>['data'];
@@ -12,10 +13,12 @@ const { article, slug } = Astro.props;
 <div class="relative w-full h-96 overflow-hidden bg-primary-dark">
   <!-- Background Image -->
   {article.image ? (
-    <img
-      src={import.meta.env.BASE_URL + article.image}
-      alt={article.title}
+    <ResponsiveImage
+      image={article.image}
+      variant="hero"
+      loading="eager"
       class="absolute inset-0 w-full h-full object-cover opacity-50"
+      alt={article.title}
     />
   ) : (
     <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-primary via-secondary to-accent-green opacity-30" />
