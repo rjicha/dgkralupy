@@ -11,7 +11,16 @@
  * @version 2.0.0
  */
 
-(function() {
+(function registerImageCropWidget() {
+  // Wait for CMS to be available
+  if (!window.CMS) {
+    console.log('Waiting for Decap CMS to load...');
+    // Retry after a short delay
+    setTimeout(registerImageCropWidget, 100);
+    return;
+  }
+
+  console.log('Registering image-crop widget...');
   const { h, Component } = window.CMS;
 
   // Image variant specifications (matching imageVariants.ts)
@@ -591,4 +600,5 @@
 
   // Register the custom widget
   window.CMS.registerWidget('image-crop', ImageCropControl, ImageCropPreview);
+  console.log('✓ image-crop widget registered successfully');
 })();
