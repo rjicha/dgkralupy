@@ -29,68 +29,18 @@ describe('CMS Configuration Schema Validation', () => {
       });
     });
 
-    it('should configure image field as object with correct nested fields', () => {
+    it('should configure image field with image-crop widget', () => {
       const config = parseCMSConfig(CMS_CONFIG_PATH);
       const articlesCollection = getCollection(config, 'articles');
 
       const imageField = findField(articlesCollection!.fields!, 'image');
 
       expect(imageField).toBeDefined();
-      expect(imageField?.widget).toBe('object');
-      expect(imageField?.fields).toBeDefined();
-
-      const nestedFields = imageField!.fields!;
-      const nestedFieldNames = nestedFields.map(f => f.name);
-
-      // Enhanced image schema requires these fields
-      expect(nestedFieldNames).toContain('src');
-      expect(nestedFieldNames).toContain('alt');
-      expect(nestedFieldNames).toContain('focusPoint');
-
-      // Verify src is an image widget
-      const srcField = findField(nestedFields, 'src');
-      expect(srcField?.widget).toBe('image');
-
-      // Verify alt is a string widget
-      const altField = findField(nestedFields, 'alt');
-      expect(altField?.widget).toBe('string');
-
-      // Verify focusPoint is an object
-      const focusPointField = findField(nestedFields, 'focusPoint');
-      expect(focusPointField?.widget).toBe('object');
-      expect(focusPointField?.fields).toBeDefined();
-
-      // Verify focusPoint has x and y number fields
-      const fpFields = focusPointField!.fields!;
-      const xField = findField(fpFields, 'x');
-      const yField = findField(fpFields, 'y');
-
-      expect(xField?.widget).toBe('number');
-      expect(yField?.widget).toBe('number');
+      // The custom image-crop widget handles the enhanced image structure internally
+      expect(imageField?.widget).toBe('image-crop');
+      expect(imageField?.required).toBe(false);
     });
 
-    it('should validate focusPoint constraints (0-100)', () => {
-      const config = parseCMSConfig(CMS_CONFIG_PATH);
-      const articlesCollection = getCollection(config, 'articles');
-
-      const imageField = findField(articlesCollection!.fields!, 'image');
-      const focusPointField = findField(imageField!.fields!, 'focusPoint');
-      const xField = findField(focusPointField!.fields!, 'x');
-      const yField = findField(focusPointField!.fields!, 'y');
-
-      // Check that x and y have min/max constraints matching schema
-      expect(xField).toMatchObject({
-        widget: 'number',
-        min: 0,
-        max: 100,
-      });
-
-      expect(yField).toMatchObject({
-        widget: 'number',
-        min: 0,
-        max: 100,
-      });
-    });
 
     it('should configure tags as list widget', () => {
       const config = parseCMSConfig(CMS_CONFIG_PATH);
@@ -178,7 +128,7 @@ describe('CMS Configuration Schema Validation', () => {
         publishedAt: 'string',
         author: 'author-auto',
         tags: 'list',
-        image: 'object',
+        image: 'image-crop',
         featured: 'boolean',
         important: 'boolean',
         draft: 'boolean',

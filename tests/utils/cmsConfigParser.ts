@@ -99,6 +99,7 @@ export const widgetToTypeMap: Record<string, string[]> = {
   select: ['string'],
   relation: ['string'],
   'author-auto': ['string'],
+  'image-crop': ['object'], // Custom widget that stores enhanced image object
 };
 
 /**
