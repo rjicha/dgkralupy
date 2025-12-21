@@ -250,6 +250,39 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <!-- Widget registration tracker -->
+  <script>
+    // Track which widgets have successfully registered
+    window.widgetsReady = {
+      'author-auto': false,
+      'image-crop': false
+    };
+
+    /**
+     * Called by each widget when it successfully registers
+     * @param {string} widgetName - The name of the registered widget
+     */
+    window.markWidgetReady = function(widgetName) {
+      if (!window.widgetsReady.hasOwnProperty(widgetName)) {
+        console.warn(`Unknown widget registered: ${widgetName}`);
+        return;
+      }
+
+      window.widgetsReady[widgetName] = true;
+      console.log(`✓ Widget "${widgetName}" registered successfully`);
+
+      // Check if all widgets are ready
+      const allReady = Object.values(window.widgetsReady).every(ready => ready);
+      if (allReady && typeof window.CMS !== 'undefined') {
+        console.log('All widgets ready, initializing CMS...');
+        window.CMS.init();
+        console.log('✓ Decap CMS initialized successfully');
+      }
+    };
+
+    console.log('Widget tracker initialized:', window.widgetsReady);
+  </script>
+
   <!-- Custom widgets (must load BEFORE CMS initialization) -->
   <script src="./author-widget.js"></script>
   <script src="./widgets/image-crop-widget.js"></script>
@@ -259,17 +292,35 @@
 
   <!-- Initialize CMS manually after all widgets are registered -->
   <script>
-    // Wait for all widgets to register, then initialize CMS
+    /**
+     * Initialize CMS when both CMS is loaded AND all widgets are registered
+     */
     (function initCMS() {
+      // First, wait for CMS library to load
       if (typeof CMS === 'undefined') {
-        console.log('Waiting for CMS to load...');
+        console.log('Waiting for Decap CMS library to load...');
         setTimeout(initCMS, 100);
         return;
       }
 
-      console.log('Initializing Decap CMS with custom widgets...');
-      CMS.init();
-      console.log('✓ Decap CMS initialized successfully');
+      console.log('Decap CMS library loaded');
+
+      // Check if all widgets are already registered
+      const allReady = Object.values(window.widgetsReady).every(ready => ready);
+
+      if (allReady) {
+        console.log('All widgets already registered, initializing CMS now...');
+        CMS.init();
+        console.log('✓ Decap CMS initialized successfully');
+      } else {
+        console.log('CMS loaded, waiting for widgets to register...');
+        console.log('Pending widgets:',
+          Object.entries(window.widgetsReady)
+            .filter(([_, ready]) => !ready)
+            .map(([name, _]) => name)
+        );
+        // Widgets will call CMS.init() via markWidgetReady() when ready
+      }
     })();
   </script>
 

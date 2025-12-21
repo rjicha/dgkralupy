@@ -13,7 +13,9 @@
   // Fetch author mappings
   let authorsData = { mapping: {}, defaultAuthor: "Redakce" };
   try {
-    const response = await fetch('/dgkralupy/content/authors/authors.json');
+    // Use relative path from admin directory instead of hardcoded base path
+    const basePath = window.location.pathname.split('/admin')[0] || '/dgkralupy';
+    const response = await fetch(`${basePath}/content/authors/authors.json`);
     authorsData = await response.json();
   } catch (e) {
     console.warn('Could not load author mappings, using defaults', e);
@@ -85,5 +87,12 @@
     h('div', {}, value || 'Autor nebyl zadán');
 
   window.CMS.registerWidget('author-auto', AuthorControl, AuthorPreview);
-  console.log('✓ author-auto widget registered successfully');
+  console.log('✓ author-auto widget registered with CMS');
+
+  // Signal that this widget is ready
+  if (typeof window.markWidgetReady === 'function') {
+    window.markWidgetReady('author-auto');
+  } else {
+    console.warn('Widget tracker not available - CMS may not initialize properly');
+  }
 })();

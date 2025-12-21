@@ -600,5 +600,12 @@
 
   // Register the custom widget
   window.CMS.registerWidget('image-crop', ImageCropControl, ImageCropPreview);
-  console.log('✓ image-crop widget registered successfully');
+  console.log('✓ image-crop widget registered with CMS');
+
+  // Signal that this widget is ready
+  if (typeof window.markWidgetReady === 'function') {
+    window.markWidgetReady('image-crop');
+  } else {
+    console.warn('Widget tracker not available - CMS may not initialize properly');
+  }
 })();
