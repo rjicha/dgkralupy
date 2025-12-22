@@ -10,6 +10,9 @@ export interface CMSField {
   fields?: CMSField[];
   pattern?: [string, string];
   hint?: string;
+  format?: string;
+  date_format?: string;
+  time_format?: boolean | string;
 }
 
 export interface CMSFileConfig {
