@@ -213,12 +213,21 @@ var authorsPath = '/dgkralupy/content/authors/authors.json';
 ## Implementation Phases
 
 ### Phase 1: Core Fixes
+<<<<<<< Updated upstream
 - [x] Step 1: Create backup commit
 - [x] Step 2: Implement retry logic with path fix and critical improvements
 - [ ] Step 3: (Optional) Configure base path override in config.yml
 - [x] Step 4: Standardize author data format
 - [x] Step 5: Verify changes locally
 - [x] Step 6: Commit changes
+=======
+- [ ] Step 1: Create backup commit
+- [ ] Step 2: Implement retry logic with path fix and critical improvements
+- [ ] Step 3: (Optional) Configure base path override in config.yml
+- [ ] Step 4: Standardize author data format
+- [ ] Step 5: Verify changes locally
+- [ ] Step 6: Commit changes
+>>>>>>> Stashed changes
 
 ### Phase 2: Testing
 - [ ] Test Case 1: Local development environment
