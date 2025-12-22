@@ -1,16 +1,21 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import * as path from 'path';
 
 export interface CMSField {
   label: string;
   name: string;
   widget: string;
   required?: boolean;
-  default?: any;
+  default?: unknown;
   fields?: CMSField[];
   pattern?: [string, string];
   hint?: string;
+}
+
+export interface CMSFileConfig {
+  name: string;
+  fields: CMSField[];
+  [key: string]: unknown;
 }
 
 export interface CMSCollection {
@@ -18,7 +23,7 @@ export interface CMSCollection {
   label: string;
   folder?: string;
   file?: string;
-  files?: any[];
+  files?: CMSFileConfig[];
   fields?: CMSField[];
 }
 
@@ -31,10 +36,13 @@ export interface CMSConfig {
  */
 export function parseCMSConfig(configPath: string): CMSConfig {
   const configContent = fs.readFileSync(configPath, 'utf8');
-  const config = yaml.load(configContent) as any;
+  const config = yaml.load(configContent) as unknown;
+
+  // Type guard for config structure
+  const parsedConfig = config as { collections?: unknown[] };
 
   return {
-    collections: config.collections || [],
+    collections: (parsedConfig.collections || []) as CMSCollection[],
   };
 }
 

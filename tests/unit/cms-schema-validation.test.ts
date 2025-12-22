@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseCMSConfig, getCollection, findField, getExpectedType } from '../utils/cmsConfigParser';
+import { parseCMSConfig, getCollection, findField, type CMSFileConfig, type CMSField } from '../utils/cmsConfigParser';
 import path from 'path';
 
 const CMS_CONFIG_PATH = path.resolve(__dirname, '../../public/admin/config.yml');
@@ -170,11 +170,11 @@ describe('CMS Configuration Schema Validation', () => {
       expect(settingsCollection).toBeDefined();
       expect(settingsCollection?.files).toBeDefined();
 
-      const contactsFile = settingsCollection!.files!.find((f: any) => f.name === 'contacts');
+      const contactsFile = settingsCollection!.files!.find((f: CMSFileConfig) => f.name === 'contacts');
       expect(contactsFile).toBeDefined();
-      expect(contactsFile.fields).toBeDefined();
+      expect(contactsFile!.fields).toBeDefined();
 
-      const fieldNames = contactsFile.fields.map((f: any) => f.name);
+      const fieldNames = contactsFile!.fields.map((f: CMSField) => f.name);
       expect(fieldNames).toContain('school');
       expect(fieldNames).toContain('cafeteria');
       expect(fieldNames).toContain('socialMedia');
@@ -184,10 +184,10 @@ describe('CMS Configuration Schema Validation', () => {
       const config = parseCMSConfig(CMS_CONFIG_PATH);
       const settingsCollection = getCollection(config, 'settings');
 
-      const navigationFile = settingsCollection!.files!.find((f: any) => f.name === 'navigation');
+      const navigationFile = settingsCollection!.files!.find((f: CMSFileConfig) => f.name === 'navigation');
       expect(navigationFile).toBeDefined();
 
-      const sectionsField = findField(navigationFile.fields, 'sections');
+      const sectionsField = findField(navigationFile!.fields, 'sections');
       expect(sectionsField?.widget).toBe('list');
     });
 
@@ -195,10 +195,10 @@ describe('CMS Configuration Schema Validation', () => {
       const config = parseCMSConfig(CMS_CONFIG_PATH);
       const settingsCollection = getCollection(config, 'settings');
 
-      const sponsorsFile = settingsCollection!.files!.find((f: any) => f.name === 'sponsors');
+      const sponsorsFile = settingsCollection!.files!.find((f: CMSFileConfig) => f.name === 'sponsors');
       expect(sponsorsFile).toBeDefined();
 
-      const partnersField = findField(sponsorsFile.fields, 'partners');
+      const partnersField = findField(sponsorsFile!.fields, 'partners');
       expect(partnersField?.widget).toBe('list');
 
       // Verify partners have logo field as image

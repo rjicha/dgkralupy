@@ -1,11 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-// Get navigation data to build subsection links
-const navigationData = await getEntry('navigation', 'navigation');
-const aboutSection = navigationData?.data.sections.find(s => s.id === 'about');
 
 // Get all pages in the o-skole section
 const pages = await getCollection('pages', ({ data, slug }) => {

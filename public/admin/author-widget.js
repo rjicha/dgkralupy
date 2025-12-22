@@ -5,6 +5,8 @@
  * @module author-widget
  */
 
+/* global React */
+
 import { registerWidget } from './scripts/utils/widget-registration.js';
 
 /**

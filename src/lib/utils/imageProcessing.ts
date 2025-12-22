@@ -42,7 +42,7 @@ export async function generateImageVariants(
 
   try {
     for (const [variantName, specs] of Object.entries(IMAGE_VARIANTS)) {
-      const crop = customCrops?.[variantName as ImageVariant];
+      const _crop = customCrops?.[variantName as ImageVariant];
       const position = focusPoint
         ? `${focusPoint.x}% ${focusPoint.y}%`
         : 'center';

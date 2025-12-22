@@ -12,6 +12,8 @@
  * @version 2.0.0
  */
 
+/* global React */
+
 import { registerWidget } from '../scripts/utils/widget-registration.js';
 
 /**

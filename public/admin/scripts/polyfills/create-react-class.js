@@ -7,6 +7,8 @@
  * @see https://reactjs.org/docs/react-without-es6.html
  */
 
+/* global React */
+
 // Create a polyfill for createReactClass using modern React
 window.createReactClass = function(spec) {
   return class extends React.Component {

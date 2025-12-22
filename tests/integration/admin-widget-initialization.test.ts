@@ -28,7 +28,8 @@ describe('Admin Widget Initialization Flow', () => {
     isReady: (name: string) => boolean;
     initializeCMS: () => void;
   };
-  let registerWidget: (name: string, factory: () => Promise<{ control: unknown; preview?: unknown }>) => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let registerWidget: (name: string, factory: () => Promise<{ control: any; preview?: any }>) => Promise<void>;
   let waitForDependencies: (deps: string[], timeout?: number) => Promise<void>;
 
   beforeEach(async () => {
@@ -38,11 +39,11 @@ describe('Admin Widget Initialization Flow', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     // Clear window objects
-    delete (window as Record<string, unknown>).CMS;
-    delete (window as Record<string, unknown>).React;
-    delete (window as Record<string, unknown>).createReactClass;
-    delete (window as Record<string, unknown>).WidgetManager;
-    delete (window as Record<string, unknown>).markWidgetReady;
+    delete (window as unknown as Record<string, unknown>).CMS;
+    delete (window as unknown as Record<string, unknown>).React;
+    delete (window as unknown as Record<string, unknown>).createReactClass;
+    delete (window as unknown as Record<string, unknown>).WidgetManager;
+    delete (window as unknown as Record<string, unknown>).markWidgetReady;
 
     // Create fresh mocks
     mockCMS = {
@@ -62,11 +63,11 @@ describe('Admin Widget Initialization Flow', () => {
 
   afterEach(() => {
     // Clean up
-    delete (window as Record<string, unknown>).CMS;
-    delete (window as Record<string, unknown>).React;
-    delete (window as Record<string, unknown>).createReactClass;
-    delete (window as Record<string, unknown>).WidgetManager;
-    delete (window as Record<string, unknown>).markWidgetReady;
+    delete (window as unknown as Record<string, unknown>).CMS;
+    delete (window as unknown as Record<string, unknown>).React;
+    delete (window as unknown as Record<string, unknown>).createReactClass;
+    delete (window as unknown as Record<string, unknown>).WidgetManager;
+    delete (window as unknown as Record<string, unknown>).markWidgetReady;
 
     vi.restoreAllMocks();
   });
@@ -82,14 +83,14 @@ describe('Admin Widget Initialization Flow', () => {
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
 
-    expect((window as Record<string, unknown>).WidgetManager).toBe(WidgetManager);
+    expect((window as unknown as Record<string, unknown>).WidgetManager).toBe(WidgetManager);
     expect(WidgetManager.isReady('author-auto')).toBe(false);
     expect(WidgetManager.isReady('image-crop')).toBe(false);
 
     // Step 2: CMS library becomes available
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     // Step 3: Load and execute widget registration utility
     const { registerWidget: regWidget } = await import('../../public/admin/scripts/utils/widget-registration.js');
@@ -132,8 +133,8 @@ describe('Admin Widget Initialization Flow', () => {
     WidgetManager = widgetManagerModule.WidgetManager;
 
     // Step 2: Try to register widgets before CMS is available
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const { registerWidget: regWidget } = await import('../../public/admin/scripts/utils/widget-registration.js');
     registerWidget = regWidget;
@@ -152,7 +153,7 @@ describe('Admin Widget Initialization Flow', () => {
     expect(mockCMS.init).not.toHaveBeenCalled();
 
     // Now make CMS available
-    (window as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
 
     // Wait for registration to complete
     await registrationPromise;
@@ -163,9 +164,9 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should handle CMS library loading before widgets', async () => {
     // Step 1: CMS library loads first
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     // Step 2: Load Widget Manager
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
@@ -197,9 +198,9 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should handle widgets loading in reverse order', async () => {
     // Setup
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
@@ -225,9 +226,9 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should handle widget registration failure gracefully', async () => {
     // Setup
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
@@ -253,12 +254,12 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should use legacy markWidgetReady if WidgetManager is not available', async () => {
     // Setup without Widget Manager
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const legacyMarkReady = vi.fn();
-    (window as Record<string, unknown>).markWidgetReady = legacyMarkReady;
+    (window as unknown as Record<string, unknown>).markWidgetReady = legacyMarkReady;
 
     const { registerWidget: regWidget } = await import('../../public/admin/scripts/utils/widget-registration.js');
     registerWidget = regWidget;
@@ -273,7 +274,7 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should wait for React and createReactClass before registering widgets', async () => {
     // Setup with only CMS available
-    (window as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
 
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
@@ -293,8 +294,8 @@ describe('Admin Widget Initialization Flow', () => {
     expect(mockCMS.registerWidget).not.toHaveBeenCalled();
 
     // Make React available
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     // Wait for registration to complete
     await registrationPromise;
@@ -324,9 +325,9 @@ describe('Admin Widget Initialization Flow', () => {
       throw new Error('CMS initialization failed');
     });
 
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
@@ -350,9 +351,9 @@ describe('Admin Widget Initialization Flow', () => {
 
   it('should handle concurrent widget registrations', async () => {
     // Setup
-    (window as Record<string, unknown>).CMS = mockCMS;
-    (window as Record<string, unknown>).React = mockReact;
-    (window as Record<string, unknown>).createReactClass = mockCreateReactClass;
+    (window as unknown as Record<string, unknown>).CMS = mockCMS;
+    (window as unknown as Record<string, unknown>).React = mockReact;
+    (window as unknown as Record<string, unknown>).createReactClass = mockCreateReactClass;
 
     const widgetManagerModule = await import('../../public/admin/scripts/widget-manager.js');
     WidgetManager = widgetManagerModule.WidgetManager;
