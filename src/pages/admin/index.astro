@@ -29,68 +29,611 @@ export const prerender = true;
         sans-serif;
     }
 
-    /* Loading state */
-    .loading {
+    /* Loading overlay - hidden once CMS loads */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      background: #fff;
       font-size: 18px;
       color: var(--primary);
+      z-index: 9999;
+    }
+
+    #loading-overlay.hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <!-- CMS will mount here -->
-  <div id="nc-root" class="loading">
+  <!-- Loading overlay - hidden once CMS mounts -->
+  <div id="loading-overlay">
     Načítání administrace...
   </div>
 
-  <!-- Decap CMS - loaded after DOM is ready -->
+  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" is:inline></script>
-
-  <!-- Widget initialization scripts -->
+  
+  <!-- Inline Custom Widgets Registration -->
   <script is:inline>
-    // Initialize CMS with widgets properly loaded
-    // This prevents race conditions by loading widgets dynamically after CMS is ready
-    window.addEventListener('load', async () => {
+    (function() {
+      'use strict';
+
+      console.log('='.repeat(60));
+      console.log('🚀 WIDGET REGISTRATION SCRIPT STARTED');
+      console.log('='.repeat(60));
+      
+      // Check if required globals are available
+      console.log('Checking required globals...');
+      console.log('- window.CMS:', typeof window.CMS, window.CMS);
+      console.log('- createClass:', typeof createClass);
+      console.log('- h:', typeof h);
+      
+      if (!window.CMS) {
+        console.error('❌ CRITICAL: CMS object not found! Decap CMS may not be loaded yet.');
+        return;
+      }
+      
+      if (typeof createClass === 'undefined') {
+        console.error('❌ CRITICAL: createClass function not found!');
+        return;
+      }
+      
+      if (typeof h === 'undefined') {
+        console.error('❌ CRITICAL: h function not found!');
+        return;
+      }
+      
+      console.log('✅ All required globals are available');
+
+        // ==========================================
+        // AUTHOR WIDGET
+        // ==========================================
+        console.log('📝 Defining Author widget...');
+        var AuthorControl = createClass({
+          getInitialState: function() {
+            return {
+              author: 'Načítání...',
+              githubUser: null,
+              error: null
+            };
+          },
+
+          componentDidMount: function() {
+            this.determineAuthor();
+          },
+
+          determineAuthor: function() {
+            var self = this;
+            
+            // Get GitHub user from backend
+            var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
+            if (!backend || !backend.currentUser) {
+              console.error('Unable to access CMS backend');
+              self.setState({ 
+                author: 'Redakce', 
+                error: 'Backend není dostupný' 
+              });
+              self.props.onChange('Redakce');
+              return;
+            }
+
+            backend.currentUser().then(function(user) {
+              var githubUsername = user && (user.login || user.name);
+              
+              if (!githubUsername) {
+                throw new Error('GitHub uživatel nenalezen');
+              }
+
+              self.setState({ githubUser: githubUsername });
+
+              // Fetch author mappings
+              var authorsPath = '/dgkralupy/content/authors/authors.json';
+              return fetch(authorsPath)
+                .then(function(response) {
+                  if (!response.ok) {
+                    throw new Error('Soubor authors.json nenalezen');
+                  }
+                  return response.json();
+                })
+                .then(function(data) {
+                  // Support both old object format and new array format
+                  var mappings = data.mappings || [];
+                  var mapping = null;
+                  
+                  // Try array format first
+                  if (Array.isArray(mappings)) {
+                    mapping = mappings.find(function(m) {
+                      return m.github === githubUsername;
+                    });
+                  } 
+                  // Fallback to object format
+                  else if (data.mapping && typeof data.mapping === 'object') {
+                    var displayName = data.mapping[githubUsername];
+                    if (displayName) {
+                      mapping = { displayName: displayName };
+                    }
+                  }
+
+                  var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
+
+                  self.setState({
+                    author: authorName,
+                    error: null
+                  });
+                  self.props.onChange(authorName);
+                });
+            }).catch(function(error) {
+              console.error('Chyba při načítání autora:', error);
+              self.setState({
+                author: 'Redakce',
+                error: error.message
+              });
+              self.props.onChange('Redakce');
+            });
+          },
+
+          render: function() {
+            console.log('🎨 AuthorControl.render() called');
+            var author = this.state.author;
+            var githubUser = this.state.githubUser;
+            var error = this.state.error;
+
+            return h('div', { 
+              className: 'author-widget',
+              style: {
+                padding: '12px',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }
+            },
+              h('p', { 
+                style: { 
+                  margin: '8px 0', 
+                  fontWeight: 500, 
+                  fontSize: '14px',
+                  color: '#333'
+                } 
+              }, author),
+              
+              githubUser && h('p', {
+                style: {
+                  margin: '4px 0',
+                  fontSize: '12px',
+                  color: '#666'
+                }
+              }, 'GitHub: ' + githubUser),
+              
+              h('p', {
+                style: {
+                  margin: '4px 0',
+                  fontSize: '11px',
+                  color: '#999'
+                }
+              }, 'Autor je nastaven automaticky na základě vašeho GitHub účtu'),
+              
+              error && h('p', {
+                style: {
+                  margin: '8px 0 4px',
+                  fontSize: '12px',
+                  color: '#c00'
+                }
+              }, '⚠️ ' + error)
+            );
+          }
+        });
+
+        console.log('✅ Author control component defined');
+        
+        var AuthorPreview = createClass({
+          render: function() {
+            console.log('🎨 AuthorPreview.render() called');
+            return h('div', {},
+              h('strong', {}, 'Autor: '),
+              this.props.value || 'Redakce'
+            );
+          }
+        });
+        console.log('✅ Author preview component defined');
+
+        // ==========================================
+        // ENHANCED IMAGE WIDGET
+        // ==========================================
+        console.log('🖼️  Defining Enhanced Image widget...');
+        var MAX_ALT_LENGTH = 125;
+        var MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+        var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+        var EnhancedImageControl = createClass({
+          getInitialState: function() {
+            var value = this.props.value || {};
+            return {
+              src: value.src || null,
+              alt: value.alt || '',
+              focusPoint: value.focusPoint || { x: 50, y: 50 },
+              crops: value.crops || {},
+              error: null,
+              isDragging: false
+            };
+          },
+
+          validateFile: function(file) {
+            if (!ALLOWED_TYPES.includes(file.type)) {
+              return 'Podporované formáty: JPG, PNG, WebP';
+            }
+            if (file.size > MAX_FILE_SIZE) {
+              return 'Maximální velikost souboru je 5 MB';
+            }
+            return null;
+          },
+
+          handleFileSelect: function(e) {
+            var self = this;
+            var file = e.target.files[0];
+            if (!file) return;
+
+            var validationError = this.validateFile(file);
+            if (validationError) {
+              this.setState({ error: validationError });
+              return;
+            }
+
+            // Use CMS media library for upload
+            if (this.props.onOpenMediaLibrary) {
+              this.props.onOpenMediaLibrary({
+                controlMedia: this.props.mediaPaths && this.props.mediaPaths.get(this.props.field.get('name')),
+                forImage: true
+              }).then(function(mediaFile) {
+                self.setState({
+                  src: mediaFile.path,
+                  error: null
+                }, function() {
+                  self.emitChange();
+                });
+              }).catch(function(error) {
+                console.error('Image upload error:', error);
+                self.setState({ error: 'Nahrávání se nezdařilo: ' + error.message });
+              });
+            }
+          },
+
+          handleAltChange: function(e) {
+            var alt = e.target.value.slice(0, MAX_ALT_LENGTH);
+            var self = this;
+            this.setState({ alt: alt }, function() {
+              self.emitChange();
+            });
+          },
+
+          handleFocusPointChange: function(e) {
+            var rect = e.currentTarget.getBoundingClientRect();
+            var x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+            var y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+            var self = this;
+
+            this.setState({
+              focusPoint: {
+                x: Math.max(0, Math.min(100, x)),
+                y: Math.max(0, Math.min(100, y))
+              }
+            }, function() {
+              self.emitChange();
+            });
+          },
+
+          handleRemove: function() {
+            this.setState({
+              src: null,
+              alt: '',
+              focusPoint: { x: 50, y: 50 },
+              crops: {}
+            });
+            this.props.onChange(null);
+          },
+
+          emitChange: function() {
+            var src = this.state.src;
+            var alt = this.state.alt;
+            var focusPoint = this.state.focusPoint;
+            var crops = this.state.crops;
+
+            if (!src) {
+              this.props.onChange(null);
+              return;
+            }
+
+            this.props.onChange({
+              src: src,
+              alt: alt,
+              focusPoint: focusPoint,
+              crops: crops
+            });
+          },
+
+          handleDropzoneClick: function() {
+            if (this.fileInputRef) {
+              this.fileInputRef.click();
+            }
+          },
+
+          render: function() {
+            console.log('🎨 EnhancedImageControl.render() called');
+            var self = this;
+            var src = this.state.src;
+            var alt = this.state.alt;
+            var focusPoint = this.state.focusPoint;
+            var error = this.state.error;
+            var isDragging = this.state.isDragging;
+
+            var containerStyle = {
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '16px',
+              marginBottom: '16px'
+            };
+
+            var dropzoneStyle = {
+              border: '2px dashed ' + (isDragging ? '#3b5f78' : '#ccc'),
+              borderRadius: '8px',
+              padding: '40px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              backgroundColor: isDragging ? '#f0f7ff' : 'transparent',
+              transition: 'all 0.2s'
+            };
+
+            var errorStyle = {
+              padding: '12px',
+              backgroundColor: '#fee',
+              border: '1px solid #fcc',
+              borderRadius: '4px',
+              color: '#c00',
+              marginBottom: '12px'
+            };
+
+            return h('div', { className: 'enhanced-image-widget', style: containerStyle },
+              error && h('div', { style: errorStyle }, error),
+              
+              !src && h('div', {
+                style: dropzoneStyle,
+                onClick: this.handleDropzoneClick
+              },
+                h('p', {}, '📁 Klikněte nebo přetáhněte obrázek'),
+                h('p', { style: { fontSize: '12px', color: '#666', marginTop: '4px' } }, 
+                  'JPG, PNG, WebP • Max 5 MB'),
+                h('input', {
+                  ref: function(ref) { self.fileInputRef = ref; },
+                  type: 'file',
+                  accept: 'image/jpeg,image/png,image/webp',
+                  style: { display: 'none' },
+                  onChange: this.handleFileSelect
+                })
+              ),
+              
+              src && h('div', { style: { marginTop: '16px' } },
+                h('div', {
+                  style: {
+                    position: 'relative',
+                    cursor: 'crosshair',
+                    marginBottom: '16px'
+                  },
+                  onClick: this.handleFocusPointChange
+                },
+                  h('img', {
+                    src: src,
+                    alt: alt,
+                    style: {
+                      maxWidth: '100%',
+                      display: 'block',
+                      borderRadius: '4px'
+                    }
+                  }),
+                  h('div', {
+                    style: {
+                      position: 'absolute',
+                      width: '20px',
+                      height: '20px',
+                      marginLeft: '-10px',
+                      marginTop: '-10px',
+                      borderRadius: '50%',
+                      border: '3px solid #ff6b6b',
+                      backgroundColor: 'rgba(255, 107, 107, 0.3)',
+                      pointerEvents: 'none',
+                      left: focusPoint.x + '%',
+                      top: focusPoint.y + '%'
+                    }
+                  })
+                ),
+                
+                h('div', { style: { marginBottom: '12px' } },
+                  h('label', {
+                    style: {
+                      display: 'block',
+                      marginBottom: '4px',
+                      fontWeight: 500,
+                      fontSize: '14px'
+                    }
+                  }, 'Alternativní text (povinný)'),
+                  h('input', {
+                    type: 'text',
+                    value: alt,
+                    maxLength: MAX_ALT_LENGTH,
+                    placeholder: 'Popis obrázku pro nevidomé uživatele',
+                    style: {
+                      width: '100%',
+                      padding: '8px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    },
+                    onChange: this.handleAltChange
+                  }),
+                  h('span', {
+                    style: {
+                      fontSize: '12px',
+                      color: '#666',
+                      marginTop: '4px',
+                      display: 'block'
+                    }
+                  }, alt.length + '/' + MAX_ALT_LENGTH + ' znaků')
+                ),
+                
+                h('div', {
+                  style: {
+                    padding: '8px',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '4px',
+                    fontSize: '13px',
+                    marginBottom: '12px'
+                  }
+                },
+                  h('strong', {}, 'Ohnisko: '),
+                  focusPoint.x + '%, ' + focusPoint.y + '% • Klikněte na obrázek pro změnu'
+                ),
+                
+                h('button', {
+                  type: 'button',
+                  style: {
+                    padding: '8px 16px',
+                    backgroundColor: '#f44',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  },
+                  onClick: this.handleRemove
+                }, '🗑️ Odstranit obrázek')
+              )
+            );
+          }
+        });
+        console.log('✅ Enhanced Image control component defined');
+
+        var EnhancedImagePreview = createClass({
+          render: function() {
+            console.log('🎨 EnhancedImagePreview.render() called');
+            var value = this.props.value || {};
+
+            if (!value.src) {
+              return h('div', {}, 'Žádný obrázek');
+            }
+
+            return h('div', {},
+              h('img', {
+                src: value.src,
+                alt: value.alt,
+                style: {
+                  maxWidth: '300px',
+                  display: 'block',
+                  marginBottom: '8px'
+                }
+              }),
+              value.alt && h('p', {}, value.alt)
+            );
+          }
+        });
+        console.log('✅ Enhanced Image preview component defined');
+
+      // ==========================================
+      // REGISTER WIDGETS
+      // ==========================================
+      console.log('');
+      console.log('📋 Starting widget registration...');
+      console.log('- CMS.registerWidget type:', typeof CMS.registerWidget);
+      
       try {
-        // Verify CMS is loaded
-        if (!window.CMS) {
-          throw new Error('Decap CMS not loaded');
-        }
-
-        console.log('CMS loaded successfully');
-
-        // Note: Custom widgets will be loaded in Phase 4
-        // For now, we're just ensuring CMS initializes correctly
-
-        console.log('✅ Admin interface ready');
-
+        console.log('Registering author widget...');
+        console.log('- Control:', typeof AuthorControl);
+        console.log('- Preview:', typeof AuthorPreview);
+        CMS.registerWidget('author', AuthorControl, AuthorPreview);
+        console.log('✅ Author widget registered successfully');
+        
+        console.log('Registering enhanced-image widget...');
+        console.log('- Control:', typeof EnhancedImageControl);
+        console.log('- Preview:', typeof EnhancedImagePreview);
+        CMS.registerWidget('enhanced-image', EnhancedImageControl, EnhancedImagePreview);
+        console.log('✅ Enhanced-image widget registered successfully');
+        
+        console.log('');
+        console.log('='.repeat(60));
+        console.log('🎉 ALL CUSTOM WIDGETS REGISTERED SUCCESSFULLY');
+        console.log('='.repeat(60));
       } catch (error) {
-        console.error('❌ CMS initialization failed:', error);
-
-        // Display user-friendly error
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = `
-          position: fixed;
-          top: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: #fee;
-          border: 2px solid #c00;
-          color: #c00;
-          padding: 16px 24px;
-          border-radius: 8px;
-          z-index: 10000;
-          font-family: sans-serif;
-          max-width: 500px;
-          text-align: center;
-        `;
-        errorDiv.textContent = `Chyba při načítání CMS: ${error.message}`;
+        console.error('');
+        console.error('='.repeat(60));
+        console.error('❌ WIDGET REGISTRATION FAILED');
+        console.error('='.repeat(60));
+        console.error('Error:', error);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        
+        // Display error to user
+        var errorDiv = document.createElement('div');
+        errorDiv.style.cssText = '\
+          position: fixed;\
+          top: 20px;\
+          left: 50%;\
+          transform: translateX(-50%);\
+          background: #fee;\
+          border: 2px solid #c00;\
+          color: #c00;\
+          padding: 16px 24px;\
+          border-radius: 8px;\
+          z-index: 10000;\
+          font-family: sans-serif;\
+          max-width: 500px;\
+          text-align: center;\
+        ';
+        errorDiv.textContent = 'Chyba při registraci widgetů: ' + error.message;
         document.body.appendChild(errorDiv);
       }
-    });
+
+      // ==========================================
+      // VERIFY REGISTRATION
+      // ==========================================
+      console.log('');
+      console.log('🔍 Verifying widget registration...');
+      if (window.CMS && window.CMS.getWidget) {
+        try {
+          var authorWidget = CMS.getWidget('author');
+          var imageWidget = CMS.getWidget('enhanced-image');
+          console.log('- author widget:', authorWidget ? '✅ Found' : '❌ Not found');
+          console.log('- enhanced-image widget:', imageWidget ? '✅ Found' : '❌ Not found');
+        } catch (e) {
+          console.log('⚠️ Could not verify widgets using CMS.getWidget():', e.message);
+        }
+      } else {
+        console.log('⚠️ CMS.getWidget() not available');
+      }
+
+      // ==========================================
+      // HIDE LOADING OVERLAY WHEN CMS READY
+      // ==========================================
+      CMS.registerEventListener({
+        name: 'postPublish',
+        handler: function() {
+          var loadingOverlay = document.getElementById('loading-overlay');
+          if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+          }
+        }
+      });
+
+      // Hide loading overlay after a short delay to ensure CMS has mounted
+      setTimeout(function() {
+        var loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('hidden');
+        }
+      }, 1000);
+
+    })();
   </script>
 </body>
 </html>
