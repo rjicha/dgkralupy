@@ -5,7 +5,15 @@
 (function() {
   'use strict';
 
-  const { h, Component } = window.preactRuntimeExports || window;
+  // Access React/Preact components from Decap CMS
+  // Decap CMS 3.x exposes these via window
+  const h = window.h || (window.React && window.React.createElement);
+  const Component = window.Component || (window.React && window.React.Component);
+
+  if (!h || !Component) {
+    console.error('Enhanced image widget: Unable to find h or Component. CMS may not be loaded yet.');
+    return;
+  }
 
   // Image variant specifications (must match design doc)
   // Prefixed with _ to indicate it's reserved for future crop editor implementation
@@ -347,5 +355,21 @@
   };
 
   // Register widget with CMS when ready
-  window.CMS.registerWidget('enhanced-image', EnhancedImageControl, EnhancedImagePreview);
+  if (window.CMS && window.CMS.registerWidget) {
+    console.log('Registering enhanced-image widget...');
+    window.CMS.registerWidget('enhanced-image', EnhancedImageControl, EnhancedImagePreview);
+    console.log('Enhanced-image widget registered successfully');
+  } else {
+    console.error('Cannot register enhanced-image widget: CMS not available');
+    // Retry after a short delay
+    setTimeout(() => {
+      if (window.CMS && window.CMS.registerWidget) {
+        console.log('Registering enhanced-image widget (retry)...');
+        window.CMS.registerWidget('enhanced-image', EnhancedImageControl, EnhancedImagePreview);
+        console.log('Enhanced-image widget registered successfully (retry)');
+      } else {
+        console.error('Failed to register enhanced-image widget after retry');
+      }
+    }, 500);
+  }
 })();

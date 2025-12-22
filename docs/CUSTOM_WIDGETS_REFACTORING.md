@@ -1,15 +1,15 @@
 # Decap CMS Custom Widgets Guide
 
 **Last Updated:** December 22, 2025  
-**Status:** Production-ready
+**Status:** ✅ Production-ready
 
 ## Overview
 
 This guide documents how to work with custom widgets in Decap CMS 3.x. Custom widgets extend the CMS editor with specialized input controls beyond the built-in widgets.
 
 **Current Widgets:**
-- **Author Widget** - Auto-detects and maps GitHub users to display names
-- **Enhanced Image Widget** - Image upload with alt text and focus point selection
+- **Author Widget** ✅ - Auto-detects and maps GitHub users to display names
+- **Enhanced Image Widget** ✅ - Image upload with alt text and focus point selection
 
 ## Core Principles
 
@@ -381,6 +381,41 @@ Before deploying widgets:
 - [ ] Widget works with existing content (backward compatibility)
 - [ ] Validation prevents invalid data
 - [ ] Loading states provide feedback
+
+## Troubleshooting
+
+### Widget Registration Error
+
+If you see "Žádné ovládání pro widget 'widget-name'", the widget registration failed. Common causes:
+
+1. **JavaScript syntax errors** - Check browser console for errors
+2. **Missing IIFE closure** - Script must end with `})();`
+3. **Widget name mismatch** - `CMS.registerWidget('name', ...)` must match config.yml `widget: name`
+4. **Script loading order** - Widgets must be registered AFTER `decap-cms.js` loads
+
+**Debug approach:**
+```javascript
+// Verify required globals are available
+console.log('CMS:', typeof window.CMS);
+console.log('createClass:', typeof createClass);
+console.log('h:', typeof h);
+```
+
+### Widget Doesn't Save Changes
+
+Ensure `onChange` is called with the correct data:
+```javascript
+this.props.onChange(newValue);
+
+// Debug: log what you're saving
+console.log('Saving:', JSON.stringify(newValue));
+```
+
+### Production Issues
+
+- Don't use absolute paths (e.g., avoid `/dgkralupy/...`)
+- Check browser console for errors
+- Test in incognito mode to rule out cache issues
 
 ## Resources
 

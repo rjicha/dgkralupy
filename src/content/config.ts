@@ -163,7 +163,12 @@ const sponsorsCollection = defineCollection({
 const authorsCollection = defineCollection({
   type: 'data',
   schema: z.object({
-    mapping: z.record(z.string()),
+    mappings: z.array(
+      z.object({
+        github: z.string(),
+        displayName: z.string(),
+      })
+    ),
     defaultAuthor: z.string(),
   }),
 });

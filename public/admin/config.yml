@@ -227,8 +227,11 @@ collections:
         name: "authors"
         file: "src/content/authors/authors.json"
         fields:
-          - label: "Mapování autorů (GitHub username → Zobrazované jméno)"
-            name: "mapping"
-            widget: "object"
-            hint: "Klíč = GitHub username, Hodnota = Zobrazované jméno"
+          - label: "Mapování autorů"
+            name: "mappings"
+            widget: "list"
+            hint: "GitHub username → Zobrazované jméno"
+            fields:
+              - {label: "GitHub username", name: "github", widget: "string", required: true}
+              - {label: "Zobrazované jméno", name: "displayName", widget: "string", required: true}
           - {label: "Výchozí autor", name: "defaultAuthor", widget: "string", default: "Redakce"}
