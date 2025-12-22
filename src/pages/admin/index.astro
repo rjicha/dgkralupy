@@ -160,15 +160,16 @@ export const prerender = true;
             // Option 3: Extract from URL pathname
             var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
             var adminIndex = pathParts.indexOf('admin');
+            var basePath;
 
             if (adminIndex > 0) {
               // Extract everything before 'admin' as base path
-              var basePath = '/' + pathParts.slice(0, adminIndex).join('/');
+              basePath = '/' + pathParts.slice(0, adminIndex).join('/');
               console.log('[Author Widget] Extracted base path from URL:', basePath);
               return basePath;
             } else if (pathParts.length > 0 && pathParts[0] !== 'admin') {
               // First segment is base path (not 'admin')
-              var basePath = '/' + pathParts[0];
+              basePath = '/' + pathParts[0];
               console.log('[Author Widget] Using first path segment as base:', basePath);
               return basePath;
             }
