@@ -57,31 +57,70 @@
   <div id="nc-root"></div>
 
   <!-- Widget initialization scripts -->
-  <script>
-    // Initialize CMS with widgets properly loaded
-    // This prevents race conditions by loading widgets dynamically after CMS is ready
-    window.addEventListener('load', async () => {
-      try {
-        // Verify CMS is loaded
-        if (!window.CMS) {
-          throw new Error('Decap CMS not loaded');
+  <script type="module">
+    // Wait for CMS to be fully loaded
+    function waitForCMS() {
+      return new Promise((resolve) => {
+        if (window.CMS) {
+          resolve();
+        } else {
+          const checkCMS = setInterval(() => {
+            if (window.CMS) {
+              clearInterval(checkCMS);
+              resolve();
+            }
+          }, 100);
         }
+      });
+    }
 
-        console.log('CMS loaded successfully');
+    // Initialize widgets after CMS is ready
+    async function initializeWidgets() {
+      try {
+        // Wait for CMS to be available
+        await waitForCMS();
 
-        // Hide loading overlay once CMS is ready
+        console.log('CMS loaded, registering custom widgets...');
+
+        // Load widget scripts dynamically
+        const authorScript = document.createElement('script');
+        authorScript.src = '/dgkralupy/admin/widgets/author.js';
+        authorScript.onerror = () => {
+          throw new Error('Failed to load author widget');
+        };
+
+        const imageScript = document.createElement('script');
+        imageScript.src = '/dgkralupy/admin/widgets/enhanced-image.js';
+        imageScript.onerror = () => {
+          throw new Error('Failed to load enhanced-image widget');
+        };
+
+        // Wait for both scripts to load
+        await Promise.all([
+          new Promise((resolve, reject) => {
+            authorScript.onload = resolve;
+            authorScript.onerror = reject;
+            document.head.appendChild(authorScript);
+          }),
+          new Promise((resolve, reject) => {
+            imageScript.onload = resolve;
+            imageScript.onerror = reject;
+            document.head.appendChild(imageScript);
+          })
+        ]);
+
+        console.log('✅ All custom widgets registered successfully');
+
+        // Hide loading overlay
         const loadingOverlay = document.getElementById('loading-overlay');
         if (loadingOverlay) {
           loadingOverlay.classList.add('hidden');
         }
 
-        // Note: Custom widgets will be loaded in Phase 4
-        // For now, we're just ensuring CMS initializes correctly
-
         console.log('✅ Admin interface ready');
 
       } catch (error) {
-        console.error('❌ CMS initialization failed:', error);
+        console.error('❌ Widget registration failed:', error);
 
         // Hide loading overlay
         const loadingOverlay = document.getElementById('loading-overlay');
@@ -109,7 +148,14 @@
         errorDiv.textContent = `Chyba při načítání CMS: ${error.message}`;
         document.body.appendChild(errorDiv);
       }
-    });
+    }
+
+    // Start initialization when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeWidgets);
+    } else {
+      initializeWidgets();
+    }
   </script>
 </body>
 </html>
