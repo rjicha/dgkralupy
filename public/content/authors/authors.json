@@ -1,6 +1,9 @@
 {
-  "mapping": {
-    "rjicha": "Radek Jícha"
-  },
+  "mappings": [
+    {
+      "github": "rjicha",
+      "displayName": "Radek Jícha"
+    }
+  ],
   "defaultAuthor": "Redakce"
 }
