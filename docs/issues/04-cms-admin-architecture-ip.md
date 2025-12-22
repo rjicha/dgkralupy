@@ -28,7 +28,7 @@ Track your progress through the 8 implementation phases:
   - Configure CMS backend and OAuth
   - Configure Czech locale
 
-- [ ] **Phase 3: Content Collections Configuration**
+- [x] **Phase 3: Content Collections Configuration**
   - Configure Articles collection
   - Configure Pages collection
   - Configure Settings collections
