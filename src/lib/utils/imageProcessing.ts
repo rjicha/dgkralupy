@@ -37,12 +37,13 @@ export interface GeneratedVariants {
 export async function generateImageVariants(
   options: GenerateVariantsOptions,
 ): Promise<GeneratedVariants | null> {
-  const { imageSrc, focusPoint, customCrops } = options;
+  const { imageSrc, focusPoint, customCrops: _customCrops } = options;
   const variants: GeneratedVariants = {};
 
   try {
     for (const [variantName, specs] of Object.entries(IMAGE_VARIANTS)) {
-      const _crop = customCrops?.[variantName as ImageVariant];
+      // TODO: Custom crops will be implemented in future phases
+      // For now, using focus point positioning only
       const position = focusPoint
         ? `${focusPoint.x}% ${focusPoint.y}%`
         : 'center';

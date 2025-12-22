@@ -47,6 +47,54 @@ I will:
 - Use TodoWrite to track implementation progress
 ```
 
+### Working with Implementation Plans
+
+When asked to implement a phase from an Implementation Plan:
+
+1. **Finding the IP**:
+   - IPs are located in `/docs/issues/`
+   - Use the issue number to find the file: `docs/issues/[NUMBER]-[description]-ip.md`
+   - Example: "implement next phase of IP 04" → look for `docs/issues/04-*-ip.md`
+
+2. **Identifying the Next Phase**:
+   - Read the IP file to find unchecked phases (- [ ])
+   - Implement the next unchecked phase in sequence
+   - Review the phase description and requirements
+
+3. **Implementation Workflow**:
+   ```
+   1. Read the IP file (e.g., docs/issues/04-cms-admin-architecture-ip.md)
+   2. Identify the next unchecked phase
+   3. Create a feature branch: feature/[NUMBER]-[description]-phase-[N]
+      Example: feature/04-cms-admin-phase-1
+   4. Implement the phase following the IP requirements
+   5. Test the implementation
+   6. Commit changes to the feature branch
+   7. Update the IP file: mark the phase as complete (- [x])
+   8. Commit the IP update
+   ```
+
+4. **Branch Naming Convention**:
+   - Pattern: `feature/[ISSUE-NUMBER]-[SHORT-DESCRIPTION]-phase-[PHASE-NUMBER]`
+   - Examples:
+     - `feature/04-cms-admin-phase-1`
+     - `feature/04-cms-admin-phase-2`
+     - `feature/05-search-functionality-phase-1`
+
+5. **Tracking Progress**:
+   - After completing a phase, update the IP file
+   - Change `- [ ] Phase N: Description` to `- [x] Phase N: Description`
+   - Commit the IP update with a clear message
+
+6. **Commit Messages**:
+   - Implementation: `feat: implement phase N of issue XX - [brief description]`
+   - IP update: `docs: mark phase N complete in IP XX`
+   - Example:
+     ```
+     feat: implement phase 1 of issue 04 - separate admin code
+     docs: mark phase 1 complete in IP 04
+     ```
+
 ### Code Examples to Follow
 **Component Structure**:
 ```typescript
