@@ -8,10 +8,15 @@ export async function getStaticPaths() {
     return data.draft !== true;
   });
 
-  return pages.map((page) => ({
-    params: { slug: page.slug },
-    props: { page },
-  }));
+  return pages
+    .filter((page) => {
+      // Exclude admin route - it's served as static files from public/admin/
+      return page.slug !== 'admin' && !page.slug.startsWith('admin/');
+    })
+    .map((page) => ({
+      params: { slug: page.slug },
+      props: { page },
+    }));
 }
 
 const { page } = Astro.props;

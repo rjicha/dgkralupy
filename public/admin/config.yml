@@ -35,6 +35,200 @@ media_library:
 locale: 'cs'
 
 # Collections configuration
-# Note: Collections will be added in Phase 3
-# For now, we include an empty array to ensure valid YAML
-collections: []
+collections:
+  # Articles collection - news, announcements, events
+  - name: "articles"
+    label: "Články"
+    label_singular: "Článek"
+    folder: "src/content/articles"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    format: "frontmatter"
+    extension: "md"
+
+    # Preview configuration
+    preview_path: "articles/{{slug}}"  # Live preview link
+
+    # List view configuration
+    summary: "{{title}} - {{publishedAt}}"  # Summary shown in list view
+    sortable_fields: ['publishedAt', 'title', 'author']  # Sortable columns
+
+    # View filters for easier content management
+    view_filters:
+      - label: "Koncepty"
+        field: draft
+        pattern: true
+      - label: "Publikované"
+        field: draft
+        pattern: false
+      - label: "Zvýrazněné"
+        field: featured
+        pattern: true
+      - label: "Důležité"
+        field: important
+        pattern: true
+
+    # View groups for organization
+    view_groups:
+      - label: "Rok"
+        field: publishedAt
+        pattern: \d{4}
+
+    editor:
+      preview: true
+
+    fields:
+      - {label: "Nadpis", name: "title", widget: "string", required: true}
+      - {label: "Perex", name: "excerpt", widget: "text", required: true, hint: "2-3 věty shrnutí článku"}
+      - {label: "Obsah článku", name: "body", widget: "markdown", required: true}
+      - {label: "Datum publikace", name: "publishedAt", widget: "datetime",
+         format: "DD.MM.YYYY", date_format: "DD.MM.YYYY", time_format: false, required: true}
+
+      # Author widget (custom - to be implemented in Phase 4)
+      - {label: "Autor", name: "author", widget: "author", required: true}
+
+      # Tags with predefined options
+      - label: "Štítky"
+        name: "tags"
+        widget: "list"
+        required: false
+        field: {label: "Štítek", name: "tag", widget: "string"}
+
+      # Featured image with enhanced widget (to be implemented in Phase 4)
+      - label: "Hlavní obrázek"
+        name: "image"
+        widget: "enhanced-image"
+        required: false
+        hint: "Doporučená velikost: 1200×675px (16:9)"
+
+      # Boolean flags
+      - {label: "Zvýrazněný článek", name: "featured", widget: "boolean",
+         default: false, required: false}
+      - {label: "Důležité oznámení", name: "important", widget: "boolean",
+         default: false, required: false}
+      - {label: "Koncept", name: "draft", widget: "boolean",
+         default: true, required: false, hint: "Koncepty se nezobrazují na webu"}
+
+  # Pages collection - static website pages
+  - name: "pages"
+    label: "Stránky"
+    label_singular: "Stránka"
+    folder: "src/content/pages"
+    create: true
+    slug: "{{section}}-{{slug}}"
+    format: "frontmatter"
+    extension: "md"
+
+    # Preview configuration
+    preview_path: "{{section}}/{{slug}}"
+
+    # List view configuration
+    summary: "{{section}}: {{title}}"
+    sortable_fields: ['section', 'title', 'order']
+
+    # View filters
+    view_filters:
+      - label: "O škole"
+        field: section
+        pattern: 'about'
+      - label: "Studium"
+        field: section
+        pattern: 'studies'
+      - label: "Aktivity"
+        field: section
+        pattern: 'activities'
+      - label: "Aktuálně"
+        field: section
+        pattern: 'news'
+
+    editor:
+      preview: true
+
+    fields:
+      - {label: "Nadpis", name: "title", widget: "string", required: true}
+      - {label: "Popis", name: "description", widget: "text", required: false}
+
+      # Section selection
+      - label: "Sekce"
+        name: "section"
+        widget: "select"
+        required: true
+        options:
+          - {label: "O škole", value: "about"}
+          - {label: "Studium", value: "studies"}
+          - {label: "Aktivity", value: "activities"}
+          - {label: "Aktuálně", value: "news"}
+
+      - {label: "Obsah", name: "body", widget: "markdown", required: true}
+      - {label: "Pořadí", name: "order", widget: "number", required: false,
+         hint: "Pořadí v navigaci (nižší číslo = výše)"}
+      - {label: "Koncept", name: "draft", widget: "boolean", default: false}
+
+  # Settings collections - file-based configuration
+  - name: "settings"
+    label: "Nastavení"
+    files:
+      # School contacts
+      - label: "Kontakty"
+        name: "contacts"
+        file: "src/content/settings/contacts.json"
+        fields:
+          - label: "Škola"
+            name: "school"
+            widget: "object"
+            fields:
+              - {label: "Název školy", name: "name", widget: "string"}
+              - {label: "Adresa", name: "address", widget: "string"}
+              - {label: "Město a PSČ", name: "city", widget: "string"}
+              - {label: "Telefon", name: "phone", widget: "string"}
+              - {label: "Email", name: "email", widget: "string"}
+              - {label: "IČO", name: "ico", widget: "string"}
+              - {label: "DIČ", name: "dic", widget: "string"}
+              - {label: "Číslo bankovního účtu", name: "bankAccount", widget: "string"}
+
+          - label: "Jídelna"
+            name: "cafeteria"
+            widget: "object"
+            fields:
+              - {label: "Telefon", name: "phone", widget: "string"}
+              - {label: "Email", name: "email", widget: "string"}
+              - {label: "ID formuláře", name: "submission", widget: "string"}
+
+          - label: "Sociální sítě"
+            name: "socialMedia"
+            widget: "object"
+            fields:
+              - {label: "Facebook URL", name: "facebook", widget: "string"}
+              - {label: "Instagram URL", name: "instagram", widget: "string"}
+
+      # Navigation structure
+      - label: "Navigace"
+        name: "navigation"
+        file: "src/content/settings/navigation.json"
+        fields:
+          - label: "Sekce"
+            name: "sections"
+            widget: "list"
+            fields:
+              - {label: "ID", name: "id", widget: "string"}
+              - {label: "Název", name: "title", widget: "string"}
+              - {label: "URL", name: "url", widget: "string"}
+              - {label: "Barva", name: "color", widget: "select", options: ["primary", "secondary", "accent-green", "accent-coral"]}
+              - label: "Podsekce"
+                name: "subsections"
+                widget: "list"
+                required: false
+                fields:
+                  - {label: "Název", name: "title", widget: "string"}
+                  - {label: "URL", name: "url", widget: "string"}
+
+      # Author name mappings
+      - label: "Autoři"
+        name: "authors"
+        file: "src/content/authors/authors.json"
+        fields:
+          - label: "Mapování autorů (GitHub username → Zobrazované jméno)"
+            name: "mapping"
+            widget: "object"
+            hint: "Klíč = GitHub username, Hodnota = Zobrazované jméno"
+          - {label: "Výchozí autor", name: "defaultAuthor", widget: "string", default: "Redakce"}
