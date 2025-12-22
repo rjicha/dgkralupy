@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Administrace - DG Kralupy</title>
+
+  <!-- Decap CMS -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- Custom styles -->
+  <style>
+    /* Brand colors and custom styling */
+    :root {
+      --primary: #3b5f78;
+      --primary-dark: #273946;
+      --secondary: #44c2c4;
+    }
+
+    /* Custom admin interface styling */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 18px;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- CMS will mount here -->
+  <div id="nc-root" class="loading">
+    Načítání administrace...
+  </div>
+
+  <!-- Widget initialization scripts -->
+  <script>
+    // Initialize CMS with widgets properly loaded
+    // This prevents race conditions by loading widgets dynamically after CMS is ready
+    window.addEventListener('load', async () => {
+      try {
+        // Verify CMS is loaded
+        if (!window.CMS) {
+          throw new Error('Decap CMS not loaded');
+        }
+
+        console.log('CMS loaded successfully');
+
+        // Note: Custom widgets will be loaded in Phase 4
+        // For now, we're just ensuring CMS initializes correctly
+
+        console.log('✅ Admin interface ready');
+
+      } catch (error) {
+        console.error('❌ CMS initialization failed:', error);
+
+        // Display user-friendly error
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #fee;
+          border: 2px solid #c00;
+          color: #c00;
+          padding: 16px 24px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-family: sans-serif;
+          max-width: 500px;
+          text-align: center;
+        `;
+        errorDiv.textContent = `Chyba při načítání CMS: ${error.message}`;
+        document.body.appendChild(errorDiv);
+      }
+    });
+  </script>
+</body>
+</html>

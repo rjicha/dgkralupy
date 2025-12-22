@@ -1,0 +1,40 @@
+# Decap CMS Configuration
+# DG Kralupy - School Website Admin Interface
+
+# Backend configuration - GitHub authentication
+backend:
+  name: github
+  repo: rjicha/dgkralupy
+  branch: main
+  base_url: https://dgkralupy-stg.radekjicha.workers.dev
+  # Note: This OAuth endpoint is already deployed and in use
+  # DO NOT change this URL as it's configured for existing users
+
+# Enable local development proxy (no GitHub auth required)
+# Run: npx decap-server
+local_backend: true
+
+# Disable editorial workflow initially (can be enabled later for review process)
+# publish_mode: editorial_workflow
+
+# Media storage configuration
+media_folder: "public/images"
+public_folder: "/images"
+media_folder_relative: true  # Use relative paths in content
+
+# Media library configuration
+media_library:
+  name: uploadcare
+  config:
+    # File size limit enforced at CMS level (5 MB)
+    max_file_size: 5242880
+    multiple: false
+    tabs: 'file url'
+
+# Czech localization
+locale: 'cs'
+
+# Collections configuration
+# Note: Collections will be added in Phase 3
+# For now, we include an empty array to ensure valid YAML
+collections: []
