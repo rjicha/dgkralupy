@@ -58,38 +58,22 @@
     (function() {
       'use strict';
 
-      console.log('='.repeat(60));
-      console.log('🚀 WIDGET REGISTRATION SCRIPT STARTED');
-      console.log('='.repeat(60));
-      
-      // Check if required globals are available
-      console.log('Checking required globals...');
-      console.log('- window.CMS:', typeof window.CMS, window.CMS);
-      console.log('- createClass:', typeof createClass);
-      console.log('- h:', typeof h);
-      
       if (!window.CMS) {
-        console.error('❌ CRITICAL: CMS object not found! Decap CMS may not be loaded yet.');
+        console.error('CMS object not found');
         return;
       }
       
       if (typeof createClass === 'undefined') {
-        console.error('❌ CRITICAL: createClass function not found!');
+        console.error('createClass function not found');
         return;
       }
       
       if (typeof h === 'undefined') {
-        console.error('❌ CRITICAL: h function not found!');
+        console.error('h function not found');
         return;
       }
-      
-      console.log('✅ All required globals are available');
 
-        // ==========================================
-        // AUTHOR WIDGET
-        // ==========================================
-        console.log('📝 Defining Author widget...');
-        var AuthorControl = createClass({
+      var AuthorControl = createClass({
           getInitialState: function() {
             return {
               author: 'Načítání...',
@@ -173,7 +157,6 @@
           },
 
           render: function() {
-            console.log('🎨 AuthorControl.render() called');
             var author = this.state.author;
             var githubUser = this.state.githubUser;
             var error = this.state.error;
@@ -222,24 +205,16 @@
             );
           }
         });
-
-        console.log('✅ Author control component defined');
         
         var AuthorPreview = createClass({
           render: function() {
-            console.log('🎨 AuthorPreview.render() called');
             return h('div', {},
               h('strong', {}, 'Autor: '),
               this.props.value || 'Redakce'
             );
           }
         });
-        console.log('✅ Author preview component defined');
 
-        // ==========================================
-        // ENHANCED IMAGE WIDGET
-        // ==========================================
-        console.log('🖼️  Defining Enhanced Image widget...');
         var MAX_ALT_LENGTH = 125;
         var MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
         var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -357,7 +332,6 @@
           },
 
           render: function() {
-            console.log('🎨 EnhancedImageControl.render() called');
             var self = this;
             var src = this.state.src;
             var alt = this.state.alt;
@@ -511,7 +485,6 @@
 
         var EnhancedImagePreview = createClass({
           render: function() {
-            console.log('🎨 EnhancedImagePreview.render() called');
             var value = this.props.value || {};
 
             if (!value.src) {
@@ -532,40 +505,12 @@
             );
           }
         });
-        console.log('✅ Enhanced Image preview component defined');
 
-      // ==========================================
-      // REGISTER WIDGETS
-      // ==========================================
-      console.log('');
-      console.log('📋 Starting widget registration...');
-      console.log('- CMS.registerWidget type:', typeof CMS.registerWidget);
-      
       try {
-        console.log('Registering author widget...');
-        console.log('- Control:', typeof AuthorControl);
-        console.log('- Preview:', typeof AuthorPreview);
         CMS.registerWidget('author', AuthorControl, AuthorPreview);
-        console.log('✅ Author widget registered successfully');
-        
-        console.log('Registering enhanced-image widget...');
-        console.log('- Control:', typeof EnhancedImageControl);
-        console.log('- Preview:', typeof EnhancedImagePreview);
         CMS.registerWidget('enhanced-image', EnhancedImageControl, EnhancedImagePreview);
-        console.log('✅ Enhanced-image widget registered successfully');
-        
-        console.log('');
-        console.log('='.repeat(60));
-        console.log('🎉 ALL CUSTOM WIDGETS REGISTERED SUCCESSFULLY');
-        console.log('='.repeat(60));
       } catch (error) {
-        console.error('');
-        console.error('='.repeat(60));
-        console.error('❌ WIDGET REGISTRATION FAILED');
-        console.error('='.repeat(60));
-        console.error('Error:', error);
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
+        console.error('Widget registration failed:', error.message);
         
         // Display error to user
         var errorDiv = document.createElement('div');
@@ -588,27 +533,6 @@
         document.body.appendChild(errorDiv);
       }
 
-      // ==========================================
-      // VERIFY REGISTRATION
-      // ==========================================
-      console.log('');
-      console.log('🔍 Verifying widget registration...');
-      if (window.CMS && window.CMS.getWidget) {
-        try {
-          var authorWidget = CMS.getWidget('author');
-          var imageWidget = CMS.getWidget('enhanced-image');
-          console.log('- author widget:', authorWidget ? '✅ Found' : '❌ Not found');
-          console.log('- enhanced-image widget:', imageWidget ? '✅ Found' : '❌ Not found');
-        } catch (e) {
-          console.log('⚠️ Could not verify widgets using CMS.getWidget():', e.message);
-        }
-      } else {
-        console.log('⚠️ CMS.getWidget() not available');
-      }
-
-      // ==========================================
-      // HIDE LOADING OVERLAY WHEN CMS READY
-      // ==========================================
       CMS.registerEventListener({
         name: 'postPublish',
         handler: function() {

@@ -1,42 +1,26 @@
 # Decap CMS Configuration
-# DG Kralupy - School Website Admin Interface
-
-# Backend configuration - GitHub authentication
 backend:
   name: github
   repo: rjicha/dgkralupy
   branch: main
   base_url: https://dgkralupy-stg.radekjicha.workers.dev
-  # Note: This OAuth endpoint is already deployed and in use
-  # DO NOT change this URL as it's configured for existing users
 
-# Enable local development proxy (no GitHub auth required)
-# Run: npx decap-server
 local_backend: true
 
-# Disable editorial workflow initially (can be enabled later for review process)
-# publish_mode: editorial_workflow
-
-# Media storage configuration
 media_folder: "public/images"
 public_folder: "/images"
-media_folder_relative: true  # Use relative paths in content
+media_folder_relative: true
 
-# Media library configuration
 media_library:
   name: uploadcare
   config:
-    # File size limit enforced at CMS level (5 MB)
     max_file_size: 5242880
     multiple: false
     tabs: 'file url'
 
-# Czech localization
 locale: 'cs'
 
-# Collections configuration
 collections:
-  # Articles collection - news, announcements, events
   - name: "articles"
     label: "Články"
     label_singular: "Článek"
@@ -46,14 +30,9 @@ collections:
     format: "frontmatter"
     extension: "md"
 
-    # Preview configuration
-    preview_path: "articles/{{slug}}"  # Live preview link
-
-    # List view configuration
-    summary: "{{title}} - {{publishedAt}}"  # Summary shown in list view
-    sortable_fields: ['publishedAt', 'title', 'author']  # Sortable columns
-
-    # View filters for easier content management
+    preview_path: "articles/{{slug}}"
+    summary: "{{title}} - {{publishedAt}}"
+    sortable_fields: ['publishedAt', 'title', 'author']
     view_filters:
       - label: "Koncepty"
         field: draft
@@ -67,8 +46,6 @@ collections:
       - label: "Důležité"
         field: important
         pattern: true
-
-    # View groups for organization
     view_groups:
       - label: "Rok"
         field: publishedAt
@@ -83,25 +60,18 @@ collections:
       - {label: "Obsah článku", name: "body", widget: "markdown", required: true}
       - {label: "Datum publikace", name: "publishedAt", widget: "datetime",
          format: "DD.MM.YYYY", date_format: "DD.MM.YYYY", time_format: false, required: true}
-
-      # Author widget (custom - to be implemented in Phase 4)
       - {label: "Autor", name: "author", widget: "author", required: true}
-
-      # Tags with predefined options
       - label: "Štítky"
         name: "tags"
         widget: "list"
         required: false
         field: {label: "Štítek", name: "tag", widget: "string"}
 
-      # Featured image with enhanced widget (to be implemented in Phase 4)
       - label: "Hlavní obrázek"
         name: "image"
         widget: "enhanced-image"
         required: false
         hint: "Doporučená velikost: 1200×675px (16:9)"
-
-      # Boolean flags
       - {label: "Zvýrazněný článek", name: "featured", widget: "boolean",
          default: false, required: false}
       - {label: "Důležité oznámení", name: "important", widget: "boolean",
@@ -109,7 +79,6 @@ collections:
       - {label: "Koncept", name: "draft", widget: "boolean",
          default: true, required: false, hint: "Koncepty se nezobrazují na webu"}
 
-  # Pages collection - static website pages
   - name: "pages"
     label: "Stránky"
     label_singular: "Stránka"
@@ -118,15 +87,9 @@ collections:
     slug: "{{section}}-{{slug}}"
     format: "frontmatter"
     extension: "md"
-
-    # Preview configuration
     preview_path: "{{section}}/{{slug}}"
-
-    # List view configuration
     summary: "{{section}}: {{title}}"
     sortable_fields: ['section', 'title', 'order']
-
-    # View filters
     view_filters:
       - label: "O škole"
         field: section
@@ -147,8 +110,6 @@ collections:
     fields:
       - {label: "Nadpis", name: "title", widget: "string", required: true}
       - {label: "Popis", name: "description", widget: "text", required: false}
-
-      # Section selection
       - label: "Sekce"
         name: "section"
         widget: "select"
@@ -164,11 +125,9 @@ collections:
          hint: "Pořadí v navigaci (nižší číslo = výše)"}
       - {label: "Koncept", name: "draft", widget: "boolean", default: false}
 
-  # Settings collections - file-based configuration
   - name: "settings"
     label: "Nastavení"
     files:
-      # School contacts
       - label: "Kontakty"
         name: "contacts"
         file: "src/content/settings/contacts.json"
@@ -201,7 +160,6 @@ collections:
               - {label: "Facebook URL", name: "facebook", widget: "string"}
               - {label: "Instagram URL", name: "instagram", widget: "string"}
 
-      # Navigation structure
       - label: "Navigace"
         name: "navigation"
         file: "src/content/settings/navigation.json"
@@ -222,7 +180,6 @@ collections:
                   - {label: "Název", name: "title", widget: "string"}
                   - {label: "URL", name: "url", widget: "string"}
 
-      # Author name mappings
       - label: "Autoři"
         name: "authors"
         file: "src/content/authors/authors.json"
