@@ -23,7 +23,7 @@ Track your progress through the 8 implementation phases:
   - Create new directory structure
   - Install dependencies
 
-- [ ] **Phase 2: Core CMS Setup**
+- [x] **Phase 2: Core CMS Setup**
   - Create base HTML entry point
   - Configure CMS backend and OAuth
   - Configure Czech locale
