@@ -10,7 +10,7 @@ All technical documents are stored in `/docs/issues/` with sequential numbering.
 
 Documents use zero-padded sequential numbering: `01`, `02`, `03`, etc.
 
-**Current sequence: 04** (next available number)
+**Current sequence: 05** (next available number)
 
 ## Document Types
 
@@ -218,5 +218,5 @@ Claude will:
 
 ---
 
-**Last Updated**: 2025-12-21
-**Next Available Number**: 04
+**Last Updated**: 2025-12-22
+**Next Available Number**: 05
