@@ -29,22 +29,35 @@ export const prerender = true;
         sans-serif;
     }
 
-    /* Loading state */
-    .loading {
+    /* Loading overlay - hidden once CMS loads */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      background: #fff;
       font-size: 18px;
       color: var(--primary);
+      z-index: 9999;
+    }
+
+    #loading-overlay.hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <!-- CMS will mount here -->
-  <div id="nc-root" class="loading">
+  <!-- Loading overlay - hidden once CMS mounts -->
+  <div id="loading-overlay">
     Načítání administrace...
   </div>
+
+  <!-- CMS will mount here -->
+  <div id="nc-root"></div>
 
   <!-- Decap CMS - loaded after DOM is ready -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" is:inline></script>
@@ -62,6 +75,12 @@ export const prerender = true;
 
         console.log('CMS loaded successfully');
 
+        // Hide loading overlay once CMS is ready
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('hidden');
+        }
+
         // Note: Custom widgets will be loaded in Phase 4
         // For now, we're just ensuring CMS initializes correctly
 
@@ -69,6 +88,12 @@ export const prerender = true;
 
       } catch (error) {
         console.error('❌ CMS initialization failed:', error);
+
+        // Hide loading overlay
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('hidden');
+        }
 
         // Display user-friendly error
         const errorDiv = document.createElement('div');
