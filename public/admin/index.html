@@ -88,98 +88,105 @@
       console.log('✅ All required globals are available');
 
         // ==========================================
-        // AUTHOR WIDGET (Simplified)
+        // AUTHOR WIDGET (localStorage-based)
         // ==========================================
+        // Uses undocumented localStorage access to read current user
+        // Decap CMS stores user data in: window.localStorage.getItem('decap-cms-user')
         console.log('📝 Defining Author widget...');
+
         var AuthorControl = createClass({
           getInitialState: function() {
             return {
-              author: 'Redakce'
+              author: this.props.value || 'Redakce',
+              isAutoPopulated: false
             };
           },
 
           componentDidMount: function() {
             var self = this;
 
-            // Function to initialize author with retry logic
-            function initializeAuthor(retryCount) {
-              retryCount = retryCount || 0;
-              var maxRetries = 5;
-              var retryDelay = 200; // ms
+            // Don't override if user already set a value
+            if (this.props.value) {
+              console.log('[Author Widget] Using existing value:', this.props.value);
+              return;
+            }
 
-              // Get GitHub username from CMS backend
-              var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
+            try {
+              // Read user from localStorage (where Decap CMS stores it)
+              var storedUser = window.localStorage.getItem('decap-cms-user');
 
-              if (!backend || !backend.currentUser) {
-                if (retryCount < maxRetries) {
-                  console.log('[Author Widget] Backend not ready, retry ' + (retryCount + 1) + '/' + maxRetries);
-                  setTimeout(function() {
-                    initializeAuthor(retryCount + 1);
-                  }, retryDelay);
-                  return;
-                }
-
-                console.log('[Author Widget] CMS backend not available after retries, using default author');
-                self.setState({ author: 'Redakce' });
-                self.props.onChange('Redakce');
+              if (!storedUser) {
+                console.log('[Author Widget] No stored user found, using default');
+                this.setState({ author: 'Redakce' });
+                this.props.onChange('Redakce');
                 return;
               }
 
-              console.log('[Author Widget] Backend available, fetching current user');
+              var userData = JSON.parse(storedUser);
+              console.log('[Author Widget] Found stored user:', userData);
 
-              backend.currentUser()
-                .then(function(user) {
-                  // Support multiple backend types (GitHub, GitLab, Bitbucket)
-                  var username = user && (user.login || user.username || user.name);
-                  if (!username) {
-                    console.log('[Author Widget] No username found, using default author');
-                    self.setState({ author: 'Redakce' });
-                    self.props.onChange('Redakce');
-                    return;
+              // Extract username (GitHub: login, GitLab/Bitbucket: username)
+              var username = userData.login || userData.username || userData.name;
+
+              if (!username) {
+                console.log('[Author Widget] No username in stored data, using default');
+                this.setState({ author: 'Redakce' });
+                this.props.onChange('Redakce');
+                return;
+              }
+
+              console.log('[Author Widget] GitHub username:', username);
+
+              // Determine base path - handle both dev and production
+              var basePath = '';
+              var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
+
+              // In dev: /dgkralupy/admin/index.html -> base is /dgkralupy
+              // In prod: /dgkralupy/admin/ -> base is /dgkralupy
+              if (pathParts.length > 0 && pathParts[0] !== 'admin') {
+                basePath = '/' + pathParts[0];
+              }
+
+              // The file is in the public folder at build time, served at root
+              var authorsPath = basePath + '/authors.json';
+              console.log('[Author Widget] Loading authors from:', authorsPath);
+
+              // Fetch and map username to display name
+              fetch(authorsPath)
+                .then(function(response) {
+                  if (!response.ok) {
+                    throw new Error('authors.json not found');
                   }
+                  return response.json();
+                })
+                .then(function(data) {
+                  var mapping = data.mappings.find(function(m) {
+                    return m.github === username || m.username === username;
+                  });
+                  var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
 
-                  console.log('[Author Widget] Username:', username);
-
-                  // Determine base path (simple: localhost = empty, otherwise extract from URL)
-                  var basePath = '';
-                  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                    var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
-                    if (pathParts.length > 0 && pathParts[0] !== 'admin') {
-                      basePath = '/' + pathParts[0];
-                    }
-                  }
-
-                  var authorsPath = basePath + '/content/authors/authors.json';
-                  console.log('[Author Widget] Loading authors from:', authorsPath);
-
-                  // Fetch and map username to display name
-                  return fetch(authorsPath)
-                    .then(function(response) {
-                      if (!response.ok) {
-                        throw new Error('authors.json not found');
-                      }
-                      return response.json();
-                    })
-                    .then(function(data) {
-                      var mapping = data.mappings.find(function(m) {
-                        return m.github === username || m.username === username;
-                      });
-                      var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
-
-                      console.log('[Author Widget] Mapped:', username, '→', authorName);
-                      self.setState({ author: authorName });
-                      self.props.onChange(authorName);
-                    });
+                  console.log('[Author Widget] Mapped:', username, '→', authorName);
+                  self.setState({
+                    author: authorName,
+                    isAutoPopulated: true
+                  });
+                  self.props.onChange(authorName);
                 })
                 .catch(function(error) {
-                  console.log('[Author Widget] Error:', error.message, '- using default author');
-                  self.setState({ author: 'Redakce' });
-                  self.props.onChange('Redakce');
+                  console.log('[Author Widget] Error loading authors.json:', error.message);
+                  // Fallback: use GitHub username as-is
+                  self.setState({
+                    author: username,
+                    isAutoPopulated: true
+                  });
+                  self.props.onChange(username);
                 });
-            }
 
-            // Start initialization
-            initializeAuthor(0);
+            } catch (error) {
+              console.log('[Author Widget] Error:', error.message, '- using default');
+              this.setState({ author: 'Redakce' });
+              this.props.onChange('Redakce');
+            }
           },
 
           render: function() {
@@ -214,7 +221,9 @@
                   fontSize: '12px',
                   color: '#888'
                 }
-              }, 'Autor je nastaven automaticky na základě vašeho GitHub účtu')
+              }, this.state.isAutoPopulated
+                  ? 'Autor nastaven automaticky z GitHub účtu'
+                  : 'Autor je nastaven automaticky při vytvoření článku')
             );
           }
         });

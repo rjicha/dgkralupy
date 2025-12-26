@@ -5,7 +5,7 @@ backend:
   branch: main
   base_url: https://dgkralupy-stg.radekjicha.workers.dev
 
-local_backend: true
+local_backend: false
 
 media_folder: "public/images"
 public_folder: "/images"
