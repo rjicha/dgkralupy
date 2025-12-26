@@ -88,209 +88,77 @@
       console.log('✅ All required globals are available');
 
         // ==========================================
-        // AUTHOR WIDGET
+        // AUTHOR WIDGET (Simplified)
         // ==========================================
         console.log('📝 Defining Author widget...');
         var AuthorControl = createClass({
-          // Configuration constants
-          RETRY_CONFIG: {
-            MAX_ATTEMPTS: 10,
-            INITIAL_DELAY_MS: 200,
-            BACKOFF_MULTIPLIER: 1.5,
-            FETCH_TIMEOUT_MS: 5000
-          },
-
           getInitialState: function() {
             return {
-              author: 'Redakce',
-              githubUser: null,
-              error: null,
-              isLoadingAuthor: false,
-              retryTimeouts: []
+              author: 'Redakce'
             };
           },
 
           componentDidMount: function() {
-            this.determineAuthor();
-          },
-
-          componentWillUnmount: function() {
-            // Critical: cleanup pending timeouts to prevent memory leaks
-            if (this.state.retryTimeouts && this.state.retryTimeouts.length > 0) {
-              console.log('[Author Widget] Cleaning up ' + this.state.retryTimeouts.length + ' pending timeouts');
-              this.state.retryTimeouts.forEach(function(timeoutId) {
-                clearTimeout(timeoutId);
-              });
-            }
-          },
-
-          // Helper: Fetch with timeout
-          fetchWithTimeout: function(url, timeout) {
-            return Promise.race([
-              fetch(url),
-              new Promise(function(_, reject) {
-                setTimeout(function() {
-                  reject(new Error('Request timeout'));
-                }, timeout);
-              })
-            ]);
-          },
-
-          // Helper: Determine base path for authors.json
-          getBasePath: function() {
-            // Option 1: Try to read from field config (configurable in config.yml)
-            var configuredPath = this.props.field && this.props.field.get('base_path');
-            if (configuredPath) {
-              console.log('[Author Widget] Using configured base path:', configuredPath);
-              return configuredPath;
-            }
-
-            // Option 2: Auto-detect based on hostname
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-              console.log('[Author Widget] Detected localhost, using empty base path');
-              return '';
-            }
-
-            // Option 3: Extract from URL pathname
-            var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
-            var adminIndex = pathParts.indexOf('admin');
-
-            if (adminIndex > 0) {
-              // Extract everything before 'admin' as base path
-              var basePath = '/' + pathParts.slice(0, adminIndex).join('/');
-              console.log('[Author Widget] Extracted base path from URL:', basePath);
-              return basePath;
-            } else if (pathParts.length > 0 && pathParts[0] !== 'admin') {
-              // First segment is base path (not 'admin')
-              var basePath = '/' + pathParts[0];
-              console.log('[Author Widget] Using first path segment as base:', basePath);
-              return basePath;
-            }
-
-            console.log('[Author Widget] No base path detected, using root');
-            return '';
-          },
-
-          determineAuthor: function() {
             var self = this;
 
-            // Prevent concurrent execution (race condition protection)
-            if (this.state.isLoadingAuthor) {
-              console.log('[Author Widget] Author determination already in progress, skipping');
+            // Get GitHub username from CMS backend
+            var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
+            if (!backend || !backend.currentUser) {
+              console.log('[Author Widget] CMS backend not available, using default author');
+              self.props.onChange('Redakce');
               return;
             }
 
-            this.setState({ isLoadingAuthor: true });
-
-            var maxRetries = this.RETRY_CONFIG.MAX_ATTEMPTS;
-            var initialDelay = this.RETRY_CONFIG.INITIAL_DELAY_MS;
-            var backoffMultiplier = this.RETRY_CONFIG.BACKOFF_MULTIPLIER;
-
-            function attemptGetBackend(retryCount) {
-              var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
-
-              // Check if backend is ready
-              if (!backend || !backend.currentUser) {
-                if (retryCount < maxRetries) {
-                  var delay = initialDelay * Math.pow(backoffMultiplier, retryCount);
-                  console.log('[Author Widget] Backend not ready, retrying in ' + Math.round(delay) + 'ms... (' + (retryCount + 1) + '/' + maxRetries + ')');
-
-                  var timeoutId = setTimeout(function() {
-                    attemptGetBackend(retryCount + 1);
-                  }, delay);
-
-                  // Track timeout for cleanup
-                  self.setState(function(prevState) {
-                    return {
-                      retryTimeouts: prevState.retryTimeouts.concat([timeoutId])
-                    };
-                  });
-                  return;
-                } else {
-                  console.error('[Author Widget] Backend not available after ' + maxRetries + ' retries');
-                  self.setState({
-                    author: 'Redakce',
-                    error: 'GitHub autentizace nedostupná. Zkontrolujte připojení.',
-                    isLoadingAuthor: false
-                  });
+            backend.currentUser()
+              .then(function(user) {
+                var username = user && user.login;
+                if (!username) {
+                  console.log('[Author Widget] No GitHub username found, using default author');
                   self.props.onChange('Redakce');
                   return;
                 }
-              }
 
-              // Backend is ready, proceed with author determination
-              console.log('[Author Widget] Backend ready, fetching current user');
+                console.log('[Author Widget] GitHub username:', username);
 
-              backend.currentUser().then(function(user) {
-                var githubUsername = user && (user.login || user.name);
-
-                if (!githubUsername) {
-                  throw new Error('GitHub uživatel nenalezen');
+                // Determine base path (simple: localhost = empty, otherwise extract from URL)
+                var basePath = '';
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                  var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
+                  if (pathParts.length > 0 && pathParts[0] !== 'admin') {
+                    basePath = '/' + pathParts[0];
+                  }
                 }
 
-                console.log('[Author Widget] GitHub user:', githubUsername);
-                self.setState({ githubUser: githubUsername });
-
-                // Determine base path dynamically
-                var basePath = self.getBasePath();
                 var authorsPath = basePath + '/content/authors/authors.json';
                 console.log('[Author Widget] Loading authors from:', authorsPath);
 
-                // Fetch author mappings with timeout
-                return self.fetchWithTimeout(authorsPath, self.RETRY_CONFIG.FETCH_TIMEOUT_MS)
+                // Fetch and map username to display name
+                return fetch(authorsPath)
                   .then(function(response) {
                     if (!response.ok) {
-                      throw new Error('Soubor authors.json nenalezen na cestě: ' + authorsPath);
+                      throw new Error('authors.json not found');
                     }
                     return response.json();
                   })
                   .then(function(data) {
-                    // Support both old object format and new array format
-                    var mappings = data.mappings || [];
-                    var mapping = null;
-
-                    // Try array format first (new format)
-                    if (Array.isArray(mappings)) {
-                      mapping = mappings.find(function(m) {
-                        return m.github === githubUsername;
-                      });
-                    }
-                    // Fallback to object format (old format)
-                    else if (data.mapping && typeof data.mapping === 'object') {
-                      var displayName = data.mapping[githubUsername];
-                      if (displayName) {
-                        mapping = { displayName: displayName };
-                      }
-                    }
-
+                    var mapping = data.mappings.find(function(m) {
+                      return m.github === username;
+                    });
                     var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
 
-                    console.log('[Author Widget] Author mapping:', githubUsername, '→', authorName);
-
-                    self.setState({
-                      author: authorName,
-                      error: null,
-                      isLoadingAuthor: false
-                    });
+                    console.log('[Author Widget] Mapped:', username, '→', authorName);
+                    self.setState({ author: authorName });
                     self.props.onChange(authorName);
                   });
-              }).catch(function(error) {
-                console.error('[Author Widget] Error loading author:', error);
-                self.setState({
-                  author: 'Redakce',
-                  error: error.message,
-                  isLoadingAuthor: false
-                });
+              })
+              .catch(function(error) {
+                console.log('[Author Widget] Error:', error.message, '- using default author');
+                self.setState({ author: 'Redakce' });
                 self.props.onChange('Redakce');
               });
-            }
-
-            // Start the retry process
-            attemptGetBackend(0);
           },
 
           render: function() {
-            var self = this;
             return h('div', {
               className: this.props.classNameWrapper,
               style: { padding: '10px', borderRadius: '4px', border: '1px solid #ddd', backgroundColor: '#fafafa' }
@@ -315,32 +183,14 @@
                 }
               }),
 
-              // Loading indicator during retry
-              this.state.isLoadingAuthor && h('p', {
-                style: {
-                  marginTop: '8px',
-                  marginBottom: '4px',
-                  fontSize: '13px',
-                  color: '#666',
-                  fontStyle: 'italic'
-                }
-              }, '⏳ Načítání autora z GitHub účtu...'),
-
-              // Status message or error
               h('p', {
                 style: {
                   marginTop: '8px',
                   marginBottom: '0',
                   fontSize: '12px',
-                  color: this.state.error ? '#c44d58' : '#888'
+                  color: '#888'
                 }
-              },
-                this.state.error
-                  ? '⚠️ ' + this.state.error
-                  : (this.state.githubUser
-                      ? 'GitHub účet: ' + this.state.githubUser
-                      : 'Autor je nastaven automaticky na základě vašeho GitHub účtu')
-              )
+              }, 'Autor je nastaven automaticky na základě vašeho GitHub účtu')
             );
           }
         });
