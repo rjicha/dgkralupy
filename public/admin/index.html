@@ -101,61 +101,85 @@
           componentDidMount: function() {
             var self = this;
 
-            // Get GitHub username from CMS backend
-            var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
-            if (!backend || !backend.currentUser) {
-              console.log('[Author Widget] CMS backend not available, using default author');
-              self.props.onChange('Redakce');
-              return;
-            }
+            // Function to initialize author with retry logic
+            function initializeAuthor(retryCount) {
+              retryCount = retryCount || 0;
+              var maxRetries = 5;
+              var retryDelay = 200; // ms
 
-            backend.currentUser()
-              .then(function(user) {
-                var username = user && user.login;
-                if (!username) {
-                  console.log('[Author Widget] No GitHub username found, using default author');
-                  self.props.onChange('Redakce');
+              // Get GitHub username from CMS backend
+              var backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
+
+              if (!backend || !backend.currentUser) {
+                if (retryCount < maxRetries) {
+                  console.log('[Author Widget] Backend not ready, retry ' + (retryCount + 1) + '/' + maxRetries);
+                  setTimeout(function() {
+                    initializeAuthor(retryCount + 1);
+                  }, retryDelay);
                   return;
                 }
 
-                console.log('[Author Widget] GitHub username:', username);
-
-                // Determine base path (simple: localhost = empty, otherwise extract from URL)
-                var basePath = '';
-                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                  var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
-                  if (pathParts.length > 0 && pathParts[0] !== 'admin') {
-                    basePath = '/' + pathParts[0];
-                  }
-                }
-
-                var authorsPath = basePath + '/content/authors/authors.json';
-                console.log('[Author Widget] Loading authors from:', authorsPath);
-
-                // Fetch and map username to display name
-                return fetch(authorsPath)
-                  .then(function(response) {
-                    if (!response.ok) {
-                      throw new Error('authors.json not found');
-                    }
-                    return response.json();
-                  })
-                  .then(function(data) {
-                    var mapping = data.mappings.find(function(m) {
-                      return m.github === username;
-                    });
-                    var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
-
-                    console.log('[Author Widget] Mapped:', username, '→', authorName);
-                    self.setState({ author: authorName });
-                    self.props.onChange(authorName);
-                  });
-              })
-              .catch(function(error) {
-                console.log('[Author Widget] Error:', error.message, '- using default author');
+                console.log('[Author Widget] CMS backend not available after retries, using default author');
                 self.setState({ author: 'Redakce' });
                 self.props.onChange('Redakce');
-              });
+                return;
+              }
+
+              console.log('[Author Widget] Backend available, fetching current user');
+
+              backend.currentUser()
+                .then(function(user) {
+                  // Support multiple backend types (GitHub, GitLab, Bitbucket)
+                  var username = user && (user.login || user.username || user.name);
+                  if (!username) {
+                    console.log('[Author Widget] No username found, using default author');
+                    self.setState({ author: 'Redakce' });
+                    self.props.onChange('Redakce');
+                    return;
+                  }
+
+                  console.log('[Author Widget] Username:', username);
+
+                  // Determine base path (simple: localhost = empty, otherwise extract from URL)
+                  var basePath = '';
+                  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                    var pathParts = window.location.pathname.split('/').filter(function(p) { return p; });
+                    if (pathParts.length > 0 && pathParts[0] !== 'admin') {
+                      basePath = '/' + pathParts[0];
+                    }
+                  }
+
+                  var authorsPath = basePath + '/content/authors/authors.json';
+                  console.log('[Author Widget] Loading authors from:', authorsPath);
+
+                  // Fetch and map username to display name
+                  return fetch(authorsPath)
+                    .then(function(response) {
+                      if (!response.ok) {
+                        throw new Error('authors.json not found');
+                      }
+                      return response.json();
+                    })
+                    .then(function(data) {
+                      var mapping = data.mappings.find(function(m) {
+                        return m.github === username || m.username === username;
+                      });
+                      var authorName = mapping ? mapping.displayName : (data.defaultAuthor || 'Redakce');
+
+                      console.log('[Author Widget] Mapped:', username, '→', authorName);
+                      self.setState({ author: authorName });
+                      self.props.onChange(authorName);
+                    });
+                })
+                .catch(function(error) {
+                  console.log('[Author Widget] Error:', error.message, '- using default author');
+                  self.setState({ author: 'Redakce' });
+                  self.props.onChange('Redakce');
+                });
+            }
+
+            // Start initialization
+            initializeAuthor(0);
           },
 
           render: function() {
