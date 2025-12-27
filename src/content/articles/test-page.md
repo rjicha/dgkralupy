@@ -5,11 +5,12 @@ publishedAt: 13.12.2025
 author: Redakce
 tags: []
 image:
-  src: /images/oip.webp
-  alt: Test page
+  src: /images/me.jpg
+  alt: ""
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
+  crops: {}
 featured: false
 important: false
 draft: false
