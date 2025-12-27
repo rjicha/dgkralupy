@@ -1,8 +1,7 @@
 ---
 title: Adventní běhání
-excerpt: >-
-  Studenti a učitelé naší školy se zapojují do tradiční dobročinné akce Adventní
-  běhání, jejímž cílem je podpořit potřebné.
+excerpt: Studenti a učitelé naší školy se zapojují do tradiční dobročinné akce
+  Adventní běhání, jejímž cílem je podpořit potřebné.
 publishedAt: 28.11.2025
 author: Mgr. Petr Svoboda
 tags:
@@ -10,11 +9,12 @@ tags:
   - Charita
   - Aktivity
 image:
-  src: /images/advent-run.jpg
-  alt: Adventní běhání
+  src: /images/me.jpg
+  alt: Me
   focusPoint:
     x: 50
-    'y': 50
+    y: 28
+  crops: {}
 featured: true
 important: false
 draft: false
