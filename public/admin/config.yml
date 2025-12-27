@@ -11,12 +11,10 @@ media_folder: "public/images"
 public_folder: "/images"
 media_folder_relative: true
 
-media_library:
-  name: uploadcare
-  config:
-    max_file_size: 5242880
-    multiple: false
-    tabs: 'file url'
+# Git-based media storage (default)
+# Images are stored directly in the repository and committed with content changes
+# No external service needed - images served from GitHub Pages
+# File size limit enforced by CMS widget validation (5 MB)
 
 locale: 'cs'
 
