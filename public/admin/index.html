@@ -52,7 +52,10 @@
 
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  
+
+  <!-- Cloudinary Upload Widget -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
   <!-- Inline Custom Widgets Registration -->
   <script>
     /* eslint-disable no-undef, @typescript-eslint/no-this-alias */
@@ -253,12 +256,12 @@
             console.log('='.repeat(60));
             console.log('[Enhanced Image] getInitialState called');
             console.log('[Enhanced Image] this.props.value:', this.props.value);
-            console.log('[Enhanced Image] this.props.onChange:', typeof this.props.onChange);
+            console.log('[Enhanced Image] Value type:', typeof this.props.value);
             console.log('='.repeat(60));
 
             var value = this.props.value;
 
-            // Base state shared by all branches
+            // Base state
             var state = {
               error: null,
               isDragging: false,
@@ -271,21 +274,28 @@
 
             // Handle different value types
             if (!value) {
-              // No value - return empty state (already set above)
               console.log('[Enhanced Image] No initial value');
               return state;
             }
 
             if (typeof value === 'string') {
-              // Cloudinary URL string
-              console.log('[Enhanced Image] Initializing with Cloudinary URL:', value);
+              // NEW FORMAT: Just public_id string (e.g., "dgkralupy/image.jpg")
+              // OR legacy full URL
+              console.log('[Enhanced Image] Initializing with string:', value);
               state.src = value;
+
+              // Build Cloudinary URL for preview if it's a public_id (not a full URL)
+              if (!value.startsWith('http')) {
+                state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                console.log('[Enhanced Image] Built preview URL for initial state:', state.previewUrl);
+              }
+
               return state;
             }
 
             if (typeof value === 'object') {
-              // Enhanced object format
-              console.log('[Enhanced Image] Initializing with object format:', value);
+              // LEGACY FORMAT: Object with {src, alt, focusPoint}
+              console.log('[Enhanced Image] Initializing with legacy object format:', value);
               state.src = value.src || value.url || null;
               state.alt = value.alt || '';
               state.focusPoint = value.focusPoint || { x: 50, y: 50 };
@@ -302,7 +312,6 @@
             console.log('[Enhanced Image] componentDidUpdate called');
             console.log('[Enhanced Image] prevProps.value:', prevProps.value);
             console.log('[Enhanced Image] this.props.value:', this.props.value);
-            console.log('[Enhanced Image] Current state:', this.state);
 
             // Only update if value actually changed
             if (prevProps.value !== this.props.value && this.props.value) {
@@ -310,44 +319,51 @@
               console.log('[Enhanced Image] Value changed! New value:', value);
               console.log('[Enhanced Image] Value type:', typeof value);
 
-              // Handle both string URLs (from Cloudinary) and object format
               var newState;
               if (typeof value === 'string') {
-                // Cloudinary returns a URL string
-                console.log('[Enhanced Image] Received URL string from Cloudinary:', value);
+                // NEW FORMAT: public_id string
+                console.log('[Enhanced Image] Received public_id string:', value);
+
+                // Build Cloudinary URL for preview if it's a public_id (not a full URL)
+                var previewUrl = null;
+                if (!value.startsWith('http')) {
+                  // It's a public_id, build Cloudinary URL
+                  previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                  console.log('[Enhanced Image] Built preview URL:', previewUrl);
+                }
+
                 newState = {
                   src: value,
-                  alt: this.state.alt || '',  // Preserve existing alt or empty
-                  focusPoint: this.state.focusPoint || { x: 50, y: 50 },
-                  crops: this.state.crops || {},
-                  previewUrl: null,  // Clear any blob URL
-                  error: null  // Clear any errors
+                  previewUrl: previewUrl,
+                  error: null
                 };
               } else if (typeof value === 'object' && value !== null) {
-                // Object format (our enhanced format)
-                console.log('[Enhanced Image] Received object format:', value);
+                // LEGACY FORMAT: object with src/alt/focusPoint
+                console.log('[Enhanced Image] Received legacy object format:', value);
+
+                var srcValue = value.src || value.url || null;
+                var legacyPreviewUrl = null;
+                if (srcValue && !srcValue.startsWith('http')) {
+                  // Build Cloudinary URL for legacy public_id
+                  legacyPreviewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                }
+
                 newState = {
-                  src: value.src || value.url || null,
+                  src: srcValue,
                   alt: value.alt || '',
                   focusPoint: value.focusPoint || { x: 50, y: 50 },
-                  crops: value.crops || {},
-                  previewUrl: null,
+                  previewUrl: legacyPreviewUrl,
                   error: null
                 };
               } else {
-                // Invalid or null value
                 console.log('[Enhanced Image] Invalid value type, ignoring');
                 return;
               }
 
               console.log('[Enhanced Image] Setting new state:', newState);
-              // CRITICAL: Just update state, DO NOT call emitChange()
-              // The value is already set by CMS via props.value
-              // Calling emitChange() here would cause infinite loop:
-              //   componentDidUpdate -> setState -> emitChange -> props.onChange ->
-              //   parent updates -> componentDidUpdate (again) -> infinite loop
+              // DO NOT call emitChange() here to avoid infinite loop
               this.setState(newState, function() {
-                console.log('[Enhanced Image] State updated successfully:', this.state);
+                console.log('[Enhanced Image] State updated successfully');
               });
             }
           },
@@ -453,12 +469,9 @@
 
           emitChange: function() {
             var src = this.state.src;
-            var alt = this.state.alt;
-            var focusPoint = this.state.focusPoint;
-            var crops = this.state.crops;
 
             console.log('[Enhanced Image] emitChange called');
-            console.log('[Enhanced Image] Current state:', { src, alt, focusPoint, crops });
+            console.log('[Enhanced Image] src:', src);
 
             if (!src) {
               console.log('[Enhanced Image] No src, calling onChange(null)');
@@ -466,49 +479,94 @@
               return;
             }
 
-            var value = {
-              src: src,
-              alt: alt,
-              focusPoint: focusPoint,
-              crops: crops
-            };
-            console.log('[Enhanced Image] Calling onChange with:', value);
-            this.props.onChange(value);
+            // Send just the public_id string (not an object)
+            console.log('[Enhanced Image] Calling onChange with public_id string:', src);
+            this.props.onChange(src);
           },
 
           handleDropzoneClick: function() {
             var self = this;
             console.log('='.repeat(60));
-            console.log('[Enhanced Image] handleDropzoneClick - Opening media library');
+            console.log('[Enhanced Image] Opening Cloudinary Upload Widget');
             console.log('[Enhanced Image] Current state:', this.state);
-            console.log('[Enhanced Image] Available props:', Object.keys(this.props));
             console.log('='.repeat(60));
 
-            // Open media library dialog - this handles the upload properly
-            if (this.props.onOpenMediaLibrary) {
-              try {
-                console.log('[Enhanced Image] Calling onOpenMediaLibrary...');
-                this.props.onOpenMediaLibrary({
-                  controlMedia: this.props.mediaPaths,
-                  forImage: true,
-                  value: this.state.src,
-                  // Callback when media is selected
-                  allowMultiple: false,
-                  config: this.props.field.get('config'),
-                  field: this.props.field
-                });
-                console.log('[Enhanced Image] onOpenMediaLibrary called successfully');
-              } catch (error) {
-                console.error('[Enhanced Image] Error opening media library:', error);
-                // Fallback to file input on error
-                if (this.fileInputRef) {
-                  this.fileInputRef.click();
+            // Check if Cloudinary widget is available
+            if (typeof window.cloudinary === 'undefined') {
+              console.error('[Enhanced Image] Cloudinary widget not loaded!');
+              self.setState({ error: 'Cloudinary widget není k dispozici' });
+              return;
+            }
+
+            // Open Cloudinary Upload Widget directly
+            try {
+              window.cloudinary.openUploadWidget({
+                cloudName: 'zzbazza',
+                uploadPreset: 'dgkralupy-stg',
+                folder: 'dgkralupy',
+                sources: ['local', 'url', 'camera'],
+                multiple: false,
+                maxFiles: 1,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+                maxFileSize: 5000000, // 5MB
+                resourceType: 'image',
+                defaultSource: 'local',
+                styles: {
+                  palette: {
+                    window: '#FFFFFF',
+                    windowBorder: '#3b5f78',
+                    tabIcon: '#3b5f78',
+                    menuIcons: '#3b5f78',
+                    textDark: '#000000',
+                    textLight: '#FFFFFF',
+                    link: '#44c2c4',
+                    action: '#44c2c4',
+                    inactiveTabIcon: '#888888',
+                    error: '#F44336',
+                    inProgress: '#44c2c4',
+                    complete: '#4CAF50',
+                    sourceBg: '#F5F5F5'
+                  }
                 }
-              }
-            } else if (this.fileInputRef) {
-              console.log('[Enhanced Image] onOpenMediaLibrary not available, using file input');
-              // Fallback to file input if media library not available
-              this.fileInputRef.click();
+              }, function(error, result) {
+                console.log('[Enhanced Image] Cloudinary callback called');
+                console.log('[Enhanced Image] Error:', error);
+                console.log('[Enhanced Image] Result:', result);
+
+                if (error) {
+                  console.error('[Enhanced Image] Cloudinary error:', error);
+                  self.setState({ error: 'Chyba při nahrávání: ' + error.message });
+                  return;
+                }
+
+                // Handle successful upload
+                if (result && result.event === 'success') {
+                  console.log('[Enhanced Image] Upload successful!');
+                  console.log('[Enhanced Image] Image info:', result.info);
+
+                  // Extract public_id (e.g., "dgkralupy/image-name.jpg")
+                  var publicId = result.info.public_id;
+                  var secureUrl = result.info.secure_url;
+
+                  console.log('[Enhanced Image] Public ID:', publicId);
+                  console.log('[Enhanced Image] Secure URL (for preview):', secureUrl);
+
+                  // Store public_id in src, use secure_url for preview
+                  self.setState({
+                    src: publicId,           // Store just the public_id
+                    previewUrl: secureUrl,   // Use full URL for preview display
+                    error: null
+                  }, function() {
+                    console.log('[Enhanced Image] State updated with public_id:', publicId);
+                    self.emitChange();
+                  });
+                }
+              });
+
+              console.log('[Enhanced Image] Cloudinary widget opened successfully');
+            } catch (error) {
+              console.error('[Enhanced Image] Error opening Cloudinary widget:', error);
+              self.setState({ error: 'Chyba při otevření Cloudinary: ' + error.message });
             }
           },
 
