@@ -250,15 +250,106 @@
 
         var EnhancedImageControl = createClass({
           getInitialState: function() {
-            var value = this.props.value || {};
-            return {
-              src: value.src || null,
-              alt: value.alt || '',
-              focusPoint: value.focusPoint || { x: 50, y: 50 },
-              crops: value.crops || {},
+            console.log('='.repeat(60));
+            console.log('[Enhanced Image] getInitialState called');
+            console.log('[Enhanced Image] this.props.value:', this.props.value);
+            console.log('[Enhanced Image] this.props.onChange:', typeof this.props.onChange);
+            console.log('='.repeat(60));
+
+            var value = this.props.value;
+
+            // Base state shared by all branches
+            var state = {
               error: null,
-              isDragging: false
+              isDragging: false,
+              previewUrl: null,
+              src: null,
+              alt: '',
+              focusPoint: { x: 50, y: 50 },
+              crops: {}
             };
+
+            // Handle different value types
+            if (!value) {
+              // No value - return empty state (already set above)
+              console.log('[Enhanced Image] No initial value');
+              return state;
+            }
+
+            if (typeof value === 'string') {
+              // Cloudinary URL string
+              console.log('[Enhanced Image] Initializing with Cloudinary URL:', value);
+              state.src = value;
+              return state;
+            }
+
+            if (typeof value === 'object') {
+              // Enhanced object format
+              console.log('[Enhanced Image] Initializing with object format:', value);
+              state.src = value.src || value.url || null;
+              state.alt = value.alt || '';
+              state.focusPoint = value.focusPoint || { x: 50, y: 50 };
+              state.crops = value.crops || {};
+              return state;
+            }
+
+            // Fallback for unexpected types
+            console.warn('[Enhanced Image] Unexpected value type:', typeof value, value);
+            return state;
+          },
+
+          componentDidUpdate: function(prevProps) {
+            console.log('[Enhanced Image] componentDidUpdate called');
+            console.log('[Enhanced Image] prevProps.value:', prevProps.value);
+            console.log('[Enhanced Image] this.props.value:', this.props.value);
+            console.log('[Enhanced Image] Current state:', this.state);
+
+            // Only update if value actually changed
+            if (prevProps.value !== this.props.value && this.props.value) {
+              var value = this.props.value;
+              console.log('[Enhanced Image] Value changed! New value:', value);
+              console.log('[Enhanced Image] Value type:', typeof value);
+
+              // Handle both string URLs (from Cloudinary) and object format
+              var newState;
+              if (typeof value === 'string') {
+                // Cloudinary returns a URL string
+                console.log('[Enhanced Image] Received URL string from Cloudinary:', value);
+                newState = {
+                  src: value,
+                  alt: this.state.alt || '',  // Preserve existing alt or empty
+                  focusPoint: this.state.focusPoint || { x: 50, y: 50 },
+                  crops: this.state.crops || {},
+                  previewUrl: null,  // Clear any blob URL
+                  error: null  // Clear any errors
+                };
+              } else if (typeof value === 'object' && value !== null) {
+                // Object format (our enhanced format)
+                console.log('[Enhanced Image] Received object format:', value);
+                newState = {
+                  src: value.src || value.url || null,
+                  alt: value.alt || '',
+                  focusPoint: value.focusPoint || { x: 50, y: 50 },
+                  crops: value.crops || {},
+                  previewUrl: null,
+                  error: null
+                };
+              } else {
+                // Invalid or null value
+                console.log('[Enhanced Image] Invalid value type, ignoring');
+                return;
+              }
+
+              console.log('[Enhanced Image] Setting new state:', newState);
+              // CRITICAL: Just update state, DO NOT call emitChange()
+              // The value is already set by CMS via props.value
+              // Calling emitChange() here would cause infinite loop:
+              //   componentDidUpdate -> setState -> emitChange -> props.onChange ->
+              //   parent updates -> componentDidUpdate (again) -> infinite loop
+              this.setState(newState, function() {
+                console.log('[Enhanced Image] State updated successfully:', this.state);
+              });
+            }
           },
 
           validateFile: function(file) {
@@ -276,28 +367,53 @@
             var file = e.target.files[0];
             if (!file) return;
 
+            console.log('File selected:', file.name, file.type, file.size);
+            console.log('Available props:', Object.keys(this.props));
+
             var validationError = this.validateFile(file);
             if (validationError) {
+              console.error('Validation error:', validationError);
               this.setState({ error: validationError });
               return;
             }
 
-            // Use CMS media library for upload
-            if (this.props.onOpenMediaLibrary) {
-              this.props.onOpenMediaLibrary({
-                controlMedia: this.props.mediaPaths && this.props.mediaPaths.get(this.props.field.get('name')),
-                forImage: true
-              }).then(function(mediaFile) {
+            // Add the asset to Decap CMS's media store
+            if (this.props.onAddAsset) {
+              console.log('Using onAddAsset to upload file...');
+              try {
+                // onAddAsset returns a Redux action {type: 'ADD_ASSET', payload: File}
+                var action = this.props.onAddAsset(file);
+                console.log('onAddAsset returned:', action);
+
+                // Extract the file from the action payload
+                var uploadedFile = action.payload;
+
+                // Construct the image path based on public_folder setting
+                // Files go to media_folder (public/images) and are served from public_folder (/images)
+                var imagePath = '/images/' + uploadedFile.name;
+
+                // Create a blob URL for preview (since file isn't on server yet)
+                var blobUrl = URL.createObjectURL(uploadedFile);
+
+                console.log('Constructed image path:', imagePath);
+                console.log('Created blob URL for preview:', blobUrl);
+
+                // Store the final path for saving, but use blob URL for preview
                 self.setState({
-                  src: mediaFile.path,
+                  src: imagePath,  // This will be saved in frontmatter
+                  previewUrl: blobUrl,  // This will be used for display
                   error: null
                 }, function() {
+                  console.log('State updated successfully');
                   self.emitChange();
                 });
-              }).catch(function(error) {
-                console.error('Image upload error:', error);
-                self.setState({ error: 'Nahrávání se nezdařilo: ' + error.message });
-              });
+              } catch (error) {
+                console.error('Error in onAddAsset:', error);
+                self.setState({ error: 'Chyba při nahrávání: ' + error.message });
+              }
+            } else {
+              console.error('onAddAsset not available in props');
+              self.setState({ error: 'Nahrávání souborů není dostupné' });
             }
           },
 
@@ -341,21 +457,57 @@
             var focusPoint = this.state.focusPoint;
             var crops = this.state.crops;
 
+            console.log('[Enhanced Image] emitChange called');
+            console.log('[Enhanced Image] Current state:', { src, alt, focusPoint, crops });
+
             if (!src) {
+              console.log('[Enhanced Image] No src, calling onChange(null)');
               this.props.onChange(null);
               return;
             }
 
-            this.props.onChange({
+            var value = {
               src: src,
               alt: alt,
               focusPoint: focusPoint,
               crops: crops
-            });
+            };
+            console.log('[Enhanced Image] Calling onChange with:', value);
+            this.props.onChange(value);
           },
 
           handleDropzoneClick: function() {
-            if (this.fileInputRef) {
+            var self = this;
+            console.log('='.repeat(60));
+            console.log('[Enhanced Image] handleDropzoneClick - Opening media library');
+            console.log('[Enhanced Image] Current state:', this.state);
+            console.log('[Enhanced Image] Available props:', Object.keys(this.props));
+            console.log('='.repeat(60));
+
+            // Open media library dialog - this handles the upload properly
+            if (this.props.onOpenMediaLibrary) {
+              try {
+                console.log('[Enhanced Image] Calling onOpenMediaLibrary...');
+                this.props.onOpenMediaLibrary({
+                  controlMedia: this.props.mediaPaths,
+                  forImage: true,
+                  value: this.state.src,
+                  // Callback when media is selected
+                  allowMultiple: false,
+                  config: this.props.field.get('config'),
+                  field: this.props.field
+                });
+                console.log('[Enhanced Image] onOpenMediaLibrary called successfully');
+              } catch (error) {
+                console.error('[Enhanced Image] Error opening media library:', error);
+                // Fallback to file input on error
+                if (this.fileInputRef) {
+                  this.fileInputRef.click();
+                }
+              }
+            } else if (this.fileInputRef) {
+              console.log('[Enhanced Image] onOpenMediaLibrary not available, using file input');
+              // Fallback to file input if media library not available
               this.fileInputRef.click();
             }
           },
@@ -367,6 +519,20 @@
             var focusPoint = this.state.focusPoint;
             var error = this.state.error;
             var isDragging = this.state.isDragging;
+            var previewUrl = this.state.previewUrl;
+
+            // Use preview URL for display if available (for newly uploaded files),
+            // otherwise use the src path (for saved files)
+            var displaySrc = previewUrl || src;
+
+            console.log('[Enhanced Image] Rendering with state:', {
+              src: src,
+              alt: alt,
+              focusPoint: focusPoint,
+              previewUrl: previewUrl,
+              displaySrc: displaySrc,
+              error: error
+            });
 
             var containerStyle = {
               border: '1px solid #ddd',
@@ -423,12 +589,20 @@
                   onClick: this.handleFocusPointChange
                 },
                   h('img', {
-                    src: src,
+                    src: displaySrc,
                     alt: alt,
                     style: {
                       maxWidth: '100%',
                       display: 'block',
                       borderRadius: '4px'
+                    },
+                    onError: function(e) {
+                      console.error('[Enhanced Image] Failed to load image:', displaySrc);
+                      e.target.style.display = 'none';
+                      // Optionally show error message
+                    },
+                    onLoad: function() {
+                      console.log('[Enhanced Image] Image loaded successfully:', displaySrc);
                     }
                   }),
                   h('div', {
