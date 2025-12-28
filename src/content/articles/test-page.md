@@ -5,11 +5,11 @@ publishedAt: 13.12.2025
 author: Redakce
 tags: []
 image:
-  src: /images/me.jpg
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1766923156/dgkralupy/bsgo9gyyvozswzzcxc2k.jpg
   alt: ""
   focusPoint:
-    x: 50
-    y: 50
+    x: 36
+    y: 32
   crops: {}
 featured: false
 important: false
