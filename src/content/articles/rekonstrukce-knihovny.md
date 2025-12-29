@@ -10,11 +10,11 @@ tags:
   - Rekonstrukce
   - Knihovna
 image:
-  src: /images/library-reconstruction.jpg
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009624/dgkralupy/library-reconstruction.jpg
   alt: Rekonstrukce školní knihovny
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
 featured: false
 important: false
 draft: false

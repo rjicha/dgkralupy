@@ -10,11 +10,11 @@ tags:
   - Přijímací řízení
   - Den otevřených dveří
 image:
-  src: /images/open-house.jpg
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009543/dgkralupy/open-house.png
   alt: 'Den otevřených dveří - středa 3. prosince 2025 od 14:30 do 17:00'
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
 featured: true
 important: true
 draft: false

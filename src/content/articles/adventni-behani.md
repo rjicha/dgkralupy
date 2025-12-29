@@ -10,11 +10,11 @@ tags:
   - Charita
   - Aktivity
 image:
-  src: /images/advent-run.jpg
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767008798/dgkralupy/d9rhnoim18tuyb0lkb6n.jpg
   alt: Adventní běhání
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
 featured: true
 important: false
 draft: false

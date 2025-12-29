@@ -469,9 +469,11 @@
 
           emitChange: function() {
             var src = this.state.src;
+            var previewUrl = this.state.previewUrl;
 
             console.log('[Enhanced Image] emitChange called');
             console.log('[Enhanced Image] src:', src);
+            console.log('[Enhanced Image] previewUrl:', previewUrl);
 
             if (!src) {
               console.log('[Enhanced Image] No src, calling onChange(null)');
@@ -479,9 +481,25 @@
               return;
             }
 
-            // Send just the public_id string (not an object)
-            console.log('[Enhanced Image] Calling onChange with public_id string:', src);
-            this.props.onChange(src);
+            // Build the full Cloudinary URL from public_id if we don't have previewUrl
+            var fullUrl = previewUrl;
+            if (!fullUrl && src) {
+              // If src is a public_id, construct the full URL
+              fullUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + src;
+            }
+
+            // Send complete object with src (full URL), alt, and focusPoint
+            var imageData = {
+              src: fullUrl,
+              alt: this.state.alt || '',
+              focusPoint: {
+                x: this.state.focusPoint.x,
+                y: this.state.focusPoint.y
+              }
+            };
+
+            console.log('[Enhanced Image] Calling onChange with complete object:', imageData);
+            this.props.onChange(imageData);
           },
 
           handleDropzoneClick: function() {

@@ -5,11 +5,11 @@ publishedAt: 13.12.2025
 author: Redakce
 tags: []
 image:
-  src: /images/oip.webp
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009695/dgkralupy/me.jpg
   alt: Test page
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
 featured: false
 important: false
 draft: false

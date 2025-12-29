@@ -10,11 +10,11 @@ tags:
   - Studentský parlament
   - Zábava
 image:
-  src: /images/halloween.jpg
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009640/dgkralupy/halloween.jpg
   alt: Halloween na DG
   focusPoint:
     x: 50
-    'y': 50
+    y: 50
 featured: false
 important: false
 draft: false

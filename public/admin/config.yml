@@ -2,7 +2,7 @@
 backend:
   name: github
   repo: rjicha/dgkralupy
-  branch: main
+  branch: chore/remove-uploadcare
   base_url: https://dgkralupy-stg.radekjicha.workers.dev
 
 local_backend: false
