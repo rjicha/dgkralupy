@@ -9,8 +9,8 @@ tags:
   - Charita
   - Aktivity
 image:
-  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009111/dgkralupy/zv29mtnthkqp7vcizyxb.jpg
-  alt: ""
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767008798/dgkralupy/d9rhnoim18tuyb0lkb6n.jpg
+  alt: Adventní běhání
   focusPoint:
     x: 50
     y: 50

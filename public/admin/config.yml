@@ -9,14 +9,22 @@ local_backend: false
 
 media_folder: "public/images"
 public_folder: "/images"
-media_folder_relative: true
 
+# Cloudinary media storage
+# Images stored on Cloudinary CDN (free tier: 25GB storage, 25GB bandwidth/month)
+# Only metadata stored in Git - prevents repository bloat
+# On-demand transformations with automatic format optimization (AVIF, WebP, JPG)
+# Note: api_key is public and safe to expose (required by Decap CMS)
 media_library:
-  name: uploadcare
+  name: cloudinary
   config:
-    max_file_size: 5242880
-    multiple: false
-    tabs: 'file url'
+    cloud_name: zzbazza
+    api_key: 442897745552571
+    upload_preset: dgkralupy-stg
+    folder: dgkralupy
+    output_filename_only: false   # Store full CDN URLs in frontmatter
+    use_transformations: true     # Apply editor transformations
+    use_secure_url: true          # Use HTTPS protocol
 
 locale: 'cs'
 

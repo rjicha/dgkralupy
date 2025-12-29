@@ -20,6 +20,7 @@
  */
 
 import { normalizeImageData } from '../lib/utils/imageProcessing';
+import { getCloudinaryUrl, extractPublicId } from '../lib/utils/cloudinary';
 import type { ImageData } from '../types/image';
 import type { ImageVariant } from '../lib/utils/imageVariants';
 
@@ -53,38 +54,45 @@ const imageData = normalizeImageData(image);
 // Use alt from props, then from image data, then empty string
 const altText = altOverride || imageData.alt || '';
 
-// Construct full image path with BASE_URL
-const fullImageSrc = imageData.src.startsWith('http')
-  ? imageData.src
-  : `${import.meta.env.BASE_URL}/${imageData.src.replace(/^\//, '')}`;
+// Check if image is from Cloudinary
+const isCloudinaryImage = imageData.src.includes('cloudinary.com') ||
+                          imageData.src.includes('res.cloudinary.com');
 
-// Calculate object-position from focus point
+let imageSrc: string;
+
+if (isCloudinaryImage) {
+  // Use Cloudinary with transformations
+  const publicId = extractPublicId(imageData.src);
+  imageSrc = getCloudinaryUrl(publicId, variant, imageData.focusPoint);
+} else {
+  // Legacy: local images (fallback for existing content)
+  imageSrc = imageData.src.startsWith('http')
+    ? imageData.src
+    : `${import.meta.env.BASE_URL}/${imageData.src.replace(/^\//, '')}`;
+}
+
+// Calculate object-position from focus point (fallback for local images)
 const objectPosition = imageData.focusPoint
   ? `${imageData.focusPoint.x}% ${imageData.focusPoint.y}%`
   : 'center';
 
 /**
- * Note: This is Phase 2A implementation using direct image references.
- * Future enhancement (when images move to src/assets/):
- * - Use generateImageVariants() for multi-format optimization (AVIF, WebP, JPG)
- * - Generate responsive srcset for different screen sizes
- * - Apply custom crops per variant
- *
- * Current implementation provides:
- * - Backward compatibility with existing string format
- * - Support for new object format with focus points
- * - Proper alt text handling
- * - Object-position based on focus point
+ * Implementation notes:
+ * - Cloudinary images: Transformations applied via URL (focus point, resize, format optimization)
+ * - Local images: Fallback using object-position CSS for focus point
+ * - Automatic format optimization for Cloudinary (AVIF, WebP, JPG based on browser)
+ * - Backward compatible with existing local images
  */
 ---
 
 <img
-  src={fullImageSrc}
+  src={imageSrc}
   alt={altText}
   loading={loading}
   decoding="async"
   class={className}
-  style={`object-position: ${objectPosition}; ${style}`}
+  style={isCloudinaryImage ? style : `object-position: ${objectPosition}; ${style}`}
   data-variant={variant}
+  data-cloudinary={isCloudinaryImage}
   data-focus-point={imageData.focusPoint ? `${imageData.focusPoint.x},${imageData.focusPoint.y}` : undefined}
 />

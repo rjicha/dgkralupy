@@ -52,7 +52,10 @@
 
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  
+
+  <!-- Cloudinary Upload Widget -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
   <!-- Inline Custom Widgets Registration -->
   <script>
     /* eslint-disable no-undef, @typescript-eslint/no-this-alias */
@@ -250,15 +253,119 @@
 
         var EnhancedImageControl = createClass({
           getInitialState: function() {
-            var value = this.props.value || {};
-            return {
-              src: value.src || null,
-              alt: value.alt || '',
-              focusPoint: value.focusPoint || { x: 50, y: 50 },
-              crops: value.crops || {},
+            console.log('='.repeat(60));
+            console.log('[Enhanced Image] getInitialState called');
+            console.log('[Enhanced Image] this.props.value:', this.props.value);
+            console.log('[Enhanced Image] Value type:', typeof this.props.value);
+            console.log('='.repeat(60));
+
+            var value = this.props.value;
+
+            // Base state
+            var state = {
               error: null,
-              isDragging: false
+              isDragging: false,
+              previewUrl: null,
+              src: null,
+              alt: '',
+              focusPoint: { x: 50, y: 50 },
+              crops: {}
             };
+
+            // Handle different value types
+            if (!value) {
+              console.log('[Enhanced Image] No initial value');
+              return state;
+            }
+
+            if (typeof value === 'string') {
+              // NEW FORMAT: Just public_id string (e.g., "dgkralupy/image.jpg")
+              // OR legacy full URL
+              console.log('[Enhanced Image] Initializing with string:', value);
+              state.src = value;
+
+              // Build Cloudinary URL for preview if it's a public_id (not a full URL)
+              if (!value.startsWith('http')) {
+                state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                console.log('[Enhanced Image] Built preview URL for initial state:', state.previewUrl);
+              }
+
+              return state;
+            }
+
+            if (typeof value === 'object') {
+              // LEGACY FORMAT: Object with {src, alt, focusPoint}
+              console.log('[Enhanced Image] Initializing with legacy object format:', value);
+              state.src = value.src || value.url || null;
+              state.alt = value.alt || '';
+              state.focusPoint = value.focusPoint || { x: 50, y: 50 };
+              state.crops = value.crops || {};
+              return state;
+            }
+
+            // Fallback for unexpected types
+            console.warn('[Enhanced Image] Unexpected value type:', typeof value, value);
+            return state;
+          },
+
+          componentDidUpdate: function(prevProps) {
+            console.log('[Enhanced Image] componentDidUpdate called');
+            console.log('[Enhanced Image] prevProps.value:', prevProps.value);
+            console.log('[Enhanced Image] this.props.value:', this.props.value);
+
+            // Only update if value actually changed
+            if (prevProps.value !== this.props.value && this.props.value) {
+              var value = this.props.value;
+              console.log('[Enhanced Image] Value changed! New value:', value);
+              console.log('[Enhanced Image] Value type:', typeof value);
+
+              var newState;
+              if (typeof value === 'string') {
+                // NEW FORMAT: public_id string
+                console.log('[Enhanced Image] Received public_id string:', value);
+
+                // Build Cloudinary URL for preview if it's a public_id (not a full URL)
+                var previewUrl = null;
+                if (!value.startsWith('http')) {
+                  // It's a public_id, build Cloudinary URL
+                  previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                  console.log('[Enhanced Image] Built preview URL:', previewUrl);
+                }
+
+                newState = {
+                  src: value,
+                  previewUrl: previewUrl,
+                  error: null
+                };
+              } else if (typeof value === 'object' && value !== null) {
+                // LEGACY FORMAT: object with src/alt/focusPoint
+                console.log('[Enhanced Image] Received legacy object format:', value);
+
+                var srcValue = value.src || value.url || null;
+                var legacyPreviewUrl = null;
+                if (srcValue && !srcValue.startsWith('http')) {
+                  // Build Cloudinary URL for legacy public_id
+                  legacyPreviewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                }
+
+                newState = {
+                  src: srcValue,
+                  alt: value.alt || '',
+                  focusPoint: value.focusPoint || { x: 50, y: 50 },
+                  previewUrl: legacyPreviewUrl,
+                  error: null
+                };
+              } else {
+                console.log('[Enhanced Image] Invalid value type, ignoring');
+                return;
+              }
+
+              console.log('[Enhanced Image] Setting new state:', newState);
+              // DO NOT call emitChange() here to avoid infinite loop
+              this.setState(newState, function() {
+                console.log('[Enhanced Image] State updated successfully');
+              });
+            }
           },
 
           validateFile: function(file) {
@@ -276,28 +383,53 @@
             var file = e.target.files[0];
             if (!file) return;
 
+            console.log('File selected:', file.name, file.type, file.size);
+            console.log('Available props:', Object.keys(this.props));
+
             var validationError = this.validateFile(file);
             if (validationError) {
+              console.error('Validation error:', validationError);
               this.setState({ error: validationError });
               return;
             }
 
-            // Use CMS media library for upload
-            if (this.props.onOpenMediaLibrary) {
-              this.props.onOpenMediaLibrary({
-                controlMedia: this.props.mediaPaths && this.props.mediaPaths.get(this.props.field.get('name')),
-                forImage: true
-              }).then(function(mediaFile) {
+            // Add the asset to Decap CMS's media store
+            if (this.props.onAddAsset) {
+              console.log('Using onAddAsset to upload file...');
+              try {
+                // onAddAsset returns a Redux action {type: 'ADD_ASSET', payload: File}
+                var action = this.props.onAddAsset(file);
+                console.log('onAddAsset returned:', action);
+
+                // Extract the file from the action payload
+                var uploadedFile = action.payload;
+
+                // Construct the image path based on public_folder setting
+                // Files go to media_folder (public/images) and are served from public_folder (/images)
+                var imagePath = '/images/' + uploadedFile.name;
+
+                // Create a blob URL for preview (since file isn't on server yet)
+                var blobUrl = URL.createObjectURL(uploadedFile);
+
+                console.log('Constructed image path:', imagePath);
+                console.log('Created blob URL for preview:', blobUrl);
+
+                // Store the final path for saving, but use blob URL for preview
                 self.setState({
-                  src: mediaFile.path,
+                  src: imagePath,  // This will be saved in frontmatter
+                  previewUrl: blobUrl,  // This will be used for display
                   error: null
                 }, function() {
+                  console.log('State updated successfully');
                   self.emitChange();
                 });
-              }).catch(function(error) {
-                console.error('Image upload error:', error);
-                self.setState({ error: 'Nahrávání se nezdařilo: ' + error.message });
-              });
+              } catch (error) {
+                console.error('Error in onAddAsset:', error);
+                self.setState({ error: 'Chyba při nahrávání: ' + error.message });
+              }
+            } else {
+              console.error('onAddAsset not available in props');
+              self.setState({ error: 'Nahrávání souborů není dostupné' });
             }
           },
 
@@ -337,26 +469,122 @@
 
           emitChange: function() {
             var src = this.state.src;
-            var alt = this.state.alt;
-            var focusPoint = this.state.focusPoint;
-            var crops = this.state.crops;
+            var previewUrl = this.state.previewUrl;
+
+            console.log('[Enhanced Image] emitChange called');
+            console.log('[Enhanced Image] src:', src);
+            console.log('[Enhanced Image] previewUrl:', previewUrl);
 
             if (!src) {
+              console.log('[Enhanced Image] No src, calling onChange(null)');
               this.props.onChange(null);
               return;
             }
 
-            this.props.onChange({
-              src: src,
-              alt: alt,
-              focusPoint: focusPoint,
-              crops: crops
-            });
+            // Build the full Cloudinary URL from public_id if we don't have previewUrl
+            var fullUrl = previewUrl;
+            if (!fullUrl && src) {
+              // If src is a public_id, construct the full URL
+              fullUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + src;
+            }
+
+            // Send complete object with src (full URL), alt, and focusPoint
+            var imageData = {
+              src: fullUrl,
+              alt: this.state.alt || '',
+              focusPoint: {
+                x: this.state.focusPoint.x,
+                y: this.state.focusPoint.y
+              }
+            };
+
+            console.log('[Enhanced Image] Calling onChange with complete object:', imageData);
+            this.props.onChange(imageData);
           },
 
           handleDropzoneClick: function() {
-            if (this.fileInputRef) {
-              this.fileInputRef.click();
+            var self = this;
+            console.log('='.repeat(60));
+            console.log('[Enhanced Image] Opening Cloudinary Upload Widget');
+            console.log('[Enhanced Image] Current state:', this.state);
+            console.log('='.repeat(60));
+
+            // Check if Cloudinary widget is available
+            if (typeof window.cloudinary === 'undefined') {
+              console.error('[Enhanced Image] Cloudinary widget not loaded!');
+              self.setState({ error: 'Cloudinary widget není k dispozici' });
+              return;
+            }
+
+            // Open Cloudinary Upload Widget directly
+            try {
+              window.cloudinary.openUploadWidget({
+                cloudName: 'zzbazza',
+                uploadPreset: 'dgkralupy-stg',
+                folder: 'dgkralupy',
+                sources: ['local', 'url', 'camera'],
+                multiple: false,
+                maxFiles: 1,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+                maxFileSize: 5000000, // 5MB
+                resourceType: 'image',
+                defaultSource: 'local',
+                styles: {
+                  palette: {
+                    window: '#FFFFFF',
+                    windowBorder: '#3b5f78',
+                    tabIcon: '#3b5f78',
+                    menuIcons: '#3b5f78',
+                    textDark: '#000000',
+                    textLight: '#FFFFFF',
+                    link: '#44c2c4',
+                    action: '#44c2c4',
+                    inactiveTabIcon: '#888888',
+                    error: '#F44336',
+                    inProgress: '#44c2c4',
+                    complete: '#4CAF50',
+                    sourceBg: '#F5F5F5'
+                  }
+                }
+              }, function(error, result) {
+                console.log('[Enhanced Image] Cloudinary callback called');
+                console.log('[Enhanced Image] Error:', error);
+                console.log('[Enhanced Image] Result:', result);
+
+                if (error) {
+                  console.error('[Enhanced Image] Cloudinary error:', error);
+                  self.setState({ error: 'Chyba při nahrávání: ' + error.message });
+                  return;
+                }
+
+                // Handle successful upload
+                if (result && result.event === 'success') {
+                  console.log('[Enhanced Image] Upload successful!');
+                  console.log('[Enhanced Image] Image info:', result.info);
+
+                  // Extract public_id (e.g., "dgkralupy/image-name.jpg")
+                  var publicId = result.info.public_id;
+                  var secureUrl = result.info.secure_url;
+
+                  console.log('[Enhanced Image] Public ID:', publicId);
+                  console.log('[Enhanced Image] Secure URL (for preview):', secureUrl);
+
+                  // Store public_id in src, use secure_url for preview
+                  self.setState({
+                    src: publicId,           // Store just the public_id
+                    previewUrl: secureUrl,   // Use full URL for preview display
+                    error: null
+                  }, function() {
+                    console.log('[Enhanced Image] State updated with public_id:', publicId);
+                    self.emitChange();
+                  });
+                }
+              });
+
+              console.log('[Enhanced Image] Cloudinary widget opened successfully');
+            } catch (error) {
+              console.error('[Enhanced Image] Error opening Cloudinary widget:', error);
+              self.setState({ error: 'Chyba při otevření Cloudinary: ' + error.message });
             }
           },
 
@@ -367,6 +595,20 @@
             var focusPoint = this.state.focusPoint;
             var error = this.state.error;
             var isDragging = this.state.isDragging;
+            var previewUrl = this.state.previewUrl;
+
+            // Use preview URL for display if available (for newly uploaded files),
+            // otherwise use the src path (for saved files)
+            var displaySrc = previewUrl || src;
+
+            console.log('[Enhanced Image] Rendering with state:', {
+              src: src,
+              alt: alt,
+              focusPoint: focusPoint,
+              previewUrl: previewUrl,
+              displaySrc: displaySrc,
+              error: error
+            });
 
             var containerStyle = {
               border: '1px solid #ddd',
@@ -423,12 +665,20 @@
                   onClick: this.handleFocusPointChange
                 },
                   h('img', {
-                    src: src,
+                    src: displaySrc,
                     alt: alt,
                     style: {
                       maxWidth: '100%',
                       display: 'block',
                       borderRadius: '4px'
+                    },
+                    onError: function(e) {
+                      console.error('[Enhanced Image] Failed to load image:', displaySrc);
+                      e.target.style.display = 'none';
+                      // Optionally show error message
+                    },
+                    onLoad: function() {
+                      console.log('[Enhanced Image] Image loaded successfully:', displaySrc);
                     }
                   }),
                   h('div', {
