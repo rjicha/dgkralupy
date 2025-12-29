@@ -8,13 +8,7 @@ tags:
   - Sport
   - Charita
   - Aktivity
-image:
-  src: /images/me.jpg
-  alt: Me
-  focusPoint:
-    x: 50
-    y: 28
-  crops: {}
+image: dgkralupy/d9rhnoim18tuyb0lkb6n
 featured: true
 important: false
 draft: false
