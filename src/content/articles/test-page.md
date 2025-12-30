@@ -8,8 +8,8 @@ image:
   src: dgkralupy/me.jpg
   alt: Test page
   focusPoint:
-    x: 50.7
-    y: 22.7
+    x: 50
+    y: 8.6
 featured: false
 important: false
 draft: false
