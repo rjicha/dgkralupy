@@ -3,18 +3,11 @@
  * Generates optimized image URLs with transformations
  */
 
-import { Cloudinary } from '@cloudinary/url-gen';
-import { fill } from '@cloudinary/url-gen/actions/resize';
-import { xyCenter, autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { IMAGE_VARIANTS, type ImageVariant } from './imageVariants';
 import type { FocusPoint } from '../../types/image';
 
-// Initialize Cloudinary instance
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME || 'zzbazza'
-  }
-});
+// Cloud name configuration
+const CLOUD_NAME = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME || 'zzbazza';
 
 /**
  * Generate Cloudinary URL with transformations
@@ -30,37 +23,39 @@ export function getCloudinaryUrl(
 ): string {
   const specs = IMAGE_VARIANTS[variant];
 
+  // Build transformation parameters as a single comma-separated string
+  const transformations: string[] = [
+    `f_auto`,  // Format: auto (AVIF, WebP, JPG based on browser)
+    `q_auto`,  // Quality: auto optimization
+  ];
+
   if (focusPoint) {
-    // Use xy_center gravity with custom focus point
-    // Note: x and y methods accept percentage values (0-100) which matches our FocusPoint type
-    // Cloudinary generates URLs like: c_fill,g_xy_center,w_800,h_450,x_50,y_50
-    const img = cld.image(publicId)
-      .resize(
-        fill()
-          .width(specs.width)
-          .height(specs.height)
-          .gravity(xyCenter())
-          .x(focusPoint.x)   // Percentage: 0-100
-          .y(focusPoint.y)   // Percentage: 0-100
-      )
-      .format('auto')  // Automatic format (AVIF, WebP, JPG based on browser)
-      .quality('auto'); // Automatic quality optimization
-
-    return img.toURL();
+    // Use crop mode with xy_center gravity and custom focus point
+    // NOTE: c_crop is required (not c_fill) when using g_xy_center with custom x/y coordinates
+    // Convert FocusPoint percentages (0-100) to Cloudinary decimal format (0.0-1.0)
+    // Cloudinary interprets: integers as pixels, decimals as percentages
+    // Example: x=50 → 50px, x=0.5 → 50%
+    transformations.push(
+      `c_crop`,  // Crop mode (required for custom xy coordinates)
+      `g_xy_center`,
+      `h_${specs.height}`,
+      `w_${specs.width}`,
+      `x_${(focusPoint.x / 100).toFixed(1)}`,  // Convert 0-100 to 0.0-1.0
+      `y_${(focusPoint.y / 100).toFixed(1)}`   // Convert 0-100 to 0.0-1.0
+    );
   } else {
-    // Use auto gravity when no focus point specified
-    const img = cld.image(publicId)
-      .resize(
-        fill()
-          .width(specs.width)
-          .height(specs.height)
-          .gravity(autoGravity())
-      )
-      .format('auto')
-      .quality('auto');
-
-    return img.toURL();
+    // Use fill mode with auto gravity when no focus point specified
+    transformations.push(
+      `c_fill`,  // Fill mode
+      `g_auto`,
+      `h_${specs.height}`,
+      `w_${specs.width}`
+    );
   }
+
+  // Build final URL with all transformations in a single layer
+  const transformString = transformations.join(',');
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformString}/${publicId}`;
 }
 
 /**

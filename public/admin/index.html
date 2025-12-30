@@ -56,6 +56,9 @@
   <!-- Cloudinary Upload Widget -->
   <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 
+  <!-- Cloudinary Configuration -->
+  <script src="./cloudinary-config.js"></script>
+
   <!-- Inline Custom Widgets Registration -->
   <script>
     /* eslint-disable no-undef, @typescript-eslint/no-this-alias */
@@ -286,7 +289,7 @@
 
               // Build Cloudinary URL for preview if it's a public_id (not a full URL)
               if (!value.startsWith('http')) {
-                state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                state.previewUrl = window.CLOUDINARY_CONFIG.buildUrl(value);
                 console.log('[Enhanced Image] Built preview URL for initial state:', state.previewUrl);
               } else {
                 state.previewUrl = value;
@@ -337,7 +340,7 @@
 
               // Build preview URL from src
               if (srcValue && !srcValue.startsWith('http')) {
-                state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                state.previewUrl = window.CLOUDINARY_CONFIG.buildUrl(srcValue);
                 console.log('[Enhanced Image] Built preview URL from object public_id:', state.previewUrl);
               } else if (srcValue) {
                 state.previewUrl = srcValue;
@@ -372,7 +375,7 @@
                 // Build Cloudinary URL for preview if it's a public_id (not a full URL)
                 if (!value.startsWith('http')) {
                   // It's a public_id, build Cloudinary URL
-                  newState.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                  newState.previewUrl = window.CLOUDINARY_CONFIG.buildUrl(value);
                   console.log('[Enhanced Image] Built preview URL:', newState.previewUrl);
                 } else {
                   newState.previewUrl = value;
@@ -414,7 +417,7 @@
                 // Build preview URL
                 if (srcValue && !srcValue.startsWith('http')) {
                   // Build Cloudinary URL for public_id
-                  newState.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                  newState.previewUrl = window.CLOUDINARY_CONFIG.buildUrl(srcValue);
                   console.log('[Enhanced Image] Built preview URL from public_id:', newState.previewUrl);
                 } else if (srcValue) {
                   newState.previewUrl = srcValue;
@@ -558,11 +561,8 @@
             }
 
             // ✅ Phase 2.1: Extract public_id from full URL if needed (backwards compatibility)
-            var publicId = src;
-            if (src.startsWith('http://') || src.startsWith('https://')) {
-              // Extract public_id from URL: https://...upload/v123/dgkralupy/image.jpg -> dgkralupy/image.jpg
-              var match = src.match(/\/upload\/(?:v\d+\/)?(.+)$/);
-              publicId = match ? match[1] : src;
+            var publicId = window.CLOUDINARY_CONFIG.extractPublicId(src);
+            if (publicId !== src) {
               console.log('[Enhanced Image] Extracted public_id from URL:', publicId);
             } else {
               console.log('[Enhanced Image] src is already public_id:', publicId);
@@ -599,9 +599,9 @@
             // Open Cloudinary Upload Widget directly
             try {
               window.cloudinary.openUploadWidget({
-                cloudName: 'zzbazza',
-                uploadPreset: 'dgkralupy-stg',
-                folder: 'dgkralupy',
+                cloudName: window.CLOUDINARY_CONFIG.cloudName,
+                uploadPreset: window.CLOUDINARY_CONFIG.uploadPreset,
+                folder: window.CLOUDINARY_CONFIG.folder,
                 sources: ['local', 'url', 'camera'],
                 multiple: false,
                 maxFiles: 1,
