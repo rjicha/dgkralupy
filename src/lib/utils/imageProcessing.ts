@@ -126,7 +126,7 @@ export function normalizeImageData(imageData: ImageData): {
     return {
       src: imageData,
       alt: '',
-      focusPoint: { x: 50, y: 50 },
+      // No default focus point - let Cloudinary use g_auto for smart cropping
     };
   }
 
@@ -134,7 +134,8 @@ export function normalizeImageData(imageData: ImageData): {
   return {
     src: imageData.src,
     alt: imageData.alt || '',
-    focusPoint: imageData.focusPoint || { x: 50, y: 50 },
+    // Only use focus point if explicitly provided (undefined enables g_auto)
+    focusPoint: imageData.focusPoint,
     crops: imageData.crops,
   };
 }
