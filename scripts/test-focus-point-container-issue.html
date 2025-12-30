@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Point Container vs Image Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .test-case {
+      margin-bottom: 40px;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .test-case h2 {
+      margin-top: 0;
+    }
+
+    .container {
+      position: relative;
+      width: 800px;
+      height: 600px;
+      border: 3px solid #3b5f78;
+      background: #f0f0f0;
+      cursor: crosshair;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .focus-indicator {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      margin-left: -10px;
+      margin-top: -10px;
+      border-radius: 50%;
+      border: 3px solid #ff6b6b;
+      background-color: rgba(255, 107, 107, 0.3);
+      pointer-events: none;
+    }
+
+    .results {
+      font-family: monospace;
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .results div {
+      margin: 4px 0;
+    }
+
+    .error {
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    .correct {
+      color: #388e3c;
+      font-weight: bold;
+    }
+
+    .legend {
+      margin-bottom: 20px;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Focus Point: Container vs Image Dimensions Test</h1>
+
+  <div class="legend">
+    <strong>Test Objective:</strong> Demonstrate that using container dimensions (current implementation)
+    produces incorrect focus point percentages when the image doesn't fill the container.
+    <br><br>
+    <strong>How to test:</strong> Click anywhere on the images below. The results will show:
+    <ul>
+      <li><span class="error">Red (Wrong)</span> - Using container dimensions (current implementation)</li>
+      <li><span class="correct">Green (Correct)</span> - Using actual image dimensions (proposed fix)</li>
+    </ul>
+  </div>
+
+  <!-- Test Case 1: Portrait Image in Landscape Container -->
+  <div class="test-case">
+    <h2>Test Case 1: Portrait Image (400×600) in Landscape Container (800×600)</h2>
+    <p><strong>Expected Issue:</strong> When clicking on the right edge of the image (should be 100%),
+    the container-based calculation will show ~62.5% because the image only occupies the left half of the container.</p>
+
+    <div class="container" id="container1" onclick="handleClick(event, 'container1', 'indicator1', 'results1')">
+      <img src="data:image/svg+xml,%3Csvg width='400' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='600' fill='%234CAF50'/%3E%3Ctext x='200' y='300' font-size='24' fill='white' text-anchor='middle'%3E400×600 Portrait%3C/text%3E%3C/svg%3E" alt="Portrait test">
+      <div class="focus-indicator" id="indicator1" style="left: 50%; top: 50%;"></div>
+    </div>
+
+    <div class="results" id="results1">
+      Click on the image to test...
+    </div>
+  </div>
+
+  <!-- Test Case 2: Small Image in Large Container -->
+  <div class="test-case">
+    <h2>Test Case 2: Small Image (300×300) in Large Container (800×600)</h2>
+    <p><strong>Expected Issue:</strong> The small image will be centered with empty space on all sides.
+    Container-based calculation will be significantly off.</p>
+
+    <div class="container" id="container2" onclick="handleClick(event, 'container2', 'indicator2', 'results2')">
+      <img src="data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='300' fill='%232196F3'/%3E%3Ctext x='150' y='150' font-size='20' fill='white' text-anchor='middle'%3E300×300 Small%3C/text%3E%3C/svg%3E" alt="Small test">
+      <div class="focus-indicator" id="indicator2" style="left: 50%; top: 50%;"></div>
+    </div>
+
+    <div class="results" id="results2">
+      Click on the image to test...
+    </div>
+  </div>
+
+  <!-- Test Case 3: Image that Fills Container (Control) -->
+  <div class="test-case">
+    <h2>Test Case 3: Image that Fills Container (800×600) - Control Test</h2>
+    <p><strong>Expected Result:</strong> Both calculations should match because the image fills the entire container.</p>
+
+    <div class="container" id="container3" onclick="handleClick(event, 'container3', 'indicator3', 'results3')">
+      <img src="data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='800' height='600' fill='%23FF9800'/%3E%3Ctext x='400' y='300' font-size='24' fill='white' text-anchor='middle'%3E800×600 Fills Container%3C/text%3E%3C/svg%3E" alt="Full test">
+      <div class="focus-indicator" id="indicator3" style="left: 50%; top: 50%;"></div>
+    </div>
+
+    <div class="results" id="results3">
+      Click on the image to test...
+    </div>
+  </div>
+
+  <script>
+    function handleClick(event, containerId, indicatorId, resultsId) {
+      const container = document.getElementById(containerId);
+      const indicator = document.getElementById(indicatorId);
+      const results = document.getElementById(resultsId);
+      const img = container.querySelector('img');
+
+      // WRONG WAY (Current Implementation): Use container dimensions
+      const containerRect = container.getBoundingClientRect();
+      const containerX = Math.round(((event.clientX - containerRect.left) / containerRect.width) * 100);
+      const containerY = Math.round(((event.clientY - containerRect.top) / containerRect.height) * 100);
+
+      // CORRECT WAY (Proposed Fix): Use actual image dimensions
+      const imgRect = img.getBoundingClientRect();
+      const imgX = Math.round(((event.clientX - imgRect.left) / imgRect.width) * 100);
+      const imgY = Math.round(((event.clientY - imgRect.top) / imgRect.height) * 100);
+
+      // Calculate error
+      const errorX = Math.abs(containerX - imgX);
+      const errorY = Math.abs(containerY - imgY);
+
+      // Update indicator position (using correct calculation)
+      const clampedX = Math.max(0, Math.min(100, imgX));
+      const clampedY = Math.max(0, Math.min(100, imgY));
+      indicator.style.left = clampedX + '%';
+      indicator.style.top = clampedY + '%';
+
+      // Display results
+      results.innerHTML = `
+        <div><strong>Click Position:</strong> (${event.clientX}, ${event.clientY})</div>
+        <div><strong>Container Dimensions:</strong> ${Math.round(containerRect.width)}×${Math.round(containerRect.height)}</div>
+        <div><strong>Image Dimensions:</strong> ${Math.round(imgRect.width)}×${Math.round(imgRect.height)}</div>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #ddd;">
+          <strong>Focus Point Calculation:</strong>
+        </div>
+        <div class="error">❌ Using Container (current): x=${containerX}%, y=${containerY}%</div>
+        <div class="correct">✅ Using Image (proposed): x=${imgX}%, y=${imgY}%</div>
+        <div style="margin-top: 8px;">
+          <strong>Error:</strong> x=${errorX}%, y=${errorY}%
+          ${errorX > 5 || errorY > 5 ? ' <span class="error">⚠️ Significant error!</span>' : ' <span class="correct">✓ Within tolerance</span>'}
+        </div>
+      `;
+    }
+
+    // Initialize with center click on page load
+    window.addEventListener('load', () => {
+      const containers = ['container1', 'container2', 'container3'];
+      containers.forEach((containerId, index) => {
+        const container = document.getElementById(containerId);
+        const rect = container.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        // Simulate click at center
+        const event = new MouseEvent('click', {
+          clientX: centerX,
+          clientY: centerY
+        });
+
+        setTimeout(() => {
+          container.dispatchEvent(event);
+        }, 100 * (index + 1));
+      });
+    });
+  </script>
+</body>
+</html>
