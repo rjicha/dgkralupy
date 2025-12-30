@@ -547,11 +547,9 @@
 
           emitChange: function() {
             var src = this.state.src;
-            var previewUrl = this.state.previewUrl;
 
             console.log('[Enhanced Image] emitChange called');
             console.log('[Enhanced Image] src:', src);
-            console.log('[Enhanced Image] previewUrl:', previewUrl);
 
             if (!src) {
               console.log('[Enhanced Image] No src, calling onChange(null)');
@@ -559,21 +557,20 @@
               return;
             }
 
-            // ✅ FIX: Check if src is already a full URL before building one
-            var fullUrl;
+            // ✅ Phase 2.1: Extract public_id from full URL if needed (backwards compatibility)
+            var publicId = src;
             if (src.startsWith('http://') || src.startsWith('https://')) {
-              // Already a full URL - use as-is
-              console.log('[Enhanced Image] src is already full URL, using as-is');
-              fullUrl = src;
+              // Extract public_id from URL: https://...upload/v123/dgkralupy/image.jpg -> dgkralupy/image.jpg
+              var match = src.match(/\/upload\/(?:v\d+\/)?(.+)$/);
+              publicId = match ? match[1] : src;
+              console.log('[Enhanced Image] Extracted public_id from URL:', publicId);
             } else {
-              // It's a public_id - build full URL
-              console.log('[Enhanced Image] src is public_id, building full URL');
-              fullUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + src;
+              console.log('[Enhanced Image] src is already public_id:', publicId);
             }
 
-            // Build complete image data object
+            // Build complete image data object with public_id (not full URL)
             var imageData = {
-              src: fullUrl,
+              src: publicId,  // ✅ Store public_id, not full URL
               alt: this.state.alt || '',
               focusPoint: {
                 x: this.state.focusPoint.x,
