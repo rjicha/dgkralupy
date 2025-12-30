@@ -166,8 +166,8 @@ export function getCloudinaryUrl(
       `g_xy_center`,
       `h_${specs.height}`,
       `w_${specs.width}`,
-      `x_${(focusPoint.x / 100).toFixed(1)}`,  // 0-100 → 0.0-1.0
-      `y_${(focusPoint.y / 100).toFixed(1)}`
+      `x_${(focusPoint.x / 100).toFixed(2)}`,  // 0-100 → 0.00-1.00 (2 decimal precision = 1% accuracy)
+      `y_${(focusPoint.y / 100).toFixed(2)}`
     );
   } else {
     transformations.push(
@@ -181,6 +181,43 @@ export function getCloudinaryUrl(
   const transformString = transformations.join(',');
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformString}/${publicId}`;
 }
+```
+
+### ⚠️ Cloudinary Coordinate Format - Important Distinction
+
+Cloudinary distinguishes between **pixels** and **percentages** based on the parameter value format:
+
+| Format | Meaning | Example |
+|--------|---------|---------|
+| **Integer** | Pixels from edge | `x_50` = 50 pixels from left |
+| **Decimal** | Percentage from edge | `x_0.5` = 50% from left (half the image width) |
+
+**Our Implementation:**
+1. **Storage:** Focus points stored as percentages (0-100) in frontmatter
+2. **Conversion:** Divide by 100 to get Cloudinary decimal format (0.0-1.0)
+3. **Precision:** Use `.toFixed(2)` for 1% accuracy (sufficient for image cropping)
+
+**Example Flow:**
+```typescript
+// User clicks at 26% from left, 51% from top
+// CMS widget saves to frontmatter:
+focusPoint: { x: 26, y: 51 }
+
+// Website converts for Cloudinary:
+x: 26/100 = 0.26  → x_0.26 (26% from left)
+y: 51/100 = 0.51  → y_0.51 (51% from top)
+
+// Cloudinary URL:
+.../c_crop,g_xy_center,w_1200,h_675,x_0.26,y_0.51/...
+```
+
+**Common Mistake:**
+```typescript
+// ❌ WRONG - Using integer creates pixel-based crop
+x_26  // = 26 pixels from left (not 26%!)
+
+// ✅ CORRECT - Using decimal creates percentage-based crop
+x_0.26  // = 26% from left
 ```
 
 ---

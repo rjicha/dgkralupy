@@ -231,7 +231,8 @@ export function getCloudinaryUrl(
   if (focusPoint) {
     // Use xy_center gravity with custom focus point
     // Note: x and y methods accept percentage values (0-100) which matches our FocusPoint type
-    // Cloudinary generates URLs like: c_fill,g_xy_center,w_800,h_450,x_50,y_50
+    // Cloudinary URL format: c_crop,g_xy_center,w_800,h_450,x_0.5,y_0.5
+    // Note: Decimals (0.5) = percentages, Integers (50) = pixels
     const img = cld.image(publicId)
       .resize(
         fill()
