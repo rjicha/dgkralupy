@@ -523,10 +523,31 @@
           },
 
           handleFocusPointChange: function(e) {
-            var rect = e.currentTarget.getBoundingClientRect();
-            var x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
-            var y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+            // Get the actual element that was clicked (should be the img)
+            var target = e.target;
+
+            // Safety check: Only process clicks on the image element
+            // (Ignore clicks on empty space in container)
+            // Use toUpperCase() for case-insensitive comparison (browser compatibility)
+            if (target.tagName.toUpperCase() !== 'IMG') {
+              console.log('[Enhanced Image] Click outside image area, ignoring');
+              return;
+            }
+
+            // Use the IMAGE element's bounding box, not the container's
+            // This ensures correct percentage calculation even when image doesn't fill container
+            var rect = target.getBoundingClientRect();
+
+            // Calculate with 1-decimal precision (0.1% accuracy = 10x better than integers)
+            // For a 1200px image: 0.1% = 1.2px granularity (sufficient for visual cropping)
+            var rawX = ((e.clientX - rect.left) / rect.width) * 100;
+            var rawY = ((e.clientY - rect.top) / rect.height) * 100;
+            var x = Math.round(rawX * 10) / 10;  // Round to 1 decimal place
+            var y = Math.round(rawY * 10) / 10;
             var self = this;
+
+            console.log('[Enhanced Image] Focus point calculated:', { x: x, y: y });
+            console.log('[Enhanced Image] Image dimensions:', { width: rect.width, height: rect.height });
 
             this.setState({
               focusPoint: {
@@ -534,6 +555,9 @@
                 y: Math.max(0, Math.min(100, y))
               }
             }, function() {
+              // emitChange() MUST be called in setState callback to ensure
+              // DecapCMS receives updates after state is committed (immutable data pattern)
+              // See: https://decapcms.org/docs/custom-widgets/
               self.emitChange();
             });
           },

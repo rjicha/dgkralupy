@@ -222,6 +222,93 @@ x_0.26  // = 26% from left
 
 ---
 
+## Focus Point Calculation - Implementation Details
+
+**Important:** Focus point percentages MUST be calculated relative to the **actual image element dimensions**, not the container dimensions.
+
+### Why This Matters
+
+The image is rendered with `maxWidth: '100%'`, which means it scales down to fit the container but doesn't stretch. When the image is smaller than the container (e.g., portrait image in landscape container), there's empty space around the image.
+
+**Example:**
+```
+Container: 800px × 600px
+Portrait Image: 400px × 600px (centered, with 200px empty space on left and right)
+
+If user clicks at the right edge of the image:
+  - Click position: x = 500px (from viewport left)
+  - Image bounds: left = 300px, right = 700px, width = 400px
+
+Correct calculation (using image dimensions):
+  x = ((500 - 300) / 400) × 100 = 50% ✓
+
+Incorrect calculation (using container dimensions):
+  x = ((500 - 100) / 800) × 100 = 50% ✗ (would be different if image is offset)
+```
+
+### Implementation
+
+```javascript
+handleFocusPointChange: function(e) {
+  var target = e.target;  // ✅ Get actual clicked element
+
+  if (target.tagName.toUpperCase() !== 'IMG') {
+    return;  // Ignore clicks outside image
+  }
+
+  var rect = target.getBoundingClientRect();  // ✅ Use IMAGE dimensions
+  var rawX = ((e.clientX - rect.left) / rect.width) * 100;
+  var rawY = ((e.clientY - rect.top) / rect.height) * 100;
+  var x = Math.round(rawX * 10) / 10;  // Round to 1 decimal place
+  var y = Math.round(rawY * 10) / 10;
+
+  // ... rest of handler
+}
+```
+
+### Bug History
+
+- **Before Fix (Issue #09):**
+  - Used `e.currentTarget.getBoundingClientRect()` which returned container dimensions
+  - Used `Math.round()` for integer precision (0-100), providing only 101 discrete positions
+  - Focus indicator already had `pointerEvents: 'none'` for click-through
+
+- **After Fix (Issue #09):**
+  - Uses `e.target.getBoundingClientRect()` which returns actual image dimensions
+  - Uses 1-decimal precision (0.0-100.0) via `Math.round(value * 10) / 10`, providing 1001 positions (10x improvement)
+  - Added safety check to ignore clicks outside image element
+
+- **Impact:**
+  - Significantly improved accuracy for portrait images and images that don't fill their containers
+  - Better precision for large images (0.1% granularity = ~1.2px on 1200px images)
+  - Improved UX: users can accurately select focus points on any image type
+
+### Coordinate Format - Storage vs API
+
+**Storage (Frontmatter):** We store percentages as 0.0-100.0
+```yaml
+focusPoint:
+  x: 26.3  # 26.3% from left
+  y: 51.7  # 51.7% from top
+```
+
+**Cloudinary API:** We convert to 0.00-1.00 decimal format
+```
+x_0.26  # 26% from left (26.3 / 100 = 0.263 → rounded to 0.26)
+y_0.52  # 52% from top (51.7 / 100 = 0.517 → rounded to 0.52)
+```
+
+**Why the difference?**
+- **Storage:** More human-readable (26.3% is clearer than 0.263)
+- **API:** Cloudinary's standard format ([documentation](https://cloudinary.com/documentation/custom_focus_areas))
+
+**References:**
+- [Cloudinary Custom Focus Areas](https://cloudinary.com/documentation/custom_focus_areas)
+- [Cloudinary Transformation Reference](https://cloudinary.com/documentation/transformation_reference)
+- [Decap CMS Custom Widgets](https://decapcms.org/docs/custom-widgets/)
+
+---
+
 ## Configuration
 
 ### Cloudinary Config (`public/admin/cloudinary-config.js`)
