@@ -9,11 +9,11 @@ tags:
   - Rekonstrukce
   - Knihovna
 image:
-  src: https://res.cloudinary.com/zzbazza/image/upload/v1767077456/dgkralupy/rlq9whziop1bhxxi0zx6.jpg
+  src: dgkralupy/rlq9whziop1bhxxi0zx6.jpg
   alt: ""
   focusPoint:
-    x: 50
-    y: 50
+    x: 22
+    y: 46
 featured: false
 important: false
 draft: false
