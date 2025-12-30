@@ -272,7 +272,8 @@
               src: null,
               alt: '',
               focusPoint: { x: 50, y: 50 },
-              crops: {}
+              crops: {},
+              imageRect: null  // Store image bounding rect for correct indicator positioning
             };
 
             // Handle different value types
@@ -537,6 +538,7 @@
             // Use the IMAGE element's bounding box, not the container's
             // This ensures correct percentage calculation even when image doesn't fill container
             var rect = target.getBoundingClientRect();
+            var containerRect = e.currentTarget.getBoundingClientRect();
 
             // Calculate with 1-decimal precision (0.1% accuracy = 10x better than integers)
             // For a 1200px image: 0.1% = 1.2px granularity (sufficient for visual cropping)
@@ -553,6 +555,14 @@
               focusPoint: {
                 x: Math.max(0, Math.min(100, x)),
                 y: Math.max(0, Math.min(100, y))
+              },
+              // Store image rect relative to container for correct indicator positioning
+              // This allows us to position the indicator relative to the image, not the container
+              imageRect: {
+                offsetLeft: rect.left - containerRect.left,  // Image position within container
+                offsetTop: rect.top - containerRect.top,
+                width: rect.width,
+                height: rect.height
               }
             }, function() {
               // emitChange() MUST be called in setState callback to ensure
@@ -700,6 +710,7 @@
             var error = this.state.error;
             var isDragging = this.state.isDragging;
             var previewUrl = this.state.previewUrl;
+            var imageRect = this.state.imageRect;
 
             // Build display URL: prefer previewUrl, but if not set and src exists,
             // build Cloudinary URL from public_id to avoid relative path 404 errors
@@ -793,6 +804,8 @@
                       console.log('[Enhanced Image] Image loaded successfully:', displaySrc);
                     }
                   }),
+                  // Focus point indicator
+                  // Calculate position in pixels relative to the actual image, not the container
                   h('div', {
                     style: {
                       position: 'absolute',
@@ -804,8 +817,14 @@
                       border: '3px solid #ff6b6b',
                       backgroundColor: 'rgba(255, 107, 107, 0.3)',
                       pointerEvents: 'none',
-                      left: focusPoint.x + '%',
-                      top: focusPoint.y + '%'
+                      // Use pixel positioning based on image dimensions if available,
+                      // otherwise fall back to percentage (for initial render before first click)
+                      left: imageRect
+                        ? (imageRect.offsetLeft + (focusPoint.x / 100) * imageRect.width) + 'px'
+                        : focusPoint.x + '%',
+                      top: imageRect
+                        ? (imageRect.offsetTop + (focusPoint.y / 100) * imageRect.height) + 'px'
+                        : focusPoint.y + '%'
                     }
                   })
                 ),
