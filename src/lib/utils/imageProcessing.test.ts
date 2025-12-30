@@ -9,7 +9,7 @@ describe('Image Processing', () => {
       expect(result).toEqual({
         src: '/images/test.jpg',
         alt: '',
-        focusPoint: { x: 50, y: 50 },
+        // No focusPoint - enables Cloudinary g_auto smart cropping
       });
     });
 
@@ -41,13 +41,14 @@ describe('Image Processing', () => {
       expect(result.alt).toBe('');
     });
 
-    it('should provide default focus point for missing field', () => {
+    it('should allow undefined focus point for Cloudinary smart cropping', () => {
       const result = normalizeImageData({
         src: '/images/test.jpg',
         alt: 'Test',
       });
 
-      expect(result.focusPoint).toEqual({ x: 50, y: 50 });
+      // When focusPoint is undefined, Cloudinary uses g_auto for smart cropping
+      expect(result.focusPoint).toBeUndefined();
     });
 
     it('should handle object format without crops', () => {

@@ -10,13 +10,14 @@ describe('ResponsiveImage Component Integration', () => {
       expect(normalized).toEqual({
         src: '/images/test.jpg',
         alt: '',
-        focusPoint: { x: 50, y: 50 },
+        // No focusPoint - enables Cloudinary g_auto smart cropping
       });
     });
 
-    it('should provide default focus point for legacy images', () => {
+    it('should use Cloudinary smart cropping for legacy images', () => {
       const result = normalizeImageData('/images/halloween.jpg');
-      expect(result.focusPoint).toEqual({ x: 50, y: 50 });
+      // Undefined focusPoint enables Cloudinary g_auto for automatic smart cropping
+      expect(result.focusPoint).toBeUndefined();
     });
 
     it('should handle legacy images without alt text', () => {
@@ -50,7 +51,8 @@ describe('ResponsiveImage Component Integration', () => {
 
       const normalized = normalizeImageData(partialImage);
 
-      expect(normalized.focusPoint).toEqual({ x: 50, y: 50 });
+      // Undefined focusPoint enables Cloudinary g_auto smart cropping
+      expect(normalized.focusPoint).toBeUndefined();
       expect(normalized.crops).toBeUndefined();
     });
 
@@ -115,7 +117,8 @@ describe('ResponsiveImage Component Integration', () => {
       const normalized = normalizeImageData(image);
       expect(normalized.src).toBe('/images/test.jpg');
       expect(normalized.alt).toBe('');
-      expect(normalized.focusPoint).toEqual({ x: 50, y: 50 });
+      // Undefined focusPoint enables Cloudinary g_auto smart cropping
+      expect(normalized.focusPoint).toBeUndefined();
     });
   });
 
@@ -131,7 +134,8 @@ describe('ResponsiveImage Component Integration', () => {
       existingArticles.forEach((imagePath) => {
         const normalized = normalizeImageData(imagePath);
         expect(normalized.src).toBe(imagePath);
-        expect(normalized.focusPoint).toEqual({ x: 50, y: 50 });
+        // Undefined focusPoint enables Cloudinary g_auto smart cropping
+        expect(normalized.focusPoint).toBeUndefined();
       });
     });
 
