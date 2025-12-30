@@ -1,8 +1,7 @@
 ---
 title: Rekonstrukce školní knihovny
-excerpt: >-
-  Probíhají práce na rekonstrukci školní knihovny, která získá moderní podobu a
-  nové vybavení pro studenty.
+excerpt: Probíhají práce na rekonstrukci školní knihovny, která získá moderní
+  podobu a nové vybavení pro studenty.
 publishedAt: 15.10.2025
 author: Mgr. Karel Procházka
 tags:
@@ -10,8 +9,8 @@ tags:
   - Rekonstrukce
   - Knihovna
 image:
-  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009624/dgkralupy/library-reconstruction.jpg
-  alt: Rekonstrukce školní knihovny
+  src: https://res.cloudinary.com/zzbazza/image/upload/v1767077456/dgkralupy/rlq9whziop1bhxxi0zx6.jpg
+  alt: ""
   focusPoint:
     x: 50
     y: 50
