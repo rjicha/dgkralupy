@@ -1,19 +1,14 @@
 ---
 /**
- * ResponsiveImage Component
+ * ResponsiveImage Component (Cloudinary-only)
  *
- * Displays images with support for both legacy (string) and enhanced (object) formats.
- * Provides graceful fallback when image optimization is not available.
+ * Displays images from Cloudinary CDN with automatic optimizations.
+ * All images use Cloudinary transformations (format, quality, resize, focus point).
  *
  * @component
  * @example
- * <!-- Legacy format (string) -->
- * <ResponsiveImage image="/images/photo.jpg" variant="hero" />
- *
- * @example
- * <!-- Enhanced format (object) -->
  * <ResponsiveImage
- *   image={{ src: "/images/photo.jpg", alt: "Description", focusPoint: { x: 60, y: 40 } }}
+ *   image={{ src: "dgkralupy/article.jpg", alt: "Description", focusPoint: { x: 60, y: 40 } }}
  *   variant="card"
  *   loading="lazy"
  * />
@@ -54,34 +49,19 @@ const imageData = normalizeImageData(image);
 // Use alt from props, then from image data, then empty string
 const altText = altOverride || imageData.alt || '';
 
-// Check if image is from Cloudinary
-const isCloudinaryImage = imageData.src.includes('cloudinary.com') ||
-                          imageData.src.includes('res.cloudinary.com');
+// ✅ CLOUDINARY-ONLY: All images are from Cloudinary
+// Extract public_id (handles both full URLs and public_ids)
+const publicId = extractPublicId(imageData.src);
 
-let imageSrc: string;
-
-if (isCloudinaryImage) {
-  // Use Cloudinary with transformations
-  const publicId = extractPublicId(imageData.src);
-  imageSrc = getCloudinaryUrl(publicId, variant, imageData.focusPoint);
-} else {
-  // Legacy: local images (fallback for existing content)
-  imageSrc = imageData.src.startsWith('http')
-    ? imageData.src
-    : `${import.meta.env.BASE_URL}/${imageData.src.replace(/^\//, '')}`;
-}
-
-// Calculate object-position from focus point (fallback for local images)
-const objectPosition = imageData.focusPoint
-  ? `${imageData.focusPoint.x}% ${imageData.focusPoint.y}%`
-  : 'center';
+// Generate optimized Cloudinary URL with transformations
+const imageSrc = getCloudinaryUrl(publicId, variant, imageData.focusPoint);
 
 /**
  * Implementation notes:
- * - Cloudinary images: Transformations applied via URL (focus point, resize, format optimization)
- * - Local images: Fallback using object-position CSS for focus point
- * - Automatic format optimization for Cloudinary (AVIF, WebP, JPG based on browser)
- * - Backward compatible with existing local images
+ * - All images use Cloudinary with transformations
+ * - Automatic format optimization (AVIF, WebP, JPG based on browser)
+ * - Focus point applied via Cloudinary URL transformations
+ * - No local image fallback needed
  */
 ---
 
@@ -91,8 +71,8 @@ const objectPosition = imageData.focusPoint
   loading={loading}
   decoding="async"
   class={className}
-  style={isCloudinaryImage ? style : `object-position: ${objectPosition}; ${style}`}
+  style={style}
   data-variant={variant}
-  data-cloudinary={isCloudinaryImage}
+  data-cloudinary="true"
   data-focus-point={imageData.focusPoint ? `${imageData.focusPoint.x},${imageData.focusPoint.y}` : undefined}
 />
