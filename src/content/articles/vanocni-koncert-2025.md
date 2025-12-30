@@ -10,7 +10,7 @@ tags:
   - Hudba
   - Akce
 image:
-  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009589/dgkralupy/christmas-concert.png
+  src: dgkralupy/christmas-concert.png
   alt: Vánoční koncert
   focusPoint:
     x: 50

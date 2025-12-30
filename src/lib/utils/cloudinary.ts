@@ -69,9 +69,13 @@ export function extractPublicId(url: string): string {
     return url;
   }
 
-  // Extract public ID from Cloudinary URL
-  // Example: https://res.cloudinary.com/zzbazza/image/upload/v1234567890/dgkralupy/image.jpg
+  // Extract public ID from Cloudinary URL, handling:
+  // - Basic: https://res.cloudinary.com/zzbazza/image/upload/dgkralupy/image.jpg
+  // - With version: https://res.cloudinary.com/zzbazza/image/upload/v1234567890/dgkralupy/image.jpg
+  // - With transformations: https://res.cloudinary.com/zzbazza/image/upload/w_800,h_600/v1234567890/dgkralupy/image.jpg
   // Result: dgkralupy/image.jpg
-  const match = url.match(/\/upload\/(?:v\d+\/)?(.+)$/);
-  return match ? match[1] : url;
+
+  // Match everything after /upload/, skipping transformations and version
+  const match = url.match(/\/upload\/(?:[^/]+\/)*?(v\d+\/)?(.+)$/);
+  return match ? match[2] : url;
 }

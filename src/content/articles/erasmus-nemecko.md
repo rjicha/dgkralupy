@@ -10,7 +10,7 @@ tags:
   - Zahraniční pobyt
   - Studium
 image:
-  src: https://res.cloudinary.com/zzbazza/image/upload/v1767009609/dgkralupy/erasmus-germany.jpg
+  src: dgkralupy/erasmus-germany.jpg
   alt: Erasmus+ výměnný pobyt v Německu
   focusPoint:
     x: 50

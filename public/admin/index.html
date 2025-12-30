@@ -677,9 +677,17 @@
             var isDragging = this.state.isDragging;
             var previewUrl = this.state.previewUrl;
 
-            // Use preview URL for display if available (for newly uploaded files),
-            // otherwise use the src path (for saved files)
-            var displaySrc = previewUrl || src;
+            // Build display URL: prefer previewUrl, but if not set and src exists,
+            // build Cloudinary URL from public_id to avoid relative path 404 errors
+            var displaySrc = previewUrl;
+            if (!displaySrc && src) {
+              // If src is a public_id (not a full URL), build Cloudinary URL
+              if (!src.startsWith('http')) {
+                displaySrc = window.CLOUDINARY_CONFIG.buildUrl(src);
+              } else {
+                displaySrc = src;
+              }
+            }
 
             console.log('[Enhanced Image] Rendering with state:', {
               src: src,
@@ -850,9 +858,16 @@
               return h('div', {}, 'Žádný obrázek');
             }
 
+            // Build Cloudinary URL from public_id to avoid relative path 404 errors
+            var displaySrc = value.src;
+            if (displaySrc && !displaySrc.startsWith('http')) {
+              // It's a public_id, build Cloudinary URL
+              displaySrc = window.CLOUDINARY_CONFIG.buildUrl(displaySrc);
+            }
+
             return h('div', {},
               h('img', {
-                src: value.src,
+                src: displaySrc,
                 alt: value.alt,
                 style: {
                   maxWidth: '300px',

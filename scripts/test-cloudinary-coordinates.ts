@@ -6,7 +6,7 @@
  */
 
 import { Cloudinary } from '@cloudinary/url-gen';
-import { fill } from '@cloudinary/url-gen/actions/resize';
+import { crop } from '@cloudinary/url-gen/actions/resize';
 import { xyCenter } from '@cloudinary/url-gen/qualifiers/gravity';
 
 const cld = new Cloudinary({
