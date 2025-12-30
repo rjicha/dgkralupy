@@ -44,10 +44,14 @@ window.CLOUDINARY_CONFIG = {
       return url;
     }
 
-    // Extract public_id from Cloudinary URL
-    // Example: https://res.cloudinary.com/zzbazza/image/upload/v1234567890/dgkralupy/image.jpg
+    // Extract public_id from Cloudinary URL, handling:
+    // - Basic: https://res.cloudinary.com/zzbazza/image/upload/dgkralupy/image.jpg
+    // - With version: https://res.cloudinary.com/zzbazza/image/upload/v1234567890/dgkralupy/image.jpg
+    // - With transformations: https://res.cloudinary.com/zzbazza/image/upload/w_800,h_600/v1234567890/dgkralupy/image.jpg
     // Result: dgkralupy/image.jpg
-    var match = url.match(/\/upload\/(?:v\d+\/)?(.+)$/);
-    return match ? match[1] : url;
+
+    // Match everything after /upload/, skipping transformations and version
+    var match = url.match(/\/upload\/(?:[^/]+\/)*?(v\d+\/)?(.+)$/);
+    return match ? match[2] : url;
   }
 };
