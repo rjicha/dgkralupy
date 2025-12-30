@@ -288,18 +288,62 @@
               if (!value.startsWith('http')) {
                 state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
                 console.log('[Enhanced Image] Built preview URL for initial state:', state.previewUrl);
+              } else {
+                state.previewUrl = value;
+                console.log('[Enhanced Image] Using full URL as preview:', value);
               }
 
               return state;
             }
 
             if (typeof value === 'object') {
-              // LEGACY FORMAT: Object with {src, alt, focusPoint}
-              console.log('[Enhanced Image] Initializing with legacy object format:', value);
-              state.src = value.src || value.url || null;
-              state.alt = value.alt || '';
-              state.focusPoint = value.focusPoint || { x: 50, y: 50 };
-              state.crops = value.crops || {};
+              // Handle Immutable.js Map (Decap CMS uses Immutable.js)
+              console.log('[Enhanced Image] Initializing with object format:', value);
+
+              // Check if it's an Immutable Map
+              var srcValue;
+              var altValue;
+              var focusPointValue;
+              var cropsValue;
+
+              if (value.get) {
+                // Immutable Map - use .get() method
+                console.log('[Enhanced Image] Detected Immutable Map, using .get()');
+                srcValue = value.get('src') || value.get('url') || null;
+                altValue = value.get('alt') || '';
+                focusPointValue = value.get('focusPoint');
+                cropsValue = value.get('crops');
+
+                // Convert Immutable focusPoint to plain object if needed
+                if (focusPointValue && focusPointValue.toJS) {
+                  focusPointValue = focusPointValue.toJS();
+                }
+                if (cropsValue && cropsValue.toJS) {
+                  cropsValue = cropsValue.toJS();
+                }
+              } else {
+                // Plain JavaScript object
+                console.log('[Enhanced Image] Plain object, using dot notation');
+                srcValue = value.src || value.url || null;
+                altValue = value.alt || '';
+                focusPointValue = value.focusPoint;
+                cropsValue = value.crops;
+              }
+
+              state.src = srcValue;
+              state.alt = altValue;
+              state.focusPoint = focusPointValue || { x: 50, y: 50 };
+              state.crops = cropsValue || {};
+
+              // Build preview URL from src
+              if (srcValue && !srcValue.startsWith('http')) {
+                state.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                console.log('[Enhanced Image] Built preview URL from object public_id:', state.previewUrl);
+              } else if (srcValue) {
+                state.previewUrl = srcValue;
+                console.log('[Enhanced Image] Using object full URL as preview:', state.previewUrl);
+              }
+
               return state;
             }
 
@@ -319,42 +363,76 @@
               console.log('[Enhanced Image] Value changed! New value:', value);
               console.log('[Enhanced Image] Value type:', typeof value);
 
-              var newState;
+              var newState = {};
+
               if (typeof value === 'string') {
                 // NEW FORMAT: public_id string
                 console.log('[Enhanced Image] Received public_id string:', value);
 
                 // Build Cloudinary URL for preview if it's a public_id (not a full URL)
-                var previewUrl = null;
                 if (!value.startsWith('http')) {
                   // It's a public_id, build Cloudinary URL
-                  previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
-                  console.log('[Enhanced Image] Built preview URL:', previewUrl);
+                  newState.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + value;
+                  console.log('[Enhanced Image] Built preview URL:', newState.previewUrl);
+                } else {
+                  newState.previewUrl = value;
+                  console.log('[Enhanced Image] Using full URL as preview:', value);
                 }
 
-                newState = {
-                  src: value,
-                  previewUrl: previewUrl,
-                  error: null
-                };
+                newState.src = value;
+                newState.error = null;
+
               } else if (typeof value === 'object' && value !== null) {
-                // LEGACY FORMAT: object with src/alt/focusPoint
-                console.log('[Enhanced Image] Received legacy object format:', value);
+                // Handle Immutable.js Map or plain object
+                console.log('[Enhanced Image] Received object format:', value);
 
-                var srcValue = value.src || value.url || null;
-                var legacyPreviewUrl = null;
-                if (srcValue && !srcValue.startsWith('http')) {
-                  // Build Cloudinary URL for legacy public_id
-                  legacyPreviewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                var srcValue;
+                var altValue;
+                var focusPointValue;
+
+                if (value.get) {
+                  // Immutable Map - use .get() method
+                  console.log('[Enhanced Image] Detected Immutable Map in componentDidUpdate');
+                  srcValue = value.get('src') || value.get('url') || null;
+                  altValue = value.get('alt') || '';
+                  focusPointValue = value.get('focusPoint');
+
+                  // Convert Immutable focusPoint to plain object if needed
+                  if (focusPointValue && focusPointValue.toJS) {
+                    focusPointValue = focusPointValue.toJS();
+                  }
+                } else {
+                  // Plain JavaScript object
+                  console.log('[Enhanced Image] Plain object in componentDidUpdate');
+                  srcValue = value.src || value.url || null;
+                  altValue = value.alt || '';
+                  focusPointValue = value.focusPoint;
                 }
 
-                newState = {
-                  src: srcValue,
-                  alt: value.alt || '',
-                  focusPoint: value.focusPoint || { x: 50, y: 50 },
-                  previewUrl: legacyPreviewUrl,
-                  error: null
-                };
+                newState.src = srcValue;
+
+                // Build preview URL
+                if (srcValue && !srcValue.startsWith('http')) {
+                  // Build Cloudinary URL for public_id
+                  newState.previewUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + srcValue;
+                  console.log('[Enhanced Image] Built preview URL from public_id:', newState.previewUrl);
+                } else if (srcValue) {
+                  newState.previewUrl = srcValue;
+                  console.log('[Enhanced Image] Using full URL as preview:', srcValue);
+                }
+
+                // Only update alt/focusPoint if the IMAGE changed (src changed)
+                // This preserves user edits while they're editing the SAME image
+                if (this.state.src !== srcValue) {
+                  console.log('[Enhanced Image] Image changed, loading new alt and focusPoint');
+                  newState.alt = altValue;
+                  newState.focusPoint = focusPointValue || { x: 50, y: 50 };
+                } else {
+                  console.log('[Enhanced Image] Same image, preserving user edits to alt/focusPoint');
+                }
+
+                newState.error = null;
+
               } else {
                 console.log('[Enhanced Image] Invalid value type, ignoring');
                 return;
@@ -481,14 +559,19 @@
               return;
             }
 
-            // Build the full Cloudinary URL from public_id if we don't have previewUrl
-            var fullUrl = previewUrl;
-            if (!fullUrl && src) {
-              // If src is a public_id, construct the full URL
+            // ✅ FIX: Check if src is already a full URL before building one
+            var fullUrl;
+            if (src.startsWith('http://') || src.startsWith('https://')) {
+              // Already a full URL - use as-is
+              console.log('[Enhanced Image] src is already full URL, using as-is');
+              fullUrl = src;
+            } else {
+              // It's a public_id - build full URL
+              console.log('[Enhanced Image] src is public_id, building full URL');
               fullUrl = 'https://res.cloudinary.com/zzbazza/image/upload/' + src;
             }
 
-            // Send complete object with src (full URL), alt, and focusPoint
+            // Build complete image data object
             var imageData = {
               src: fullUrl,
               alt: this.state.alt || '',
@@ -498,7 +581,7 @@
               }
             };
 
-            console.log('[Enhanced Image] Calling onChange with complete object:', imageData);
+            console.log('[Enhanced Image] Calling onChange with image data:', imageData);
             this.props.onChange(imageData);
           },
 
