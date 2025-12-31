@@ -71,9 +71,24 @@ collections:
       - {label: "Autor", name: "author", widget: "author", required: true}
       - label: "Štítky"
         name: "tags"
-        widget: "list"
+        widget: "select"
         required: false
-        field: {label: "Štítek", name: "tag", widget: "string"}
+        multiple: true
+        create: true
+        options:
+          - Akce
+          - Aktivity
+          - Charita
+          - Erasmus+
+          - Hudba
+          - Kultura
+          - Přijímací řízení
+          - Sport
+          - Studium
+          - Studentský parlament
+          - Škola
+          - Zahraniční pobyt
+          - Zábava
 
       - label: "Hlavní obrázek"
         name: "image"
