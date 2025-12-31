@@ -4,6 +4,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    reporters: process.env.GITHUB_ACTIONS
+      ? ['default', 'github-actions', 'junit']
+      : ['default'],
+    outputFile: process.env.GITHUB_ACTIONS
+      ? { junit: 'test-results.xml' }
+      : undefined,
     include: [
       'src/**/*.test.ts',
       'tests/unit/**/*.test.ts',
@@ -11,7 +17,7 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'json-summary'],
       include: [
         'src/**/*.ts',
       ],

@@ -71,8 +71,37 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Vitest Tests
+          path: test-results.xml
+          reporter: java-junit
+          fail-on-error: false
+
       - name: Generate coverage report
         run: npm run test:coverage
+
+      - name: Coverage summary
+        if: always()
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f coverage/coverage-summary.json ]; then
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            node -e "
+              const coverage = require('./coverage/coverage-summary.json');
+              const total = coverage.total;
+              console.log('Lines:      ' + total.lines.pct + '%');
+              console.log('Statements: ' + total.statements.pct + '%');
+              console.log('Functions:  ' + total.functions.pct + '%');
+              console.log('Branches:   ' + total.branches.pct + '%');
+            " >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage summary not found" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
