@@ -13,6 +13,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  checks: write
 
 # Allow only one concurrent deployment
 concurrency:
@@ -110,6 +111,7 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 30
+          if-no-files-found: warn
 
   build:
     runs-on: ubuntu-latest
