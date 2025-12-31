@@ -13,6 +13,8 @@ export interface CMSField {
   format?: string;
   date_format?: string;
   time_format?: boolean | string;
+  multiple?: boolean;
+  create?: boolean;
 }
 
 export interface CMSFileConfig {
