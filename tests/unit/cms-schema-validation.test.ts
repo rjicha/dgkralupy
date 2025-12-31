@@ -42,14 +42,16 @@ describe('CMS Configuration Schema Validation', () => {
     });
 
 
-    it('should configure tags as list widget', () => {
+    it('should configure tags as select widget with multiple', () => {
       const config = parseCMSConfig(CMS_CONFIG_PATH);
       const articlesCollection = getCollection(config, 'articles');
 
       const tagsField = findField(articlesCollection!.fields!, 'tags');
 
       expect(tagsField).toBeDefined();
-      expect(tagsField?.widget).toBe('list');
+      expect(tagsField?.widget).toBe('select');
+      expect(tagsField?.multiple).toBe(true);
+      expect(tagsField?.create).toBe(true);
       expect(tagsField?.required).toBe(false);
     });
 
@@ -129,7 +131,7 @@ describe('CMS Configuration Schema Validation', () => {
         body: 'markdown',
         publishedAt: 'datetime',
         author: 'author',
-        tags: 'list',
+        tags: 'select',
         image: 'enhanced-image',
         featured: 'boolean',
         important: 'boolean',
