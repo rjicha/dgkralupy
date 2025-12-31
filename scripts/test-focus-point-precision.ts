@@ -4,7 +4,6 @@
  */
 
 import { getCloudinaryUrl } from '../src/lib/utils/cloudinary';
-import type { ImageVariant } from '../src/lib/utils/imageVariants';
 
 // Test cases from IP 08
 const testCases = [

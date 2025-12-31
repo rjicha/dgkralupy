@@ -29,8 +29,8 @@ export const IMAGE_VARIANTS = {
     quality: { jpg: 85, webp: 80, avif: 70 },
   },
   card: {
-    width: 800,
-    height: 450,
+    width: 600,
+    height: 338,
     aspectRatio: 16 / 9,
     quality: { jpg: 85, webp: 80, avif: 70 },
   },
